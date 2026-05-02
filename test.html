@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinetiq Test</title>
+<style>
+body { font-family: sans-serif; padding: 40px; background: #0d0d12; color: #fff; }
+.modal { background: #1a1a1f; padding: 32px; border-radius: 12px; max-width: 400px; margin: 0 auto; }
+input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #0d0d12; color: #fff; box-sizing: border-box; }
+button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: #6366f1; color: #fff; font-size: 16px; cursor: pointer; }
+button:hover { background: #5558e3; }
+.status { margin-top: 16px; padding: 12px; border-radius: 8px; background: #2a2a2f; }
+.error { background: #ff4444; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="modal">
+  <h1>Kinetiq Auth Test</h1>
+  
+  <div id="signup-form">
+    <h3>Create Account</h3>
+    <input type="text" id="name" placeholder="Your Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="testSignUp()">Sign Up</button>
+  </div>
+  
+  <div id="status" class="status" style="display:none"></div>
+</div>
+
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Initialize Supabase
+const SUPABASE_URL = 'https://oywpcylrpgsdorsvysam.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95d3BjeWxycGdzZG9yc3Z5c2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDkzMTMsImV4cCI6MjA5MzI4NTMxM30.9I_gSbybDzNko7ILROohlu0_G05MLPUEW-kOEt2V2aE';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function showStatus(message, isError = false) {
+  const statusDiv = document.getElementById('status');
+  statusDiv.textContent = message;
+  statusDiv.style.display = 'block';
+  if (isError) {
+    statusDiv.classList.add('error');
+  } else {
+    statusDiv.classList.remove('error');
+  }
+}
+
+async function testSignUp() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  
+  if (!name || !email || !password) {
+    showStatus('Please fill in all fields', true);
+    return;
+  }
+  
+  if (password.length < 6) {
+    showStatus('Password must be at least 6 characters', true);
+    return;
+  }
+  
+  showStatus('Creating account...');
+  
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          display_name: name
+        }
+      }
+    });
+    
+    if (error) throw error;
+    
+    showStatus('Success! Check your email to verify your account.');
+    console.log('Sign up data:', data);
+  } catch (error) {
+    showStatus('Error: ' + error.message, true);
+    console.error('Sign up error:', error);
+  }
+}
+
+// Test connection on load
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      showStatus('Already logged in as: ' + user.email);
+    } else {
+      showStatus('Ready to sign up!');
+    }
+  } catch (error) {
+    showStatus('Connection error: ' + error.message, true);
+  }
+});
+</script>
+
+</body>
+</html>
