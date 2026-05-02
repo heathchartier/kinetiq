@@ -5,8 +5,8 @@
 const SUPABASE_URL = 'https://oywpcylrpgsdorsvsysam.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95d3BjeWxycGdzZG9yc3Z5c2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDkzMTMsImV4cCI6MjA5MzI4NTMxM30.9I_gSbybDzNko7ILROohlu0_G05MLPUEW-kOEt2V2aE';
 
-// Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Initialize Supabase client (avoid naming conflict with CDN global)
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Global auth state
 let currentUser = null;
@@ -17,7 +17,7 @@ let currentUser = null;
 
 async function signUp(email, password, displayName) {
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
       email: email,
       password: password,
       options: {
@@ -39,7 +39,7 @@ async function signUp(email, password, displayName) {
 
 async function signIn(email, password) {
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
       email: email,
       password: password
     });
@@ -57,7 +57,7 @@ async function signIn(email, password) {
 
 async function signOut() {
   try {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabaseClient.auth.signOut();
     if (error) throw error;
     
     currentUser = null;
@@ -70,13 +70,13 @@ async function signOut() {
 }
 
 async function getCurrentUser() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabaseClient.auth.getUser();
   currentUser = user;
   return user;
 }
 
 // Check auth state on load
-supabase.auth.onAuthStateChange((event, session) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
   console.log('Auth state changed:', event, session);
   currentUser = session?.user || null;
   
