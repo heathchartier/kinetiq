@@ -2,7 +2,7 @@
 // SUPABASE CONFIGURATION
 // ============================================================================
 
-const SUPABASE_URL = 'https://oywpcylrpgsdorsvsysam.supabase.co';
+const SUPABASE_URL = 'https://oywpcylrpgsdorvysam.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95d3BjeWxycGdzZG9yc3Z5c2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDkzMTMsImV4cCI6MjA5MzI4NTMxM30.9I_gSbybDzNko7ILROohlu0_G05MLPUEW-kOEt2V2aE';
 
 // Initialize Supabase client (avoid naming conflict with CDN global)
