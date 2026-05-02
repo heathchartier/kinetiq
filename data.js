@@ -1,19 +1,3 @@
-// ============================================================================
-// KINETIQ DATA - PUBLIC VERSION
-// Contains only Kinetiq original programs
-// Built-in MAPS programs are in Heath's personal copy only
-// ============================================================================
-
-// =============================================
-// KINETIQ STRONG — 12-Week Strength Program
-// =============================================
-var kinetiqStrongData = {
-  id: 'kinetiq-strong-builtin',
-  name: 'Kinetiq Strong',
-  source: 'builtin',
-  description: "A 12-week strength program built around the Big 4 lifts. Progressive overload is the only rule that matters — add weight, get stronger, don't get hurt. Every session includes a built-in mobility warmup because the smartest thing a strong person can do is stay healthy enough to keep training. 3 days per week. No fluff.",
-  difficulty: 'Intermediate',
-  duration: '12 weeks (3 phases)',
 var kinetiqStrongData = {
   id: 'kinetiq-strong-builtin',
   name: 'Kinetiq Strong',
