@@ -37,7 +37,7 @@ button:hover { background: #5558e3; }
 const SUPABASE_URL = 'https://oywpcylrpgsdorsvsysam.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95d3BjeWxycGdzZG9yc3Z5c2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDkzMTMsImV4cCI6MjA5MzI4NTMxM30.9I_gSbybDzNko7ILROohlu0_G05MLPUEW-kOEt2V2aE';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function showStatus(message, isError = false) {
   const statusDiv = document.getElementById('status');
@@ -68,7 +68,7 @@ async function testSignUp() {
   showStatus('Creating account...');
   
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
       email: email,
       password: password,
       options: {
@@ -91,7 +91,7 @@ async function testSignUp() {
 // Test connection on load
 window.addEventListener('DOMContentLoaded', async () => {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
       showStatus('Already logged in as: ' + user.email);
     } else {
