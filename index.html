@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Kinetiq</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/kinetiq-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kinetiq">
+<meta name="theme-color" content="#0d0d12">
+<meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+
+<header id="topbar">
+  <div id="logo">KINETIQ</div>
+  <div id="nav-desktop">
+    <button class="nd active" data-view="dashboard">Dashboard</button>
+    <button class="nd" data-view="programs">Programs</button>
+    <button class="nd" data-view="nutrition">Nutrition</button>
+    <button class="nd" data-view="history">History</button>
+    <button class="nd" data-view="progress">Progress</button>
+  </div>
+  <div id="topbar-right">
+    <button id="pill" onclick="showView('active-workout')">&#9889; <span id="pill-t">0:00</span></button>
+    <button class="btn-p btn-sm" onclick="openQL()">+ Log</button>
+    <button class="btn-s btn-sm" id="trophy-btn" onclick="showAchievementsModal()" title="Achievements">🏆</button>
+    <button class="btn-s btn-sm" onclick="handleSignOut()" style="display:none" id="signout-btn">Sign Out</button>
+  </div>
+</header>
+
+<div id="page-wrap">
+
+  <!-- DASHBOARD -->
+  <section id="view-dashboard" class="view active">
+    <div class="ph"><div><h1 class="ptitle">Dashboard</h1><p class="psub" id="greet">Good morning</p></div><button class="btn-s btn-sm" onclick="showView('programs')">Programs &rarr;</button></div>
+    
+    <!-- Stats Grid -->
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="sl"><span class="stat-icon">💪</span> Workouts</div><div class="sv" id="st">0</div><div class="ss">all time</div></div>
+      <div class="stat-card s2"><div class="sl"><span class="stat-icon">📅</span> This Week</div><div class="sv" id="sw">0</div><div class="ss">sessions</div></div>
+      <div class="stat-card s3">
+        <div class="sl"><span class="stat-icon">⚡</span> Volume</div>
+        <div class="sv" id="sv">0</div>
+        <div class="ss" id="vol-trend">lbs lifted</div>
+      </div>
+      <div class="stat-card s4">
+        <div class="sl"><span class="stat-icon">🔥</span> Streak</div>
+        <div class="sv" id="ss">0</div>
+        <div class="ss" id="streak-status">days</div>
+      </div>
+    </div>
+    
+    <!-- Next Workout Card -->
+    <div id="next-workout-card" class="card" style="display:none;margin-top:14px">
+      <div class="card-h">🎯 Next Workout</div>
+      <div class="card-b" id="next-workout-body"></div>
+    </div>
+    
+    <!-- Current Progress Card -->
+    <div id="current-progress-card" class="card" style="display: none; margin-top: 14px;">
+      <div class="card-h">📈 Current Progress</div>
+      <div class="card-b" style="padding: 16px;">
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-label" id="prog-progress-name">Program Name</div>
+            <div class="progress-pct" id="prog-progress-pct">0%</div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="prog-progress-fill"></div>
+          </div>
+          <div class="progress-sub" id="prog-progress-sub">Week 1 of 12</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent PRs Card -->
+    <div id="recent-prs-card" class="card" style="display:none;margin-top:14px">
+      <div class="card-h">🏆 Recent PRs</div>
+      <div class="card-b" id="recent-prs-body"></div>
+    </div>
+    
+    <!-- This Week Preview -->
+    <div id="week-preview-card" class="card" style="display:none;margin-top:14px">
+      <div class="card-h">📅 This Week</div>
+      <div class="card-b" id="week-preview-body"></div>
+    </div>
+    
+    <div class="sec-lbl">Recent Workouts</div>
+    <div class="card" id="d-recent"></div>
+    <div class="sec-lbl">Programs</div>
+    <div class="card" id="d-progs"></div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section id="view-programs" class="view">
+    <div class="ph"><div><h1 class="ptitle">Programs</h1><p class="psub">Import or create plans</p></div><button class="btn-s btn-sm" onclick="openCP()">+ Create</button></div>
+    
+    <!-- Program Ecosystem Info Card -->
+    <div id="program-info-card" style="margin: 0 14px 16px 14px; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: #fff; font-size: 14px; line-height: 1.6; position: relative;">
+      <button onclick="document.getElementById('program-info-card').style.display='none'" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.2); border: none; color: #fff; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; font-family: inherit;">×</button>
+      <div style="font-weight: 700; font-size: 15px; margin-bottom: 8px;">💪 Recommended Program Flow</div>
+      <div style="margin-bottom: 4px;">For optimal results, run programs in this order:</div>
+      <div style="font-weight: 600; margin: 8px 0;">Strong (12 wks) → Hypertrophy (12 wks) → Balance (8 wks) → Deload (1 wk) → Repeat</div>
+      <div style="font-size: 13px; opacity: 0.9;">You can also run standalone programs (HIIT, Mobility) alongside or between cycles based on your goals.</div>
+    </div>
+    
+    <div id="save-banner" class="save-banner">&#10003; Program saved! It will be here every time you return.</div>
+    <div id="uz" class="upload-zone" onclick="document.getElementById('fi').click()" ondragover="doDO(event)" ondragleave="doDL()" ondrop="doDrop(event)">
+      <input type="file" id="fi" accept=".pdf,.txt" onchange="doFS(event)">
+      <div class="uico">&#128196;</div>
+      <div class="utitle">Import a Program</div>
+      <div class="uhint">Tap to upload a PDF or TXT &mdash; AI extracts all phases, exercises &amp; schedules and saves it permanently</div>
+      <div class="uchips">
+        <span class="chip cg">&#10003; PDF</span>
+        <span class="chip cb">&#10003; TXT</span>
+        <span class="chip cy">&#10003; Phases</span>
+        <span class="chip co">&#10003; Sets &amp; Reps</span>
+      </div>
+    </div>
+    <div id="ai-load" class="ai-load">
+      <div class="spin"></div>
+      <div class="ai-txt">Analyzing program...</div>
+      <div class="ai-sub" id="ai-sub">Extracting exercises, phases &amp; schedule</div>
+    </div>
+    <div id="prog-list"></div>
+    <div id="prog-empty" class="empty" style="display:none">
+      <div class="eico">&#128170;</div>
+      <div class="etitle">No programs yet</div>
+      <div class="esub">Upload a PDF or create a program manually</div>
+    </div>
+  </section>
+
+  <!-- PROGRAM DETAIL -->
+  <section id="view-program-detail" class="view" style="padding:0">
+    <div id="pd-back"><button class="back-btn" onclick="showView('programs')">&larr; Programs</button><span id="pd-bc"></span></div>
+    <div id="pd-hdr">
+      <div class="pd-top">
+        <div><h2 id="pd-title"></h2><p id="pd-desc"></p></div>
+        <button class="btn-d btn-sm" onclick="delProg()">Delete</button>
+      </div>
+    </div>
+    <div id="phase-scroll"></div>
+    <div id="pd-body"></div>
+  </section>
+
+  <!-- ACTIVE WORKOUT -->
+  <section id="view-active-workout" class="view" style="padding:0">
+    <div id="wtop">
+      <div><div id="aw-name">Workout</div><div id="aw-meta"></div></div>
+      <div id="aw-elapsed">0:00</div>
+    </div>
+    <div id="aw-body"></div>
+    <div id="wfoot">
+      <div id="aw-prog">0 / 0 sets done</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-s btn-sm" onclick="cancelW()">Cancel</button>
+        <button class="btn-p btn-sm" onclick="finishW()">Finish</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUTRITION -->
+  <section id="view-nutrition" class="view">
+    <div class="ph"><div><h1 class="ptitle">Nutrition</h1><p class="psub">Track your daily intake</p></div></div>
+    
+    <!-- Daily Summary -->
+    <div class="card">
+      <div class="card-h">Today's Macros</div>
+      <div class="card-b" style="padding: 16px;">
+        <div class="macro-summary">
+          <div class="macro-summary-item">
+            <div class="macro-summary-label">Calories</div>
+            <div class="macro-summary-value" id="daily-cals">0</div>
+            <div class="macro-summary-goal" id="daily-cals-goal">/ 0 cal</div>
+            <div class="macro-progress-bar">
+              <div class="macro-progress-fill" id="cals-progress"></div>
+            </div>
+          </div>
+        </div>
+        <div class="macro-summary-grid">
+          <div class="macro-summary-item">
+            <div class="macro-summary-label">Protein</div>
+            <div class="macro-summary-value" id="daily-protein">0g</div>
+            <div class="macro-summary-goal" id="daily-protein-goal">/ 0g</div>
+            <div class="macro-progress-bar">
+              <div class="macro-progress-fill" id="protein-progress" style="background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+            </div>
+          </div>
+          <div class="macro-summary-item">
+            <div class="macro-summary-label">Carbs</div>
+            <div class="macro-summary-value" id="daily-carbs">0g</div>
+            <div class="macro-summary-goal" id="daily-carbs-goal">/ 0g</div>
+            <div class="macro-progress-bar">
+              <div class="macro-progress-fill" id="carbs-progress" style="background: linear-gradient(90deg, #4facfe, #00f2fe);"></div>
+            </div>
+          </div>
+          <div class="macro-summary-item">
+            <div class="macro-summary-label">Fat</div>
+            <div class="macro-summary-value" id="daily-fat">0g</div>
+            <div class="macro-summary-goal" id="daily-fat-goal">/ 0g</div>
+            <div class="macro-progress-bar">
+              <div class="macro-progress-fill" id="fat-progress" style="background: linear-gradient(90deg, #ff9a56, #ff6a88);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Water Intake Tracker -->
+    <div class="card">
+      <div class="card-h">💧 Water Intake</div>
+      <div class="card-b" style="padding: 16px;">
+        <!-- Progress circles -->
+        <div id="water-circles" style="text-align: center; margin-bottom: 12px; font-size: 24px; letter-spacing: 4px;"></div>
+        
+        <!-- Total display -->
+        <div style="text-align: center; margin-bottom: 16px;">
+          <div style="font-size: 28px; font-weight: 900; color: var(--t1); font-family: monospace;" id="water-total">0 oz</div>
+          <div style="font-size: 13px; color: var(--t2); margin-top: 4px;" id="water-goal-display">Goal: 64 oz</div>
+          <div id="water-streak" style="font-size: 12px; color: var(--acc); margin-top: 4px; font-weight: 700;"></div>
+        </div>
+        
+        <!-- Quick add buttons -->
+        <div class="water-quick-btns">
+          <button onclick="logWater(8)">8 oz<br><span style="font-size: 10px; opacity: 0.8;">Glass</span></button>
+          <button onclick="logWater(12)">12 oz<br><span style="font-size: 10px; opacity: 0.8;">Can</span></button>
+          <button onclick="logWater(16)">16 oz<br><span style="font-size: 10px; opacity: 0.8;">Bottle</span></button>
+          <button onclick="logWater(24)">24 oz<br><span style="font-size: 10px; opacity: 0.8;">Large</span></button>
+        </div>
+        
+        <!-- Settings toggle -->
+        <button class="calc-header" onclick="toggleCalc('water-settings')" style="margin-top: 8px;">
+          <div>
+            <div class="calc-title">⚙️ Water Settings</div>
+            <div class="calc-sub">Adjust daily goal</div>
+          </div>
+          <span class="calc-chevron" id="water-settings-chevron">▼</span>
+        </button>
+        <div class="calc-body" id="water-settings" style="display: none;">
+          <div class="fg">
+            <label class="fl">Daily Goal (oz)</label>
+            <input class="fi" type="number" id="water-goal-input" placeholder="64">
+          </div>
+          <button class="btn-p" onclick="saveWaterGoal()">Save Goal</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Add Food -->
+    <div class="card">
+      <div class="card-h">Log Food</div>
+      <div class="card-b" style="padding: 16px;">
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <button class="btn-s btn-sm" id="quick-add-btn" onclick="showQuickAdd()" style="flex: 1;">⚡ Quick Add</button>
+          <button class="btn-p btn-sm" id="search-all-btn" onclick="showSearchAll()" style="flex: 1;">🔍 Search All Foods</button>
+        </div>
+        
+        <!-- Quick Add (Kinetiq Foods) -->
+        <div id="quick-add-section">
+          <input type="text" class="fi" id="food-search" placeholder="Search Kinetiq Foods (fast, offline)..." oninput="searchFoods()" onkeypress="if(event.key==='Enter'){var first=document.querySelector('#food-results .food-result-add'); if(first) first.click();}" style="margin-bottom: 12px;">
+          <div id="food-results"></div>
+        </div>
+        
+        <!-- Search All (USDA FoodData Central) -->
+        <div id="search-all-section" style="display: none;">
+          <input type="text" class="fi" id="fatsecret-search" placeholder="Search 350,000+ foods (USDA database)..." onkeypress="if(event.key==='Enter') searchFatSecret();" style="margin-bottom: 12px;">
+          <button class="btn-p" onclick="searchFatSecret()" style="width: 100%; margin-bottom: 12px;">Search</button>
+          <div id="fatsecret-results"></div>
+          <div style="font-size: 10px; color: var(--t3); text-align: center; margin-top: 8px;">Powered by USDA FoodData Central</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Favorites -->
+    <div class="card" id="favorites-card" style="display: none;">
+      <div class="card-h">⭐ Favorites</div>
+      <div class="card-b" id="favorites-list"></div>
+    </div>
+    
+    <!-- Meal Templates -->
+    <div class="card" id="meal-templates-card" style="display: none;">
+      <div class="card-h">🍽️ Meal Templates</div>
+      <div class="card-b" id="meal-templates-list"></div>
+    </div>
+    
+    <!-- Recipe Builder -->
+    <div class="card">
+      <div class="card-h" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>🍳 Recipe Builder</span>
+        <button class="btn-p btn-sm" onclick="showRecipeBuilder()" style="font-size: 11px; padding: 4px 10px;">+ New Recipe</button>
+      </div>
+      <div class="card-b" id="recipe-builder-section" style="display: none; padding: 16px;">
+        <!-- Recipe name -->
+        <div class="fg" style="margin-bottom: 12px;">
+          <label class="fl">Recipe Name</label>
+          <input class="fi" type="text" id="recipe-name" placeholder="e.g., Protein Smoothie, Chicken Salad">
+        </div>
+        
+        <!-- Servings -->
+        <div class="fg" style="margin-bottom: 12px;">
+          <label class="fl">Servings</label>
+          <input class="fi" type="number" id="recipe-servings" placeholder="1" value="1" min="1">
+        </div>
+        
+        <!-- Add ingredient search -->
+        <div class="fg" style="margin-bottom: 12px;">
+          <label class="fl">Add Ingredients</label>
+          <input class="fi" type="text" id="recipe-ingredient-search" placeholder="Search foods to add..." oninput="searchRecipeIngredients()">
+        </div>
+        <div id="recipe-ingredient-results" style="margin-bottom: 12px;"></div>
+        
+        <!-- Current ingredients -->
+        <div id="recipe-ingredients-list"></div>
+        
+        <!-- Recipe totals -->
+        <div id="recipe-totals" style="margin-top: 16px; padding: 12px; background: var(--bg3); border-radius: 8px; display: none;">
+          <div style="font-weight: 700; margin-bottom: 8px; color: var(--t1);">Total per serving:</div>
+          <div style="font-size: 13px; color: var(--t2);" id="recipe-total-macros"></div>
+        </div>
+        
+        <!-- Actions -->
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+          <button class="btn-s" onclick="cancelRecipe()" style="flex: 1;">Cancel</button>
+          <button class="btn-p" onclick="saveRecipe()" style="flex: 1;">Save Recipe</button>
+        </div>
+      </div>
+      
+      <!-- Saved recipes list -->
+      <div class="card-b" id="saved-recipes-list"></div>
+    </div>
+    
+    <!-- Today's Log -->
+    <div class="card">
+      <div class="card-h" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Today's Food Log</span>
+        <button class="btn-s btn-sm" onclick="showSaveMealModal()" style="font-size: 11px; padding: 4px 10px;">💾 Save as Meal</button>
+      </div>
+      <div class="card-b" id="food-log-list"></div>
+    </div>
+    
+    <!-- Set Daily Goals -->
+    <div class="card">
+      <button class="calc-header" onclick="toggleCalc('nutrition-goals')">
+        <div>
+          <div class="calc-title">⚙️ Set Daily Goals</div>
+          <div class="calc-sub">Configure your macro targets</div>
+        </div>
+        <span class="calc-chevron" id="nutrition-goals-chevron">▼</span>
+      </button>
+      <div class="calc-body" id="nutrition-goals" style="display: none;">
+        <div class="fg">
+          <label class="fl">Daily Calories</label>
+          <input class="fi" type="number" id="goal-calories" placeholder="2500">
+        </div>
+        <div class="fg">
+          <label class="fl">Protein (g)</label>
+          <input class="fi" type="number" id="goal-protein" placeholder="185">
+        </div>
+        <div class="fg">
+          <label class="fl">Carbs (g)</label>
+          <input class="fi" type="number" id="goal-carbs" placeholder="280">
+        </div>
+        <div class="fg">
+          <label class="fl">Fat (g)</label>
+          <input class="fi" type="number" id="goal-fat" placeholder="80">
+        </div>
+        <button class="btn-p" onclick="saveNutritionGoals()">Save Goals</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="view-history" class="view">
+    <div class="ph"><div><h1 class="ptitle">History</h1><p class="psub">Completed workouts</p></div></div>
+    <div id="hist-list"></div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="view-progress" class="view">
+    <div class="ph"><div><h1 class="ptitle">Progress</h1><p class="psub">Track your gains</p></div></div>
+    
+    <!-- Calculators Section -->
+    <div class="sec-lbl">🧮 Calculators</div>
+    
+    <!-- TDEE/Macro Calculator -->
+    <div class="card">
+      <button class="calc-header" onclick="toggleCalc('tdee-calc')">
+        <div>
+          <div class="calc-title">📊 TDEE & Macro Calculator</div>
+          <div class="calc-sub">Calculate daily calories and macros</div>
+        </div>
+        <span class="calc-chevron" id="tdee-chevron">▼</span>
+      </button>
+      <div class="calc-body" id="tdee-calc" style="display: none;">
+        <div class="fg">
+          <label class="fl">Weight (lbs)</label>
+          <input class="fi" type="number" id="tdee-weight" placeholder="185">
+        </div>
+        <div class="fg">
+          <label class="fl">Height (inches)</label>
+          <input class="fi" type="number" id="tdee-height" placeholder="70">
+        </div>
+        <div class="fg">
+          <label class="fl">Age (years)</label>
+          <input class="fi" type="number" id="tdee-age" placeholder="30">
+        </div>
+        <div class="fg">
+          <label class="fl">Sex</label>
+          <select class="fi" id="tdee-sex">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Activity Level</label>
+          <select class="fi" id="tdee-activity">
+            <option value="1.2">Sedentary (little/no exercise)</option>
+            <option value="1.375">Light (1-3 days/week)</option>
+            <option value="1.55" selected>Moderate (3-5 days/week)</option>
+            <option value="1.725">Active (6-7 days/week)</option>
+            <option value="1.9">Very Active (2x/day)</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Goal</label>
+          <select class="fi" id="tdee-goal">
+            <option value="cut">Cut (lose fat)</option>
+            <option value="maintain" selected>Maintain</option>
+            <option value="bulk">Bulk (gain muscle)</option>
+          </select>
+        </div>
+        <button class="btn-p" onclick="calcTDEE()" style="margin-top: 8px;">Calculate</button>
+        <div id="tdee-results" class="calc-results" style="display: none;">
+          <div class="result-item">
+            <div class="result-label">Basal Metabolic Rate (BMR)</div>
+            <div class="result-value" id="tdee-bmr">0</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Total Daily Energy Expenditure (TDEE)</div>
+            <div class="result-value" id="tdee-tdee">0</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Target Calories</div>
+            <div class="result-value" id="tdee-target">0</div>
+          </div>
+          <div class="result-divider"></div>
+          <div style="font-size: 12px; color: var(--t2); margin-bottom: 12px; text-align: center;">Adjust your macro split below:</div>
+          <div class="macro-adjuster">
+            <div class="macro-slider-item">
+              <div class="macro-slider-header">
+                <span class="macro-slider-label">Protein</span>
+                <span class="macro-slider-value" id="protein-pct-display">25%</span>
+              </div>
+              <input type="range" class="macro-slider" id="protein-slider" min="15" max="40" value="25" step="1" oninput="updateMacros()">
+            </div>
+            <div class="macro-slider-item">
+              <div class="macro-slider-header">
+                <span class="macro-slider-label">Carbs</span>
+                <span class="macro-slider-value" id="carbs-pct-display">55%</span>
+              </div>
+              <input type="range" class="macro-slider" id="carbs-slider" min="20" max="70" value="55" step="1" oninput="updateMacros()">
+            </div>
+            <div class="macro-slider-item">
+              <div class="macro-slider-header">
+                <span class="macro-slider-label">Fat</span>
+                <span class="macro-slider-value" id="fat-pct-display">20%</span>
+              </div>
+              <input type="range" class="macro-slider" id="fat-slider" min="15" max="40" value="20" step="1" oninput="updateMacros()">
+            </div>
+            <div class="macro-total" id="macro-total">Total: 100%</div>
+          </div>
+          <div class="result-divider"></div>
+          <div class="result-macros">
+            <div class="macro-item">
+              <div class="macro-label">Protein</div>
+              <div class="macro-value" id="tdee-protein">0g</div>
+            </div>
+            <div class="macro-item">
+              <div class="macro-label">Carbs</div>
+              <div class="macro-value" id="tdee-carbs">0g</div>
+            </div>
+            <div class="macro-item">
+              <div class="macro-label">Fat</div>
+              <div class="macro-value" id="tdee-fat">0g</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 1RM Calculator -->
+    <div class="card">
+      <button class="calc-header" onclick="toggleCalc('orm-calc')">
+        <div>
+          <div class="calc-title">💪 One-Rep Max (1RM) Calculator</div>
+          <div class="calc-sub">Estimate your max lift</div>
+        </div>
+        <span class="calc-chevron" id="orm-chevron">▼</span>
+      </button>
+      <div class="calc-body" id="orm-calc" style="display: none;">
+        <div class="fg">
+          <label class="fl">Weight Lifted (lbs)</label>
+          <input class="fi" type="number" id="orm-weight" placeholder="225">
+        </div>
+        <div class="fg">
+          <label class="fl">Reps Completed</label>
+          <input class="fi" type="number" id="orm-reps" placeholder="8" max="12">
+        </div>
+        <button class="btn-p" onclick="calcORM()" style="margin-top: 8px;">Calculate</button>
+        <div id="orm-results" class="calc-results" style="display: none;">
+          <div class="result-item">
+            <div class="result-label">Estimated 1RM</div>
+            <div class="result-value" id="orm-max">0 lbs</div>
+          </div>
+          <div class="result-divider"></div>
+          <div class="result-note">Based on Epley formula. Most accurate for 1-10 reps.</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Body Measurements Tracker -->
+    <div class="card">
+      <button class="calc-header" onclick="toggleCalc('measurements-calc')">
+        <div>
+          <div class="calc-title">📏 Body Measurements</div>
+          <div class="calc-sub">Track your body composition</div>
+        </div>
+        <span class="calc-chevron" id="measurements-chevron">▼</span>
+      </button>
+      <div class="calc-body" id="measurements-calc" style="display: none;">
+        <div class="fg">
+          <label class="fl">Weight (lbs)</label>
+          <input class="fi" type="number" id="measure-weight" placeholder="185" step="0.1">
+        </div>
+        <div class="fg">
+          <label class="fl">Body Fat % (optional)</label>
+          <input class="fi" type="number" id="measure-bf" placeholder="15" step="0.1">
+        </div>
+        <div class="fg">
+          <label class="fl">Waist (inches)</label>
+          <input class="fi" type="number" id="measure-waist" placeholder="32" step="0.1">
+        </div>
+        <div class="fg">
+          <label class="fl">Chest (inches)</label>
+          <input class="fi" type="number" id="measure-chest" placeholder="40" step="0.1">
+        </div>
+        <div class="fg">
+          <label class="fl">Arms (inches)</label>
+          <input class="fi" type="number" id="measure-arms" placeholder="15" step="0.1">
+        </div>
+        <div class="fg">
+          <label class="fl">Thighs (inches)</label>
+          <input class="fi" type="number" id="measure-thighs" placeholder="24" step="0.1">
+        </div>
+        <button class="btn-p" onclick="saveMeasurement()" style="margin-top: 8px;">Save Measurement</button>
+        <div id="measurements-list" class="measurements-list"></div>
+      </div>
+    </div>
+    
+    <div class="sec-lbl">📈 Stats & Charts</div>
+    <div class="stat-grid">
+      <div class="stat-card s1"><div class="sl"><span class="stat-icon">🏆</span> PRs Set</div><div class="sv" id="pg-pr">0</div><div class="ss">records</div></div>
+      <div class="stat-card s2"><div class="sl"><span class="stat-icon">📊</span> Best Session</div><div class="sv" id="pg-vol">0</div><div class="ss">lbs volume</div></div>
+      <div class="stat-card s3"><div class="sl"><span class="stat-icon">🎯</span> Exercises</div><div class="sv" id="pg-ex">0</div><div class="ss">unique moves</div></div>
+      <div class="stat-card s4"><div class="sl"><span class="stat-icon">⏱️</span> Avg Time</div><div class="sv" id="pg-dur">0m</div><div class="ss">per session</div></div>
+    </div>
+    <div class="card"><div class="card-h">Personal Records</div><div class="card-b" id="pr-list"></div></div>
+    <div class="card"><div class="card-h">Volume Over Time</div><div class="card-b"><div class="chart-area"><canvas id="vc"></canvas></div></div></div>
+    <div class="card"><div class="card-h">Workout Frequency (Last 12 Weeks)</div><div class="card-b"><div class="chart-area"><canvas id="freq-chart"></canvas></div></div></div>
+    <div class="card"><div class="card-h">Exercise Progress</div><div class="card-b"><select id="ex-sel" class="ex-sel" onchange="drawEC()"><option value="">Select exercise...</option></select><div class="chart-area"><canvas id="ec"></canvas></div></div></div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+<!-- BOTTOM TAB BAR -->
+<nav id="tab-bar">
+  <button class="tab active" data-view="dashboard"><span>&#127968;</span>Dashboard</button>
+  <button class="tab" data-view="programs"><span>&#128203;</span>Programs</button>
+  <button class="tab" data-view="nutrition"><span>&#127823;</span>Nutrition</button>
+  <button class="tab" data-view="history"><span>&#128197;</span>History</button>
+  <button class="tab" data-view="progress"><span>&#128200;</span>Progress</button>
+  <button class="tab" onclick="showAchievementsModal(); return false;"><span>&#127942;</span>Achievements</button>
+</nav>
+
+<!-- REST TIMER -->
+<div id="rt-ov">
+  <div id="rt-box">
+    <div class="rt-lbl">⏱️ REST TIMER</div>
+    <div class="rt-circle-container">
+      <svg class="rt-circle" viewBox="0 0 120 120">
+        <circle class="rt-circle-bg" cx="60" cy="60" r="54" />
+        <circle class="rt-circle-progress" id="rt-circle-prog" cx="60" cy="60" r="54" />
+      </svg>
+      <div id="rt-num">1:00</div>
+    </div>
+    <div id="rt-bar"><div id="rt-fill"></div></div>
+    <div id="rt-pre">
+      <button onclick="setRT(30)">:30</button>
+      <button onclick="setRT(60)">1:00</button>
+      <button onclick="setRT(90)">1:30</button>
+      <button onclick="setRT(120)">2:00</button>
+      <button onclick="setRT(180)">3:00</button>
+      <button onclick="setRT(240)">4:00</button>
+      <button onclick="setRT(300)">5:00</button>
+    </div>
+    <div id="rt-ctrl">
+      <button class="btn-s btn-sm" id="rt-pbtn" onclick="togRT()">Pause</button>
+      <button class="btn-p btn-sm" onclick="closeRT()">Skip</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK LOG MODAL -->
+<div class="modal-ov" id="ql-modal">
+  <div class="modal-box">
+    <div class="modal-hd"><span>Log Workout</span><button class="modal-close" onclick="closeM('ql-modal')">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Workout Name</label><input class="fi" id="ql-name" placeholder="e.g. Upper Body A" autocomplete="off"></div>
+      <div class="fg"><label class="fl">Exercises</label><div id="ex-builder"></div><button class="btn-g btn-sm" style="width:100%;margin-top:8px" onclick="addER()">+ Add Exercise</button></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-s btn-sm" onclick="closeM('ql-modal')">Cancel</button>
+      <button class="btn-p btn-sm" onclick="startQL()">Start Workout</button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE PROGRAM MODAL -->
+<div class="modal-ov" id="cp-modal">
+  <div class="modal-box">
+    <div class="modal-hd"><span>Create Program</span><button class="modal-close" onclick="closeM('cp-modal')">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Program Name</label><input class="fi" id="cp-name" placeholder="e.g. 5/3/1 Strength" autocomplete="off"></div>
+      <div class="fg"><label class="fl">Description</label><textarea class="fta" id="cp-desc" placeholder="Brief description..."></textarea></div>
+      <div class="fg"><label class="fl">Duration</label><input class="fi" id="cp-dur" placeholder="e.g. 12 weeks" autocomplete="off"></div>
+      <div class="fg"><label class="fl">Difficulty</label><select class="fse" id="cp-diff"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-s btn-sm" onclick="closeM('cp-modal')">Cancel</button>
+      <button class="btn-p btn-sm" onclick="createProg()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-ov" id="auth-modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-hd"><span id="auth-title">Sign In</span></div>
+    <div class="modal-body">
+      <div id="auth-error" style="display:none;background:#ff4444;color:#fff;padding:12px;border-radius:8px;margin-bottom:16px;font-size:14px;"></div>
+      
+      <!-- Sign In Form -->
+      <div id="signin-form">
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="signin-email" type="email" placeholder="you@example.com" autocomplete="email"></div>
+        <div class="fg"><label class="fl">Password</label><input class="fi" id="signin-password" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+        <div style="text-align:right;margin-top:8px;margin-bottom:8px">
+          <a href="#" onclick="showForgotPassword();return false" style="color:#6366f1;font-size:13px">Forgot password?</a>
+        </div>
+        <button class="btn-p btn-sm" style="width:100%;margin-top:8px" onclick="handleSignIn()">Sign In</button>
+        <div style="text-align:center;margin-top:16px;font-size:14px;color:#888">
+          Don't have an account? <a href="#" onclick="showSignUpForm();return false" style="color:#6366f1">Sign Up</a>
+        </div>
+      </div>
+      
+      <!-- Sign Up Form -->
+      <div id="signup-form" style="display:none">
+        <div class="fg"><label class="fl">Display Name</label><input class="fi" id="signup-name" placeholder="Your Name" autocomplete="name"></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email"></div>
+        <div class="fg"><label class="fl">Password</label><input class="fi" id="signup-password" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+        <div class="fg"><label class="fl">Confirm Password</label><input class="fi" id="signup-confirm" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+        <button class="btn-p btn-sm" style="width:100%;margin-top:8px" onclick="handleSignUp()">Create Account</button>
+        <div style="text-align:center;margin-top:16px;font-size:14px;color:#888">
+          Already have an account? <a href="#" onclick="showSignInForm();return false" style="color:#6366f1">Sign In</a>
+        </div>
+      </div>
+      
+      <!-- Forgot Password Form -->
+      <div id="forgot-form" style="display:none">
+        <p style="color:var(--t2);font-size:13px;margin-bottom:16px">Enter your email and we'll send you a link to reset your password.</p>
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="forgot-email" type="email" placeholder="you@example.com" autocomplete="email"></div>
+        <button class="btn-p btn-sm" style="width:100%;margin-top:8px" onclick="handleForgotPassword()">Send Reset Link</button>
+        <div style="text-align:center;margin-top:16px;font-size:14px;color:#888">
+          Remember your password? <a href="#" onclick="showSignInForm();return false" style="color:#6366f1">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Password Reset Modal (shown when user clicks reset link) -->
+<div class="modal-ov" id="reset-password-modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-hd">Set New Password</div>
+    <div class="modal-body">
+      <p style="color:var(--t2);font-size:13px;margin-bottom:16px">Enter your new password below.</p>
+      <div class="fg"><label class="fl">New Password</label><input class="fi" id="new-password" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+      <div class="fg"><label class="fl">Confirm Password</label><input class="fi" id="confirm-password" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+      <button class="btn-p btn-sm" style="width:100%;margin-top:8px" onclick="handlePasswordReset()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE MEAL MODAL -->
+<div id="save-meal-modal" class="modal-ov">
+  <div class="modal-c">
+    <div class="modal-h">
+      💾 Save Meal Template
+      <button class="modal-x" onclick="closeM('save-meal-modal')">×</button>
+    </div>
+    <div class="modal-b">
+      <p style="color: var(--t2); font-size: 13px; margin-bottom: 16px;">Save today's foods as a reusable meal template.</p>
+      <div class="fg">
+        <label class="fl">Meal Name</label>
+        <input class="fi" type="text" id="meal-name-input" placeholder="e.g., Breakfast #1, Post-Workout" onkeypress="if(event.key==='Enter') saveMealTemplate();">
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 20px;">
+        <button class="btn-s" onclick="closeM('save-meal-modal')" style="flex: 1;">Cancel</button>
+        <button class="btn-p" onclick="saveMealTemplate()" style="flex: 1;">Save Meal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Onboarding Modal -->
+<div id="onboarding-modal">
+  <div id="onboarding-content">
+    <!-- Content rendered dynamically by onboarding.js -->
+  </div>
+</div>
+
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script src="achievements.js"></script>
+<script src="onboarding.js"></script>
+<script src="app.js"></script>
+
+<!-- Service Worker Registration -->
+<script>
+  // Register service worker for offline functionality
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then((registration) => {
+          console.log('✅ Service Worker registered:', registration.scope);
+          
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New version available
+                console.log('🔄 New version available! Refresh to update.');
+                
+                // Show update notification (optional)
+                if (confirm('A new version of Kinetiq is available! Refresh now?')) {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                }
+              }
+            });
+          });
+        })
+        .catch((error) => {
+          console.log('❌ Service Worker registration failed:', error);
+        });
+      
+      // Handle controller change (new service worker activated)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    });
+  }
+  
+  // Add to Home Screen prompt (iOS and Android)
+  let deferredPrompt;
+  
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    
+    // Log that app is installable
+    console.log('💡 App can be installed! (Add "Install App" button to UI later)');
+    
+    // You can add an "Install App" button to your UI here
+    // Example: document.getElementById('install-btn').style.display = 'block';
+  });
+  
+  // Track when app is installed
+  window.addEventListener('appinstalled', () => {
+    console.log('🎉 Kinetiq has been installed!');
+    deferredPrompt = null;
+  });
+</script>
+</body>
+</html>
