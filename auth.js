@@ -448,12 +448,14 @@ async function syncWaterLogsToCloud() {
 }
 
 async function syncOnboardingPrefsToCloud() {
-  const goal = localStorage.getItem('ls_onboarding_goal');
-  const level = localStorage.getItem('ls_onboarding_level');
+  const goal      = localStorage.getItem('ls_onboarding_goal');
+  const level     = localStorage.getItem('ls_onboarding_level');
   const equipment = localStorage.getItem('ls_onboarding_equipment');
-  
+
   if (!goal && !level && !equipment) return;
-  
+
+  // NOTE: once you've run the SQL below in Supabase, add `onboarding_complete: true` to this update.
+  // ALTER TABLE public.profiles ADD COLUMN onboarding_complete BOOLEAN DEFAULT false;
   await supabaseClient
     .from('profiles')
     .update({
@@ -467,36 +469,92 @@ async function syncOnboardingPrefsToCloud() {
 // Sync cloud data to local (on sign in)
 async function syncDataFromCloud() {
   if (!currentUser) return;
-  
+
   // Check if online before syncing
   if (!navigator.onLine) {
     console.log('📴 Offline - skipping cloud sync');
     return;
   }
-  
+
   console.log('Syncing cloud data to local...');
-  
+
   try {
     // 1. SYNC WORKOUTS
     await syncWorkoutsFromCloud();
-    
+
     // 2. SYNC PERSONAL RECORDS
     await syncPRsFromCloud();
-    
+
     // 3. SYNC NUTRITION GOALS
     await syncNutritionGoalsFromCloud();
-    
+
     // 4. SYNC FOOD LOGS (last 7 days)
     await syncFoodLogsFromCloud();
-    
+
+    // 5. SYNC ACTIVE PROGRAM (restores currentProgram/Week/Day if localStorage was cleared)
+    await syncActiveProgramFromCloud();
+
+    // 6. SYNC ONBOARDING PREFS (restores goal/level/equipment from profile)
+    await syncOnboardingPrefsFromCloud();
+
     console.log('✅ All cloud data synced to local');
-    
+
     // Refresh UI
     if (typeof rDash === 'function') rDash();
     if (typeof rHist === 'function') rHist();
   } catch (error) {
     console.error('Error syncing from cloud:', error);
   }
+}
+
+async function syncActiveProgramFromCloud() {
+  if (!currentUser) return;
+
+  // Only restore if localStorage is missing the active program — don't overwrite a local selection
+  if (localStorage.getItem('currentProgram')) return;
+
+  const { data, error } = await supabaseClient
+    .from('active_programs')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  if (error) { console.error('Error loading active program from cloud:', error); return; }
+  if (!data) return;
+
+  // Restore the three keys app.js uses
+  localStorage.setItem('currentProgram', data.program_id);
+  localStorage.setItem('currentWeek',    String(data.current_week || 1));
+  localStorage.setItem('currentDay',     String(data.current_day  || 0));
+  console.log('📥 Active program restored from cloud:', data.program_id,
+              'week', data.current_week, 'day', data.current_day);
+}
+
+async function syncOnboardingPrefsFromCloud() {
+  if (!currentUser) return;
+
+  // Only restore if localStorage is missing the prefs (i.e., storage was cleared)
+  if (localStorage.getItem('ls_onboarding_goal')) return;
+
+  const { data: profile, error } = await supabaseClient
+    .from('profiles')
+    .select('primary_goal, fitness_level, onboarding_complete')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (error) { console.error('Error loading profile prefs from cloud:', error); return; }
+  if (!profile) return;
+
+  if (profile.primary_goal)  localStorage.setItem('ls_onboarding_goal',  profile.primary_goal);
+  if (profile.fitness_level) localStorage.setItem('ls_onboarding_level', profile.fitness_level);
+
+  // If the cloud profile says onboarding is done, mark it locally so we never show it again
+  if (profile.onboarding_complete || profile.primary_goal) {
+    localStorage.setItem('ls_onboarding_complete', 'true');
+  }
+
+  console.log('📥 Onboarding prefs restored from cloud:', profile.primary_goal, profile.fitness_level);
 }
 
 // === INDIVIDUAL SYNC FUNCTIONS (FROM CLOUD) ===
