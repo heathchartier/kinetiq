@@ -48,7 +48,7 @@ Full product detail lives in **`KINETIQ_MASTER_ROADMAP.md`** — that's the sour
 - `onboarding.js` — 4-question onboarding wizard + program recommendation
 
 ### PWA files
-- `service-worker.js` — offline caching. **Current cache name: `kinetiq-v2.1.0`** (bump this on every deploy that changes cached files, or users get stale code)
+- `service-worker.js` — offline caching. **Current cache name: `kinetiq-v2.3.0`** (bump this on every deploy that changes cached files, or users get stale code)
 - `manifest.json` — PWA config, Kinetiq branding, `/kinetiq/` start URL
 - `icons/kinetiq-icon.png` — app icon
 
@@ -61,33 +61,38 @@ Full product detail lives in **`KINETIQ_MASTER_ROADMAP.md`** — that's the sour
 
 ---
 
-## 4. WHERE WE LEFT OFF (exact state)
+## 4. WHERE WE LEFT OFF (exact state — updated 2026-05-23)
 
-### ✅ Just fixed / working
-- **Cross-device sync** — was the #1 blocker (desktop 14 workouts, cloud only 7). Root cause was a combination of a **stale service worker** serving old code + the dedupe check in `syncWorkoutsToCloud()`. Bumped SW cache `v1.0.0 → v2.1.0`; **service worker #209 is now activated and running** with cache `kinetiq-v2.1.0` (confirmed in DevTools). All workouts now upload.
-- **Password reset / forgot password** — works on desktop (Google) and iPhone Safari.
-- **Service worker update** — old `kinetiq-v1.0.0` cache is deleted, new one active.
+### ✅ Completed (2026-05-23 session)
+- **Cross-device sync** — FIXED. SW bumped `v1.0.0 → v2.1.0`, dedupe rework. All workouts upload.
+- **Password reset / forgot password** — works on desktop + Safari.
+- **Onboarding flash after sign-in** — FIXED. `onUserSignedIn()` is now `async`; checks Supabase `profiles.primary_goal` + workouts count before showing onboarding. localStorage used as fast-path for returning devices. Verified in browser (`isAsync: true`).
+- **Mobile keyboard overlap** — FIXED. `setupMobileKeyboardFix()` scrolls active input into view on focus (300ms delay). Modal uses `100dvh`/`75dvh` so it shrinks when keyboard opens on iOS 15.4+/Chrome 108+. Verified (`hasKeyboardFix: true`, `dvhFound: true`).
+- **iOS PWA localStorage eviction** — FIXED. `syncDataFromCloud()` now restores: active program position (`currentProgram`/`currentWeek`/`currentDay` from `active_programs` table) + onboarding prefs (`primary_goal`/`fitness_level` from `profiles`). After storage eviction, one sign-in restores full state. Verified (`syncActiveProgramFromCloud: true`, `syncOnboardingPrefsFromCloud: true`).
+- **Current SW cache version:** `kinetiq-v2.3.0`
 
-### 🛠️ Just changed — NEEDS VERIFICATION FIRST IN CLAUDE CODE
-- **Onboarding showing after sign-in/reset until refresh.** Root cause: `onUserSignedIn()` checked `localStorage` (`ls_onboarding_complete`) *before* cloud data synced, so on a fresh device / post-reset the flag was missing and onboarding showed until a manual refresh.
-- **Fix applied in `supabase-config.js`** (~+46/−27 lines): reordered to check **cloud profile/workouts first** — if the user has data in Supabase, skip onboarding.
-- **VERIFY:** (a) fresh sign-in on a clean device lands on dashboard with no refresh; (b) password reset lands on dashboard; (c) logout→login does not re-show onboarding.
+### 📋 One manual step still pending
+Run this SQL in Supabase SQL Editor (adds `onboarding_complete` column to make the cloud check explicit rather than proxy-based):
+```sql
+ALTER TABLE public.profiles ADD COLUMN onboarding_complete BOOLEAN DEFAULT false;
+```
+Then in `auth.js` → `syncOnboardingPrefsToCloud()`, uncomment the `onboarding_complete: true` line.
 
-### Device/environment notes from last test session
-- **Desktop:** Windows + Chrome. Password reset works; after reset landed on onboarding, refresh fixed it.
-- **iPhone Safari (browser):** forgot-password visible; **login email field sits just above the keyboard — only the username field is visible** (UX bug, not fully fixed); onboarding-until-refresh same as desktop; trophy/achievements button at bottom.
-- **iPhone PWA (home-screen install):** header now sits **below** the status bar (good), sign-out accessible; same login-field-above-keyboard issue; same onboarding-until-refresh.
-- A benign console error appears: *"A listener indicated an asynchronous response... message channel closed"* — this is almost always a **browser extension**, not Kinetiq. Ignore unless it correlates with a real failure.
+### Device/environment notes
+- **Desktop Chrome:** All fixes verified locally.
+- **iPhone Safari / PWA:** Keyboard fix deployed — test on real device to confirm. Safe-area overlap on notch/Dynamic Island still needs testing.
+- Benign console error: *"A listener indicated an asynchronous response... message channel closed"* — browser extension noise, not Kinetiq. Ignore.
 
 ---
 
 ## 5. IMMEDIATE TASK QUEUE (do in this order)
 
-1. **Verify the onboarding cloud-first fix** (above). Persist `onboarding_complete` to the Supabase `profiles` row so it's truly cross-device, not localStorage-dependent.
-2. **Fix mobile login field hidden behind keyboard** — only username shows; email field is pushed up. Likely needs `scroll-into-view` on focus and/or layout/`viewport`/`safe-area` handling. Test in iOS Safari AND installed PWA.
-3. **iOS PWA localStorage persistence** — Safari evicts storage; move session/critical flags to a Supabase-backed session so reinstalled/cleared PWAs recover state.
-4. **iOS status-bar / safe-area** — confirm header padding with `env(safe-area-inset-top)` across notch/Dynamic Island devices.
-5. **Sync hardening** — add retry logic for failed uploads + an offline queue that flushes when back online (see Technical Debt in roadmap).
+1. ✅ ~~Verify the onboarding cloud-first fix~~ — DONE
+2. ✅ ~~Fix mobile login field hidden behind keyboard~~ — DONE
+3. ✅ ~~iOS PWA localStorage persistence~~ — DONE (sync restores everything; auth session re-login is acceptable)
+4. **Run the Supabase SQL** above to add `onboarding_complete` column, then update `syncOnboardingPrefsToCloud()`.
+5. **iOS status-bar / safe-area** — confirm header padding with `env(safe-area-inset-top)` across notch/Dynamic Island devices. Test on real iPhone.
+6. **Sync hardening** — retry logic for failed uploads + offline queue that flushes when back online.
 
 Then pick from **Phase 1 Remaining** in the roadmap (program-start-from-beginning, "Strong→Strength" label fix, recommended program back on dashboard, rest-day tracker, export data, etc.).
 

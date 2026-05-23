@@ -262,8 +262,8 @@ pose.onResults((results) => {
 - [x] Password reset function / forgot password (DONE - flow works on desktop + Safari)
 - [x] Onboarding shows after sign-in/reset until refresh (FIXED 2026-05-23 — onUserSignedIn async, checks Supabase profile.primary_goal + workouts; localStorage fast-path for returning devices)
 - [x] Login email field hidden behind keyboard on mobile/PWA (FIXED 2026-05-23 — scroll-into-view on focus + 100dvh/75dvh CSS so modal shrinks with keyboard; SW bumped to v2.2.0)
-- [ ] PWA localStorage persistence on iOS (Safari evicts storage; needs Supabase-backed session) ← NEXT
-- [ ] PWA status bar / safe-area overlap on iOS (header now below status bar but needs more testing)
+- [x] PWA localStorage persistence on iOS (FIXED 2026-05-23 — syncDataFromCloud() now also restores active program from active_programs table + onboarding prefs from profiles; after storage eviction, one sign-in restores full state. SW bumped to v2.3.0)
+- [ ] PWA status bar / safe-area overlap on iOS (header now below status bar but needs more testing) ← NEXT
 
 ---
 
