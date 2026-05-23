@@ -91,31 +91,59 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 });
 
 // Callbacks (to be implemented in app.js)
-function onUserSignedIn(user) {
+async function onUserSignedIn(user) {
   console.log('User signed in:', user);
-  
-  // Hide auth modal (if function exists)
-  if (typeof hideAuthModal === 'function') {
-    hideAuthModal();
-  }
-  
-  // Show sign out button
+
+  if (typeof hideAuthModal === 'function') hideAuthModal();
+
   const signoutBtn = document.getElementById('signout-btn');
   if (signoutBtn) signoutBtn.style.display = 'block';
-  
-  // Check if user needs onboarding
-  const hasCompletedOnboarding = localStorage.getItem('ls_onboarding_complete');
-  if (!hasCompletedOnboarding && typeof showOnboarding === 'function') {
-    showOnboarding();
-    return; // Don't sync yet, wait for onboarding to complete
+
+  // Fast path: this device already recorded onboarding as done
+  if (localStorage.getItem('ls_onboarding_complete')) {
+    syncDataFromCloud();
+    if (typeof rDash === 'function') rDash();
+    if (typeof rProgs === 'function') rProgs();
+    return;
   }
-  
-  // Sync data from cloud
-  syncDataFromCloud();
-  
-  // Refresh the dashboard and programs list
-  if (typeof rDash === 'function') rDash();
-  if (typeof rProgs === 'function') rProgs();
+
+  // Cloud check: returning users have primary_goal set in their profile.
+  // If they do, they've been through onboarding before — skip it and mark localStorage.
+  // Fall back to checking for any workouts as a secondary signal.
+  try {
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('primary_goal')
+      .eq('id', user.id)
+      .single();
+
+    if (profile && profile.primary_goal) {
+      localStorage.setItem('ls_onboarding_complete', 'true');
+      syncDataFromCloud();
+      if (typeof rDash === 'function') rDash();
+      if (typeof rProgs === 'function') rProgs();
+      return;
+    }
+
+    const { data: workouts } = await supabaseClient
+      .from('workouts')
+      .select('id')
+      .eq('user_id', user.id)
+      .limit(1);
+
+    if (workouts && workouts.length > 0) {
+      localStorage.setItem('ls_onboarding_complete', 'true');
+      syncDataFromCloud();
+      if (typeof rDash === 'function') rDash();
+      if (typeof rProgs === 'function') rProgs();
+      return;
+    }
+  } catch (err) {
+    console.warn('Cloud onboarding check failed, defaulting to onboarding:', err);
+  }
+
+  // New user — show onboarding
+  if (typeof showOnboarding === 'function') showOnboarding();
 }
 
 function onUserSignedOut() {

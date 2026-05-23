@@ -3,7 +3,7 @@
 // Enables offline functionality and app-like experience
 // ============================================================================
 
-const CACHE_NAME = 'kinetiq-v2.1.0'; // Updated version to force cache refresh
+const CACHE_NAME = 'kinetiq-v2.2.0';
 const RUNTIME_CACHE = 'kinetiq-runtime-v2';
 
 // Base path for GitHub Pages
