@@ -260,10 +260,9 @@ pose.onResults((results) => {
 - [x] Cross-device sync (FIXED - SW v2.1.0, dedupe rework, all workouts upload)
 - [x] Service worker stuck on old version (FIXED - bumped v1.0.0 → v2.1.0, #209 running)
 - [x] Password reset function / forgot password (DONE - flow works on desktop + Safari)
-- [~] Onboarding shows after sign-in/reset until refresh (FIX APPLIED in supabase-config.js — cloud-first check; NEEDS VERIFICATION in Claude Code)
-- [ ] Persist `onboarding_complete` to Supabase `profiles` row (not just localStorage)
-- [ ] PWA localStorage persistence on iOS (Safari evicts storage; needs Supabase-backed session)
-- [ ] Login email field sits just above keyboard on mobile/PWA — only username visible (still not fully resolved)
+- [x] Onboarding shows after sign-in/reset until refresh (FIXED 2026-05-23 — onUserSignedIn async, checks Supabase profile.primary_goal + workouts; localStorage fast-path for returning devices)
+- [x] Login email field hidden behind keyboard on mobile/PWA (FIXED 2026-05-23 — scroll-into-view on focus + 100dvh/75dvh CSS so modal shrinks with keyboard; SW bumped to v2.2.0)
+- [ ] PWA localStorage persistence on iOS (Safari evicts storage; needs Supabase-backed session) ← NEXT
 - [ ] PWA status bar / safe-area overlap on iOS (header now below status bar but needs more testing)
 
 ---
@@ -725,12 +724,12 @@ All tables have RLS policies ensuring users can only access their own data.
 ### 2026-05-23:
 - ✅ Cross-device sync confirmed FIXED (SW v2.1.0 / #209 running, dedupe rework)
 - ✅ Password reset flow working (desktop + Safari)
-- 🛠️ Applied cloud-first onboarding check in `supabase-config.js` (needs verification)
+- ✅ Onboarding flash after sign-in FIXED — `onUserSignedIn` now async, checks Supabase `primary_goal` + workouts before showing onboarding (SW bumped to v2.2.0)
+- ✅ Mobile keyboard overlap FIXED — scroll-into-view on input focus + `dvh` CSS so modal shrinks with keyboard
 - 💡 NEW BACKLOG: voice/talk-to-text (mic), camera (progress photos, barcode), reusable permission helper
 - 💡 NEW BACKLOG: social share cards (PRs, workouts, streaks, achievements) + "make it fun" UX list
 - 🔐 Redacted USDA key from this doc; documented secrets handling
-- 📦 Migrating project to Claude Code — created `CLAUDE_CODE_HANDOFF.md`
-- 📄 Revised this roadmap to current state
+- 📦 Migrated project to Claude Code — created `CLAUDE_CODE_HANDOFF.md`
 
 ### 2026-05-03:
 - ✅ Created 9 Kinetiq training programs
