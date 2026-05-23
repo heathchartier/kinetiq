@@ -674,9 +674,27 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ============================================================================
+// MOBILE KEYBOARD — scroll focused input into view after keyboard animates up
+// ============================================================================
+function setupMobileKeyboardFix() {
+  const authModals = ['auth-modal', 'reset-password-modal'];
+  authModals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.addEventListener('focusin', (e) => {
+      if (e.target.tagName !== 'INPUT') return;
+      setTimeout(() => {
+        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300); // Wait for iOS keyboard animation to finish
+    });
+  });
+}
+
+// ============================================================================
 // ENTER KEY HANDLERS FOR AUTH FORMS
 // ============================================================================
 document.addEventListener('DOMContentLoaded', function() {
+  setupMobileKeyboardFix();
   // Sign in form - Enter key on password field
   const signinPassword = document.getElementById('signin-password');
   const signinEmail = document.getElementById('signin-email');
