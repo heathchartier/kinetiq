@@ -1074,6 +1074,18 @@ canvas { width: 100% !important; }
 .pr-val { font-size: 13px; font-weight: 700; color: var(--acc); font-family: monospace; }
 .pr-date { font-size: 10px; color: var(--t3); margin-top: 1px; }
 
+/* ===== AUTH OPEN — blur app content behind modal ===== */
+#topbar,
+#page-wrap {
+  transition: filter 0.25s ease, brightness 0.25s ease;
+}
+body.auth-open #topbar,
+body.auth-open #page-wrap {
+  filter: blur(4px) brightness(0.6);
+  pointer-events: none;
+  user-select: none;
+}
+
 /* ===== MODALS ===== */
 .modal-ov {
   display: none;
