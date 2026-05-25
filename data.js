@@ -4546,3 +4546,47 @@ var kinetiq5x5Data = {
     }
   ]
 };
+
+// ============================================================================
+// UPCOMING PROGRAMS — Coming Soon teaser data
+// When a program is fully built and added to the builtins[] array in app.js,
+// remove it from this list. The release date controls the display message.
+// ============================================================================
+var upcomingPrograms = [
+  {
+    id: 'kinetiq-core-upcoming',
+    name: 'Kinetiq Core',
+    tagline: 'A bulletproof midsection makes every other lift stronger. 8 weeks of progressive core training — not crunches, real anti-rotation, anti-extension, and rotational strength that transfers to everything you do.',
+    difficulty: 'All Levels',
+    duration: '8 weeks',
+    releaseDate: '2026-06-21',
+    accentColor: '#ff9500'
+  },
+  {
+    id: 'kinetiq-bulletproof-upcoming',
+    name: 'Kinetiq Bulletproof',
+    tagline: 'The smartest thing you can do for your training is stay healthy enough to keep training. Targeted joint prep, tendon conditioning, and movement longevity work — built for lifters who want to be doing this in 20 years.',
+    difficulty: 'All Levels',
+    duration: '10 weeks',
+    releaseDate: '2026-07-19',
+    accentColor: '#30b8ff'
+  },
+  {
+    id: 'kinetiq-physique-upcoming',
+    name: 'Kinetiq Physique',
+    tagline: 'Build the body. 12 weeks of pure aesthetics-focused training — high volume, strategic muscle targeting, and the techniques that actually change how you look. Strength is the foundation. This is the finish.',
+    difficulty: 'Intermediate',
+    duration: '12 weeks',
+    releaseDate: '2026-08-16',
+    accentColor: '#bf5af2'
+  },
+  {
+    id: 'kinetiq-longevity-upcoming',
+    name: 'Kinetiq Longevity',
+    tagline: 'Train for decades, not just seasons. Strength, mobility, and cardiovascular health built around the science of aging well — designed for people who want to be strong, capable, and pain-free for life.',
+    difficulty: 'All Levels',
+    duration: '12 weeks',
+    releaseDate: '2026-09-13',
+    accentColor: '#30e87a'
+  }
+];

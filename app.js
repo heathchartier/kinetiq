@@ -23,7 +23,7 @@ function allProgs() {
   var list = [];
   var premium = isPremium();
 
-  // Standard built-ins — everyone sees these
+  // All Kinetiq built-in programs — available to everyone
   var builtins = [
     {id:'kinetiq-foundation-builtin', prog:kinetiqFoundationData},
     {id:'kinetiq-strength-builtin', prog:kinetiqStrengthData},
@@ -33,23 +33,13 @@ function allProgs() {
     {id:'kinetiq-mobility-builtin', prog:kinetiqMobilityData},
     {id:'kinetiq-hiit-builtin', prog:kinetiqHIITData},
     {id:'kinetiq-resilience-builtin', prog:kinetiqResilienceData},
-    {id:'kinetiq-bodyweight-builtin', prog:kinetiqBodyweightData}
-  ];
-
-  // Premium built-ins — only for access_tier = 'premium'
-  var premiumBuiltins = [
+    {id:'kinetiq-bodyweight-builtin', prog:kinetiqBodyweightData},
     {id:'kinetiq-5x5-builtin', prog:kinetiq5x5Data}
   ];
 
   builtins.forEach(function(b){
     if (del.indexOf(b.id) === -1) list.push(b.prog);
   });
-
-  if (premium) {
-    premiumBuiltins.forEach(function(b){
-      if (del.indexOf(b.id) === -1) list.push(b.prog);
-    });
-  }
 
   // Custom programs from Supabase/localStorage
   // Corrective programs (MAPS Prime, MAPS Prime Pro) are premium-only
@@ -446,40 +436,63 @@ function startQuick(progId, weekIdx, dayIdx) {
 }
 
 // ===== PROGRAMS LIST =====
+// Format a release date string into a human-readable label
+function fmtRelease(dateStr) {
+  var parts = dateStr.split('-');
+  var release = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  var now = new Date();
+  now.setHours(0, 0, 0, 0);
+  var diffDays = Math.floor((release - now) / (1000 * 60 * 60 * 24));
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (diffDays < 0)  return 'Coming Soon';
+  if (diffDays === 0) return 'Available Today';
+  if (diffDays < 35) return 'Available ' + shortMonths[release.getMonth()] + ' ' + release.getDate();
+  return 'Coming ' + months[release.getMonth()] + ' ' + release.getFullYear();
+}
+
 function rProgs() {
   var pl = document.getElementById('prog-list');
   var pg = allProgs();
   var q = (document.getElementById('prog-search') && document.getElementById('prog-search').value || '').toLowerCase().trim();
   if (q) pg = pg.filter(function(p){ return p.name.toLowerCase().indexOf(q) !== -1 || (p.description || '').toLowerCase().indexOf(q) !== -1; });
+
+  // Filter upcoming programs by search query too
+  var upcoming = (typeof upcomingPrograms !== 'undefined' ? upcomingPrograms : []).filter(function(u) {
+    if (!q) return true;
+    return u.name.toLowerCase().indexOf(q) !== -1 || (u.tagline || '').toLowerCase().indexOf(q) !== -1;
+  });
+
   var empty = document.getElementById('prog-empty');
-  empty.style.display = pg.length ? 'none' : 'flex';
+  var totalVisible = pg.length + upcoming.length;
+  empty.style.display = totalVisible ? 'none' : 'flex';
   empty.querySelector && (empty.querySelector('.esub') || {}).textContent && (empty.querySelector('.esub').textContent = q ? 'No programs match "' + q + '"' : 'Upload a PDF or create a program manually');
-  if (!pg.length) { pl.innerHTML = ''; return; }
-  pl.innerHTML = pg.map(function(p) {
+  if (!totalVisible) { pl.innerHTML = ''; return; }
+
+  // Render available programs
+  var availableHtml = pg.map(function(p) {
     var pc = p.phases && p.phases.length || 0;
     var dots = '';
     for (var i = 0; i < Math.max(pc, 4); i++) dots += '<span class="pdot' + (i < pc ? ' on' : '') + '"></span>';
     var ban = p.source === 'builtin' ? 'bm' : p.source === 'ai' ? 'bai' : 'bdef';
-    
-    // Add program-specific color class
+
     var progClass = '';
-    if (p.name.includes('Strong')) progClass = ' prog-strong';
+    if (p.name.includes('Strong') || p.name.includes('Strength')) progClass = ' prog-strong';
     else if (p.name.includes('Hypertrophy')) progClass = ' prog-hypertrophy';
     else if (p.name.includes('Balance')) progClass = ' prog-balance';
     else if (p.name.includes('Deload')) progClass = ' prog-deload';
     else if (p.name.includes('Mobility')) progClass = ' prog-mobility';
     else if (p.name.includes('HIIT')) progClass = ' prog-hiit';
     else if (p.name.includes('Resilience')) progClass = ' prog-resilience';
-    
-    // Category badge (Core Cycle vs Standalone)
+
     var categoryBadge = '';
-    var isCoreProgram = p.name.includes('Strong') || p.name.includes('Hypertrophy') || p.name.includes('Balance') || p.name.includes('Deload');
+    var isCoreProgram = p.name.includes('Strength') || p.name.includes('Strong') || p.name.includes('Hypertrophy') || p.name.includes('Balance') || p.name.includes('Deload');
     if (isCoreProgram) {
-      categoryBadge = '<span class="prog-category core-cycle">🔄 Core Cycle</span>';
+      categoryBadge = '<span class="prog-category core-cycle">&#128260; Core Cycle</span>';
     } else {
-      categoryBadge = '<span class="prog-category standalone">⭐ Standalone</span>';
+      categoryBadge = '<span class="prog-category standalone">&#11088; Standalone</span>';
     }
-    
+
     var typeTag = p.type === 'corrective' ? '<span class="chip" style="background:rgba(125,200,255,.15);color:#7dc8ff;border:1px solid rgba(125,200,255,.25)">&#10039; Corrective</span>' : '';
     return '<button class="prog-card' + progClass + '" onclick="openProg(\'' + p.id + '\')">'
       + '<span class="prog-banner ' + ban + '"></span>'
@@ -498,6 +511,32 @@ function rProgs() {
       + '<div class="prog-foot"><div class="pdots">' + dots + '</div><span class="prog-arrow">View &rarr;</span></div>'
       + '</button>';
   }).join('');
+
+  // Render coming soon cards
+  var upcomingHtml = upcoming.length
+    ? '<div class="cs-section-label">Coming Soon</div>'
+      + upcoming.map(function(u) {
+          var label = fmtRelease(u.releaseDate);
+          var accent = u.accentColor || '#888';
+          return '<div class="prog-card prog-card-cs">'
+            + '<span class="prog-banner" style="background:linear-gradient(90deg,' + accent + '22,' + accent + '55,' + accent + '22);"></span>'
+            + '<div class="prog-body">'
+            + '<div class="prog-title-row"><span class="prog-category prog-cat-cs">&#128274; ' + esc(label) + '</span></div>'
+            + '<div class="prog-title prog-title-cs">' + esc(u.name) + '</div>'
+            + '<div class="prog-desc">' + esc(u.tagline || '') + '</div>'
+            + '<div class="prog-tags">'
+            + (u.difficulty ? '<span class="prog-tag">' + esc(u.difficulty) + '</span>' : '')
+            + (u.duration ? '<span class="prog-tag">' + esc(u.duration) + '</span>' : '')
+            + '</div></div>'
+            + '<div class="prog-foot prog-foot-cs">'
+            + '<span class="cs-unlock-label" style="color:' + accent + '">&#128336; ' + esc(label) + '</span>'
+            + '<span class="cs-notify-hint">Check back soon</span>'
+            + '</div>'
+            + '</div>';
+        }).join('')
+    : '';
+
+  pl.innerHTML = availableHtml + upcomingHtml;
 }
 
 // ===== PROGRAM DETAIL =====
