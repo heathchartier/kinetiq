@@ -450,6 +450,64 @@ body {
 .pdot.on { background-color: var(--acc); border-color: var(--acc); }
 .prog-arrow { font-size: 13px; font-weight: 700; color: var(--acc); }
 
+/* ===== COMING SOON PROGRAM CARDS ===== */
+.cs-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--t3);
+  margin: 20px 0 10px;
+  padding-left: 2px;
+}
+.prog-card-cs {
+  background-color: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 12px;
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: default;
+  box-shadow: var(--shadow-sm);
+  opacity: 0.82;
+}
+.prog-cat-cs {
+  background: rgba(255,255,255,0.06);
+  color: var(--t2);
+  border: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.prog-title-cs { color: var(--t2); }
+.prog-foot-cs {
+  padding: 10px 15px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cs-unlock-label {
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.cs-notify-hint {
+  font-size: 11px;
+  color: var(--t3);
+  font-style: italic;
+}
+
 /* ===== CHIPS ===== */
 .chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 .cg { background-color: rgba(48,232,122,.12); color: #30e87a; border: 1px solid rgba(48,232,122,.25); }
