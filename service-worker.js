@@ -3,7 +3,7 @@
 // Enables offline functionality and app-like experience
 // ============================================================================
 
-const CACHE_NAME = 'kinetiq-v2.4.0';
+const CACHE_NAME = 'kinetiq-v2.5.0';
 const RUNTIME_CACHE = 'kinetiq-runtime-v2';
 
 // Base path for GitHub Pages
@@ -15,6 +15,7 @@ const STATIC_ASSETS = [
   BASE_PATH + 'index.html',
   BASE_PATH + 'app.js',
   BASE_PATH + 'data.js',
+  BASE_PATH + 'maps-data.js',
   BASE_PATH + 'style.css',
   BASE_PATH + 'auth.js',
   BASE_PATH + 'achievements.js',

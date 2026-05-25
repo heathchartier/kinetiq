@@ -41,8 +41,15 @@ function allProgs() {
     if (del.indexOf(b.id) === -1) list.push(b.prog);
   });
 
+  // Premium: add all MAPS built-in programs
+  if (premium && typeof MAPS_ALL_PROGRAMS !== 'undefined') {
+    MAPS_ALL_PROGRAMS.forEach(function(prog){
+      if (del.indexOf(prog.id) === -1) list.push(prog);
+    });
+  }
+
   // Custom programs from Supabase/localStorage
-  // Corrective programs (MAPS Prime, MAPS Prime Pro) are premium-only
+  // Corrective programs are premium-only
   var filtered = premium
     ? uProgs
     : uProgs.filter(function(p){ return p.type !== 'corrective'; });
