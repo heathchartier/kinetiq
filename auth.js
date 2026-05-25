@@ -497,6 +497,9 @@ async function syncDataFromCloud() {
     // 6. SYNC ONBOARDING PREFS (restores goal/level/equipment from profile)
     await syncOnboardingPrefsFromCloud();
 
+    // 7. SYNC ACCESS TIER (premium unlocks MAPS + 5x5)
+    await syncAccessTierFromCloud();
+
     console.log('✅ All cloud data synced to local');
 
     // Refresh UI
@@ -555,6 +558,24 @@ async function syncOnboardingPrefsFromCloud() {
   }
 
   console.log('📥 Onboarding prefs restored from cloud:', profile.primary_goal, profile.fitness_level);
+}
+
+async function syncAccessTierFromCloud() {
+  if (!currentUser) return;
+
+  // Always fetch fresh — tier can change (upgrade/downgrade)
+  const { data: profile, error } = await supabaseClient
+    .from('profiles')
+    .select('access_tier')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (error) { console.warn('Could not load access tier:', error); return; }
+  if (!profile) return;
+
+  var tier = profile.access_tier || 'standard';
+  localStorage.setItem('ls_access_tier', tier);
+  console.log('📥 Access tier synced from cloud:', tier);
 }
 
 // === INDIVIDUAL SYNC FUNCTIONS (FROM CLOUD) ===

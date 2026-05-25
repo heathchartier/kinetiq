@@ -3967,3 +3967,582 @@ var kinetiqBodyweightData = {
     }
   ]
 };
+
+// ============================================================================
+// KINETIQ 5x5 — Linear Barbell Strength (Premium)
+// Alternating Workout A / Workout B, 3 days per week
+// Add 5 lbs upper / 10 lbs lower every session until progress stalls
+// ============================================================================
+var kinetiq5x5Data = {
+  id: 'kinetiq-5x5-builtin',
+  name: 'Kinetiq 5x5',
+  source: 'builtin',
+  description: "The simplest effective strength program ever designed. Three barbell lifts. Five sets of five. Add weight every session. You will get stronger faster than you thought possible — the math is brutal and the results are real. Workout A and Workout B alternate every session. 3 days per week. Rest at least one day between sessions. Run this until you stop making linear progress, then move to Kinetiq Strength.",
+  difficulty: 'Beginner–Intermediate',
+  duration: '12 weeks (repeat as long as progress continues)',
+  phases: [
+
+    // ===================== PHASE 1 =====================
+    {
+      name: 'Phase 1 — Learn the Weight (Weeks 1-4)',
+      objective: 'Establish starting weights and perfect form on all 5 lifts. Linear progression begins immediately — add weight every single session.',
+      length: '4 weeks',
+      sets: '5 sets',
+      reps: '5 reps',
+      rest: '3-5 minutes between sets',
+      frequency: '3 days per week — Mon/Wed/Fri or any 3 non-consecutive days. Alternate A/B/A one week, B/A/B the next.',
+      notes: 'Start light — embarrassingly light. Week 1 squat should be around 50% of what you think you can do. You are adding weight EVERY session (not every week). That means 3 increases per week. In 4 weeks you will be lifting weights that feel very real. Form first. Weight second. Always.',
+      weeks: [
+        {
+          name: 'Week 1 — Session 1 (Workout A)',
+          days: [
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side', notes: 'Non-negotiable before squatting. Both legs at 90 degrees, rotate forward shin to floor, hold 3 sec.' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction', notes: 'Stiff ankles kill squat depth. Fix them before they become a problem.' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps', notes: 'Prepares shoulders and rear delts for bench pressing.' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'The king. Feet shoulder-width, toes slightly out. Bar on upper traps. Sit back and down, drive knees out, stand tall. Start at a weight that feels almost too easy — you will be adding 10 lbs to this every session. Your ego will catch up by week 3.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Flat bench. Grip slightly wider than shoulders. Lower bar to lower chest, touch and press. Drive feet into floor. Start at a weight where all 5 sets feel controlled — you add 5 lbs next session.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Hinge to roughly 45 degrees. Pull bar to lower chest/upper stomach. Lead with elbows. Lower under control. This is the only upper-back work in this program — do it with intent. Add 5 lbs next session.' }
+              ]
+            },
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side', notes: 'Same as Workout A. Do it every time.' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side', notes: 'Step foot outside hand, drop back knee, rotate top arm to sky. Best single prep movement for the deadlift.' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side', notes: 'Tight hip flexors cause lower back rounding on deadlifts. This takes 90 seconds and prevents months of pain.' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'You squat EVERY session. Same movement as Workout A but 10 lbs heavier. This is intentional — frequency is how the squat grows. By month 3 you will understand why.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Grip just outside shoulders. Bar starts at collarbone. Press straight up, bar travels in a vertical line, lock out at top. OHP progresses slowly — 5 lbs per session. Respect the grind. This is the hardest lift to progress on this program.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'ONE set of 5 — not 5 sets. The deadlift is taxing enough on the CNS that one heavy work set is the prescription. Feet hip-width, bar over mid-foot, hinge to bar (do not squat down to it), drive the floor away, lock out at top. Add 10 lbs every session. Enjoy this — the deadlift progresses fastest.' }
+              ]
+            },
+            {
+              name: 'Workout A (Second Session)',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs from your last Workout A. If that jump is too large, add 5. Never compromise form for load.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Add 5 lbs from your last Workout A.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Add 5 lbs from your last Workout A.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 2 — A/B/A Pattern Continues',
+          days: [
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs from last session. The squat is getting real.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Add 5 lbs from last session.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Add 10 lbs from last session. If bar speed is slowing dramatically, add 5 instead.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs. Week 2 squats should start feeling like actual work.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Add 5 lbs.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Add 5 lbs.' }
+              ]
+            },
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Add 5 lbs.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Add 10 lbs. Respect rest between sessions — the deadlift needs it.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 3 — The Weight Gets Real',
+          days: [
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Week 3. If you started at 95 lbs, you are squatting around 155 lbs by now. This is where the program starts to separate people who trust the process from those who do not.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'All 5 reps of all 5 sets. If you cannot complete a set, the weight stays the same next session.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Control the eccentric. Pull with elbows, not biceps.' }
+              ]
+            },
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs. Three squat sessions per week is a lot — that is the point. High frequency builds the squat.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'OHP is humbling. If the last rep of set 5 is ugly, add 2.5 lbs next session instead of 5. Micro plates are your friend here.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'The deadlift is building fast. By week 3 you should be pulling a weight that feels impressive. Log it — these numbers matter.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Add 5 lbs.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Add 5 lbs.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 4 — First Plateau Protocol',
+          days: [
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Week 4. If you miss reps this week: repeat the weight next session. If you miss again: deload to 90% and rebuild. This is the natural progression — do not fight it, manage it.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'OHP may stall first. This is normal. Repeat the weight before deloading.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Keep adding 10 lbs per session. Deadlift stalls last on this program.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs if Week 3 was all clean reps. Repeat if not.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Add 5 lbs if Week 3 was complete.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Add 5 lbs.' }
+              ]
+            },
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Add 5 lbs, or repeat if last session was incomplete.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Add 10 lbs. Four weeks in — your deadlift should be considerably higher than where you started.' }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    // ===================== PHASE 2 =====================
+    {
+      name: 'Phase 2 — Sustained Progression (Weeks 5-8)',
+      objective: 'Continue linear progression. Manage first stalls with the repeat-then-deload protocol. Deadlift switches to every other B session.',
+      length: '4 weeks',
+      sets: '5 sets',
+      reps: '5 reps',
+      rest: '4-5 minutes between squat sets, 3 minutes for upper body',
+      frequency: '3 days per week. Alternate A/B.',
+      notes: 'By now you know the pattern. The weights are real. Rest times extend as loads increase — 3 minutes minimum, 5 minutes if needed between squat sets. The deadlift switches to every other Workout B to manage recovery. When you fail to complete a weight twice in a row: deload to 90% of that lift only and rebuild.',
+      weeks: [
+        {
+          name: 'Week 5 — Extended Rest, More Weight',
+          days: [
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue adding 10 lbs per session. Rest 4-5 minutes between sets now.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue 5 lbs per session.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue 5 lbs per session.' }
+              ]
+            },
+            {
+              name: 'Workout B',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs. Every session, every week.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Add 5 lbs or repeat if you missed reps last time.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Add 10 lbs. Deadlift is now every other Workout B — not every session. You are getting strong enough that the recovery demand is real.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Add 5 lbs.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Add 5 lbs.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 6 — Manage Stalls',
+          days: [
+            {
+              name: 'Workout B (No Deadlift)',
+              focus: 'Squat · Overhead Press',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs, or repeat if you missed last session. Do not skip this rule.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Stalls are normal. Repeat weight, then deload to 90% if it stalls again. The OHP is the most technical of the 5 lifts — it rewards patience.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout B (With Deadlift)',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Add 10 lbs from last deadlift session.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 7 — Keep Building',
+          days: [
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Week 7. If you started at 95 lbs and hit 10 lbs per session, you are approaching 275 lbs. That is a real squat. Do not let form deteriorate chasing weight.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout B (No Deadlift)',
+              focus: 'Squat · Overhead Press',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 8 — Deload',
+          days: [
+            {
+              name: 'Workout B (With Deadlift) — Deload',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '3', reps: '10 each side', notes: 'Extended mobility on deload week. Take your time.' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '3', reps: '6 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '60 sec each side' },
+                { name: 'Barbell Back Squat', sets: '3', reps: '5', notes: 'Deload to 80% of your current working weight. 3 sets only. Move perfectly. You are recovering, not training.' },
+                { name: 'Barbell Overhead Press', sets: '3', reps: '5', notes: '80% weight, 3 sets.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: '80% weight. Perfect technique. Come back next week fresh.' }
+              ]
+            },
+            {
+              name: 'Workout A — Deload',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '3', reps: '10 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '15 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '3', reps: '20 reps' },
+                { name: 'Barbell Back Squat', sets: '3', reps: '5', notes: '80% weight. Focus on depth and bar path.' },
+                { name: 'Barbell Bench Press', sets: '3', reps: '5', notes: '80% weight. Touch the chest clean on every rep.' },
+                { name: 'Barbell Bent-Over Row', sets: '3', reps: '5', notes: '80% weight. Control the movement completely.' }
+              ]
+            },
+            {
+              name: 'Workout B (No Deadlift) — Deload',
+              focus: 'Squat · Overhead Press',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '3', reps: '10 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '3', reps: '6 each side' },
+                { name: 'Barbell Back Squat', sets: '3', reps: '5', notes: '80% weight. Come back next week ready to set new PRs.' },
+                { name: 'Barbell Overhead Press', sets: '3', reps: '5', notes: '80% weight.' }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    // ===================== PHASE 3 =====================
+    {
+      name: 'Phase 3 — Advanced Linear (Weeks 9-12)',
+      objective: 'Milk every last pound of linear progress. Bench and OHP may now alternate instead of running both every session. When true linear progress ends, move to Kinetiq Strength.',
+      length: '4 weeks',
+      sets: '5 sets',
+      reps: '5 reps',
+      rest: '5 minutes between squat sets',
+      frequency: '3 days per week. Alternate A/B.',
+      notes: 'In Phase 3, if bench or OHP stalls repeatedly, alternate them: Workout A does Bench one week, OHP the next. This spreads the upper-body press recovery across more sessions. Continue squatting every session. When you truly cannot add weight after multiple resets, this program has given you everything it has. Graduate to Kinetiq Strength.',
+      weeks: [
+        {
+          name: 'Week 9 — Full Intensity',
+          days: [
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Resume from deload. Add 10 lbs from your Week 7 working weight.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Resume from deload. Add 5 lbs from Week 7 working weight.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Resume from deload.' }
+              ]
+            },
+            {
+              name: 'Workout B (With Deadlift)',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Resume from deload.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Resume from deload. Add 10 lbs from Week 7 deadlift.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Add 10 lbs.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Add 5 lbs.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Add 5 lbs.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 10 — Push Hard',
+          days: [
+            {
+              name: 'Workout B (No Deadlift)',
+              focus: 'Squat · Overhead Press',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'If repeatedly stalling, alternate OHP and Bench across Workout A and B this phase.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout B (With Deadlift)',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Add 10 lbs. If you are pulling 315+ lbs at this point, that is a real deadlift. You built this in 10 weeks.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 11 — Final Push',
+          days: [
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Week 11. Continue until progress stops.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout B (No Deadlift)',
+              focus: 'Squat · Overhead Press',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 12 — Graduation',
+          days: [
+            {
+              name: 'Workout B (With Deadlift)',
+              focus: 'Squat · Overhead Press · Deadlift',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression or repeat Week 11 weights if needed.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Deadlift', sets: '1', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout A',
+              focus: 'Squat · Bench · Barbell Row',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '10 each direction' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '15 reps' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '5', notes: 'Continue progression.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '5', notes: 'Continue progression.' }
+              ]
+            },
+            {
+              name: 'Workout B (No Deadlift) — Final Session',
+              focus: 'Squat · Overhead Press',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '8 each side' },
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '5 each side' },
+                { name: 'Mobility Warmup — Hip Flexor Stretch', sets: '2', reps: '45 sec each side' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '5', notes: 'Final session of the 12-week block. Log every lift. Compare to where you started. Linear progress is over when it is over — and when it is over, you will be stronger than you thought possible in 12 weeks. Repeat this program if you still have room to run. When you are truly done with linear progress, move to Kinetiq Strength. You have earned it.' },
+                { name: 'Barbell Overhead Press', sets: '5', reps: '5', notes: 'Log your final numbers. You are a different person than you were 12 weeks ago.' }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
