@@ -9,10 +9,10 @@
   --bg4:     #252530;
   --border:  #2e2e3e;
   
-  /* Accent colors */
-  --acc:     #d4f000;
-  --acc2:    #ff6030;
-  --acc3:    #30b8ff;
+  /* Accent colors — IQ Brand */
+  --acc:     #00e5b8;   /* IQ teal — primary brand color */
+  --acc2:    #ff6030;   /* orange — intensity, danger, secondary */
+  --acc3:    #30b8ff;   /* blue — info, charts, AI */
   --ok:      #30e87a;
   --danger:  #ff3a4a;
   
@@ -398,9 +398,9 @@ body {
 }
 .prog-card:last-child { margin-bottom: 0; }
 .prog-banner { height: 4px; display: block; width: 100%; }
-.bm { background: linear-gradient(90deg, #d4f000, #ff6030, #30b8ff); }
-.bai { background: linear-gradient(90deg, #30b8ff, #d4f000); }
-.bdef { background: linear-gradient(90deg, #d4f000, #ff6030); }
+.bm { background: linear-gradient(90deg, #00e5b8, #00b4d8, #30b8ff); }   /* built-in: teal → blue */
+.bai { background: linear-gradient(90deg, #30b8ff, #00e5b8); }            /* AI import: blue → teal */
+.bdef { background: linear-gradient(90deg, #00e5b8, #00c49a); }           /* custom/default: teal */
 
 /* Program-specific colors */
 .prog-strong .prog-banner { background: var(--prog-strong); }
@@ -511,7 +511,7 @@ body {
 /* ===== CHIPS ===== */
 .chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 .cg { background-color: rgba(48,232,122,.12); color: #30e87a; border: 1px solid rgba(48,232,122,.25); }
-.cy { background-color: rgba(212,240,0,.12); color: #d4f000; border: 1px solid rgba(212,240,0,.25); }
+.cy { background-color: rgba(0,229,184,.12); color: #00e5b8; border: 1px solid rgba(0,229,184,.25); }
 .co { background-color: rgba(255,96,48,.12); color: #ff6030; border: 1px solid rgba(255,96,48,.25); }
 .cb { background-color: rgba(48,184,255,.12); color: #30b8ff; border: 1px solid rgba(48,184,255,.25); }
 
@@ -525,7 +525,7 @@ body {
   background-color: var(--bg2);
   -webkit-tap-highlight-color: transparent;
 }
-.upload-zone.dov { border-color: var(--acc); background-color: rgba(212,240,0,.04); }
+.upload-zone.dov { border-color: var(--acc); background-color: rgba(0,229,184,.04); }
 #fi { display: none; }
 .uico { font-size: 34px; margin-bottom: 8px; }
 .utitle { font-size: 16px; font-weight: 700; color: var(--t1); margin-bottom: 4px; }
@@ -1857,8 +1857,8 @@ canvas { width: 100% !important; }
   font-size: 11px;
   font-weight: 700;
   color: var(--acc);
-  background: rgba(212,240,0,.12);
-  border: 1px solid rgba(212,240,0,.2);
+  background: rgba(0,229,184,.12);
+  border: 1px solid rgba(0,229,184,.2);
   padding: 2px 8px;
   border-radius: 20px;
   white-space: nowrap;
@@ -2410,8 +2410,8 @@ canvas { width: 100% !important; }
 }
 
 .achievement-card.legendary {
-  border-color: #d4f000;
-  box-shadow: 0 0 20px rgba(212, 240, 0, 0.3);
+  border-color: #00e5b8;
+  box-shadow: 0 0 20px rgba(0, 229, 184, 0.3);
 }
 
 .achievement-card .achievement-emoji {
