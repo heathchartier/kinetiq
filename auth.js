@@ -5,11 +5,13 @@
 // Show/hide auth modal
 function showAuthModal() {
   document.getElementById('auth-modal').style.display = 'flex';
+  document.body.classList.add('auth-open');
   showSignInForm();
 }
 
 function hideAuthModal() {
   document.getElementById('auth-modal').style.display = 'none';
+  document.body.classList.remove('auth-open');
   clearAuthError();
 }
 
