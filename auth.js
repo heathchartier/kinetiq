@@ -49,7 +49,7 @@ async function handleForgotPassword() {
   
   try {
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/kinetiq/'
+      redirectTo: window.location.origin + '/'
     });
     
     if (error) throw error;

@@ -3,11 +3,11 @@
 // Enables offline functionality and app-like experience
 // ============================================================================
 
-const CACHE_NAME = 'kinetiq-v2.5.0';
+const CACHE_NAME = 'kinetiq-v2.6.0';
 const RUNTIME_CACHE = 'kinetiq-runtime-v2';
 
-// Base path for GitHub Pages
-const BASE_PATH = '/kinetiq/';
+// Base path — root now that kinetiqfit.pro custom domain is active
+const BASE_PATH = '/';
 
 // Files to cache on install
 const STATIC_ASSETS = [
