@@ -14,9 +14,16 @@ var prs    = DB.get('prs', {});
 var aw = null, wt = null, wst = null, curPid = null, curPhi = 0;
 var rtIv = null, rtTot = 120, rtRem = 120, rtRun = false, rtLast = 120;
 
+function isPremium() {
+  return localStorage.getItem('ls_access_tier') === 'premium';
+}
+
 function allProgs() {
   var del = DB.get('del_bi', []);
   var list = [];
+  var premium = isPremium();
+
+  // Standard built-ins — everyone sees these
   var builtins = [
     {id:'kinetiq-foundation-builtin', prog:kinetiqFoundationData},
     {id:'kinetiq-strength-builtin', prog:kinetiqStrengthData},
@@ -28,10 +35,29 @@ function allProgs() {
     {id:'kinetiq-resilience-builtin', prog:kinetiqResilienceData},
     {id:'kinetiq-bodyweight-builtin', prog:kinetiqBodyweightData}
   ];
+
+  // Premium built-ins — only for access_tier = 'premium'
+  var premiumBuiltins = [
+    {id:'kinetiq-5x5-builtin', prog:kinetiq5x5Data}
+  ];
+
   builtins.forEach(function(b){
     if (del.indexOf(b.id) === -1) list.push(b.prog);
   });
-  return list.concat(uProgs);
+
+  if (premium) {
+    premiumBuiltins.forEach(function(b){
+      if (del.indexOf(b.id) === -1) list.push(b.prog);
+    });
+  }
+
+  // Custom programs from Supabase/localStorage
+  // Corrective programs (MAPS Prime, MAPS Prime Pro) are premium-only
+  var filtered = premium
+    ? uProgs
+    : uProgs.filter(function(p){ return p.type !== 'corrective'; });
+
+  return list.concat(filtered);
 }
 
 // ===== ROUTING =====
