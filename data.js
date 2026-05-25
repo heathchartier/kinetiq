@@ -4559,7 +4559,7 @@ var upcomingPrograms = [
     tagline: 'A bulletproof midsection makes every other lift stronger. 8 weeks of progressive core training — not crunches, real anti-rotation, anti-extension, and rotational strength that transfers to everything you do.',
     difficulty: 'All Levels',
     duration: '8 weeks',
-    releaseDate: '2026-06-21',
+    releaseDate: '2026-09-01',
     accentColor: '#ff9500'
   },
   {
@@ -4568,7 +4568,7 @@ var upcomingPrograms = [
     tagline: 'The smartest thing you can do for your training is stay healthy enough to keep training. Targeted joint prep, tendon conditioning, and movement longevity work — built for lifters who want to be doing this in 20 years.',
     difficulty: 'All Levels',
     duration: '10 weeks',
-    releaseDate: '2026-07-19',
+    releaseDate: '2026-12-01',
     accentColor: '#30b8ff'
   },
   {
@@ -4577,7 +4577,7 @@ var upcomingPrograms = [
     tagline: 'Build the body. 12 weeks of pure aesthetics-focused training — high volume, strategic muscle targeting, and the techniques that actually change how you look. Strength is the foundation. This is the finish.',
     difficulty: 'Intermediate',
     duration: '12 weeks',
-    releaseDate: '2026-08-16',
+    releaseDate: '2027-03-01',
     accentColor: '#bf5af2'
   },
   {
@@ -4586,7 +4586,7 @@ var upcomingPrograms = [
     tagline: 'Train for decades, not just seasons. Strength, mobility, and cardiovascular health built around the science of aging well — designed for people who want to be strong, capable, and pain-free for life.',
     difficulty: 'All Levels',
     duration: '12 weeks',
-    releaseDate: '2026-09-13',
+    releaseDate: '2027-06-01',
     accentColor: '#30e87a'
   }
 ];
