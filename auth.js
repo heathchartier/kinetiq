@@ -454,14 +454,13 @@ async function syncOnboardingPrefsToCloud() {
 
   if (!goal && !level && !equipment) return;
 
-  // NOTE: once you've run the SQL below in Supabase, add `onboarding_complete: true` to this update.
-  // ALTER TABLE public.profiles ADD COLUMN onboarding_complete BOOLEAN DEFAULT false;
   await supabaseClient
     .from('profiles')
     .update({
       primary_goal: goal,
       fitness_level: level,
-      training_experience_years: level === 'beginner' ? 0 : level === 'intermediate' ? 2 : 5
+      training_experience_years: level === 'beginner' ? 0 : level === 'intermediate' ? 2 : 5,
+      onboarding_complete: true
     })
     .eq('id', currentUser.id);
 }
