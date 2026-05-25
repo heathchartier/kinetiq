@@ -1366,7 +1366,7 @@ function drawVC() {
   var c = document.getElementById('vc'); if (!c) return;
   var s = hist.slice().sort(function(a,b){ return new Date(a.date)-new Date(b.date); }).slice(-12);
   if (!s.length) { clrC(c, 'No data yet. Complete workouts to see your volume trend!'); return; }
-  drawBars(c, s.map(function(w){ return w.volume||0; }), s.map(function(w){ return fd(w.date); }), '#d4f000');
+  drawBars(c, s.map(function(w){ return w.volume||0; }), s.map(function(w){ return fd(w.date); }), '#00e5b8');
 }
 
 function drawFreqChart() {
