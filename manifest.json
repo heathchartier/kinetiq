@@ -2,20 +2,20 @@
   "name": "Kinetiq - Smart Fitness Tracker",
   "short_name": "Kinetiq",
   "description": "Your personal fitness operating system. Track workouts, nutrition, and progress offline.",
-  "start_url": "/kinetiq/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d12",
   "theme_color": "#0d0d12",
   "orientation": "portrait",
-  "scope": "/kinetiq/",
+  "scope": "/",
   "categories": ["health", "fitness", "lifestyle"],
   "screenshots": [],
   "icons": [
-    { 
-      "src": "icons/kinetiq-icon.png", 
-      "sizes": "180x180", 
-      "type": "image/png", 
-      "purpose": "any maskable" 
+    {
+      "src": "icons/kinetiq-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "prefer_related_applications": false
