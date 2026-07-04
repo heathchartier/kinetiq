@@ -450,20 +450,23 @@ async function syncWaterLogsToCloud() {
 }
 
 async function syncOnboardingPrefsToCloud() {
-  const goal      = localStorage.getItem('ls_onboarding_goal');
-  const level     = localStorage.getItem('ls_onboarding_level');
-  const equipment = localStorage.getItem('ls_onboarding_equipment');
+  const onboardingDone = localStorage.getItem('ls_onboarding_complete');
+  const goal           = localStorage.getItem('ls_onboarding_goal');
+  const level          = localStorage.getItem('ls_onboarding_level');
 
-  if (!goal && !level && !equipment) return;
+  // Nothing to write if user hasn't completed onboarding and has no prefs
+  if (!onboardingDone && !goal && !level) return;
+
+  const update = { onboarding_complete: !!onboardingDone };
+  if (goal)  update.primary_goal  = goal;
+  if (level) {
+    update.fitness_level = level;
+    update.training_experience_years = level === 'beginner' ? 0 : level === 'intermediate' ? 2 : 5;
+  }
 
   await supabaseClient
     .from('profiles')
-    .update({
-      primary_goal: goal,
-      fitness_level: level,
-      training_experience_years: level === 'beginner' ? 0 : level === 'intermediate' ? 2 : 5,
-      onboarding_complete: true
-    })
+    .update(update)
     .eq('id', currentUser.id);
 }
 
