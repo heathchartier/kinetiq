@@ -79,9 +79,14 @@ async function getCurrentUser() {
 supabaseClient.auth.onAuthStateChange((event, session) => {
   console.log('Auth state changed:', event, session);
   currentUser = session?.user || null;
-  
-  if (event === 'SIGNED_IN') {
-    onUserSignedIn(session.user);
+
+  if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+    if (session?.user) {
+      onUserSignedIn(session.user);
+    } else if (event === 'INITIAL_SESSION') {
+      // No session on fresh load — show auth modal
+      if (typeof showAuthModal === 'function') showAuthModal();
+    }
   } else if (event === 'SIGNED_OUT') {
     onUserSignedOut();
   } else if (event === 'PASSWORD_RECOVERY') {
@@ -113,11 +118,11 @@ async function onUserSignedIn(user) {
   try {
     const { data: profile } = await supabaseClient
       .from('profiles')
-      .select('primary_goal')
+      .select('primary_goal, onboarding_complete')
       .eq('id', user.id)
       .single();
 
-    if (profile && profile.primary_goal) {
+    if (profile && (profile.primary_goal || profile.onboarding_complete)) {
       localStorage.setItem('ls_onboarding_complete', 'true');
       syncDataFromCloud();
       if (typeof rDash === 'function') rDash();
