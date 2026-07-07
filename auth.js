@@ -437,7 +437,7 @@ async function syncFoodLogsToCloud() {
       meal_type: entry.meal || 'other',
       food_name: entry.name,
       servings: entry.servings || 1,
-      calories: entry.calories || 0,
+      calories: entry.cals || 0,
       protein: entry.protein || 0,
       carbs: entry.carbs || 0,
       fat: entry.fat || 0
@@ -464,7 +464,7 @@ async function syncTodaysFoodLogToCloud() {
     meal_type: entry.meal || 'other',
     food_name: entry.name,
     servings: entry.servings || 1,
-    calories: entry.calories || 0,
+    calories: entry.cals || 0,
     protein: entry.protein || 0,
     carbs: entry.carbs || 0,
     fat: entry.fat || 0
@@ -537,9 +537,14 @@ async function syncDataFromCloud() {
 
     console.log('✅ All cloud data synced to local');
 
-    // Refresh UI
+    // Refresh UI so restored data appears immediately, without a page reload
     if (typeof rDash === 'function') rDash();
     if (typeof rHist === 'function') rHist();
+    if (typeof loadNutritionGoals === 'function') loadNutritionGoals();
+    if (typeof renderFoodLog === 'function') renderFoodLog();
+    if (typeof updateNutritionSummary === 'function') updateNutritionSummary();
+    if (typeof rProg === 'function') rProg();
+    if (typeof rProgs === 'function') rProgs();
   } catch (error) {
     console.error('Error syncing from cloud:', error);
   }
@@ -671,6 +676,10 @@ async function syncWorkoutsFromCloud() {
   
   localStorage.setItem('ls_history', JSON.stringify(merged));
   console.log(`✅ Merged to ${merged.length} total workouts in local storage`);
+
+  // Keep the in-memory hist array (declared in app.js) in sync so the UI
+  // reflects this immediately, without requiring a page refresh.
+  if (typeof hist !== 'undefined') { hist.length = 0; Array.prototype.push.apply(hist, merged); }
 }
 
 async function syncPRsFromCloud() {
@@ -710,6 +719,12 @@ async function syncPRsFromCloud() {
   }
   
   localStorage.setItem('ls_prs', JSON.stringify(localPRs));
+
+  // Keep the in-memory prs object (declared in app.js) in sync immediately.
+  if (typeof prs !== 'undefined') {
+    for (var k in prs) { if (prs.hasOwnProperty(k)) delete prs[k]; }
+    Object.assign(prs, localPRs);
+  }
 }
 
 async function syncNutritionGoalsFromCloud() {
@@ -737,6 +752,14 @@ async function syncNutritionGoalsFromCloud() {
   };
   
   localStorage.setItem('nutritionGoals', JSON.stringify(goals));
+
+  // Keep the in-memory nutritionGoals object (declared in app.js) in sync immediately.
+  if (typeof nutritionGoals !== 'undefined') {
+    nutritionGoals.calories = goals.calories;
+    nutritionGoals.protein = goals.protein;
+    nutritionGoals.carbs = goals.carbs;
+    nutritionGoals.fat = goals.fat;
+  }
 }
 
 async function syncFoodLogsFromCloud() {
@@ -759,16 +782,23 @@ async function syncFoodLogsFromCloud() {
     if (error || !entries || entries.length === 0) continue;
     
     const dayLog = entries.map(e => ({
+      id: e.id,
       name: e.food_name,
       meal: e.meal_type,
       servings: e.servings,
-      calories: e.calories,
+      cals: e.calories,
       protein: e.protein,
       carbs: e.carbs,
       fat: e.fat
     }));
     
     localStorage.setItem('foodLog_' + dateStr, JSON.stringify(dayLog));
+
+    // Keep the in-memory foodLog array (declared in app.js, today's log only) in sync.
+    if (dateStr === today && typeof foodLog !== 'undefined') {
+      foodLog.length = 0;
+      Array.prototype.push.apply(foodLog, dayLog);
+    }
   }
 }
 

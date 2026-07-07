@@ -563,7 +563,7 @@ function collectExercises() {
     EXERCISE_DB.forEach(function(ex) {
       if (!ex.name || seen[ex.name.toLowerCase()]) return;
       seen[ex.name.toLowerCase()] = true;
-      result.push({ name: ex.name, muscle: ex.muscle, equipment: ex.equipment });
+      result.push({ name: ex.name, muscle: ex.muscle, equipment: ex.equipment, desc: ex.desc });
     });
   }
 
@@ -658,7 +658,7 @@ function rExLib() {
     return '<div class="sec-lbl" style="margin-top:14px">' + letter + '</div>'
       + grouped[letter].map(function(ex) {
         var col = muscleColor[ex.muscle] || '#888';
-        return '<div class="ex-lib-row">'
+        return '<div class="ex-lib-row" onclick="openExDetail(\'' + esc(ex.name.replace(/'/g, "\\'")) + '\')">'
           + '<div class="ex-lib-name">' + esc(ex.name) + '</div>'
           + '<div class="ex-lib-meta">'
           + '<span class="ex-lib-badge" style="color:' + col + ';background:' + col + '20;border-color:' + col + '40">' + esc(ex.muscle || 'Other') + '</span>'
@@ -667,6 +667,26 @@ function rExLib() {
           + '</div>';
       }).join('');
   }).join('');
+}
+
+function openExDetail(name) {
+  var ex = collectExercises().filter(function(e) { return e.name === name; })[0];
+  if (!ex) return;
+
+  var muscleColor = {
+    Legs:'#22c55e', Back:'#00e5b8', Chest:'#f59e0b',
+    Shoulders:'#a855f7', Arms:'#ec4899', Core:'#ef4444',
+    Mobility:'#06b6d4', Cardio:'#f97316', Other:'#888'
+  };
+  var col = muscleColor[ex.muscle] || '#888';
+
+  document.getElementById('ex-detail-name').textContent = ex.name;
+  document.getElementById('ex-detail-badges').innerHTML =
+    '<span class="ex-lib-badge" style="color:' + col + ';background:' + col + '20;border-color:' + col + '40">' + esc(ex.muscle || 'Other') + '</span>'
+    + (ex.equipment ? '<span class="ex-lib-sep">·</span><span class="ex-lib-equip">' + esc(ex.equipment) + '</span>' : '');
+  document.getElementById('ex-detail-desc').textContent = ex.desc || 'No description available yet for this exercise.';
+
+  openM('ex-detail-modal');
 }
 
 function rProgs() {
