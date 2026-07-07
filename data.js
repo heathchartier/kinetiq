@@ -265,7 +265,7 @@ var kinetiqFoundationData = {
       reps: '8-10 reps',
       rest: '90-120 seconds',
       frequency: '3 days per week.',
-      notes: 'Reps drop, weight increases, rest extends. The movements stay the same — you just load them heavier. Add weight every week when form stays clean. If you fail reps, repeat the weight next week. This phase prepares you for Kinetiq Strong.',
+      notes: 'Reps drop, weight increases, rest extends. The movements stay the same — you just load them heavier. Add weight every week when form stays clean. If you fail reps, repeat the weight next week. This phase prepares you for Kinetiq Strength.',
       weeks: [
         {
           name: 'Week 6 — Transition to Strength',
@@ -1094,7 +1094,7 @@ var kinetiqStrengthData = {
                 { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '10 each side' },
                 { name: 'Mobility Warmup — Band Pull-Apart', sets: '3', reps: '20 reps' },
                 { name: 'Mobility Warmup — Wrist Circles', sets: '2', reps: '12 each direction' },
-                { name: 'Barbell Bench Press — 1RM Attempt', sets: '6', reps: 'Work to true 1RM', notes: 'After your 1RM, log all four lifts in the app. You now have a baseline. Run this program again — you will beat every single number. That is the nature of progressive overload done right. Welcome to Kinetiq Strong.' }
+                { name: 'Barbell Bench Press — 1RM Attempt', sets: '6', reps: 'Work to true 1RM', notes: 'After your 1RM, log all four lifts in the app. You now have a baseline. Run this program again — you will beat every single number. That is the nature of progressive overload done right. Welcome to Kinetiq Strength.' }
               ]
             }
           ]
@@ -1110,7 +1110,7 @@ var kinetiqHypertrophyData = {
   id: 'kinetiq-hypertrophy-builtin',
   name: 'Kinetiq Hypertrophy',
   source: 'builtin',
-  description: "A 12-week muscle building program that progresses through three distinct phases: Bridge (5x8), Growth (4x10-12), and Metabolic (3x12-15). This program is designed to run immediately after Kinetiq Strong — you\'ve built the strength foundation, now it\'s time to build the muscle. Volume increases, intensity adjusts, and your body adapts. Every session includes mobility work because joint health is non-negotiable when you\'re chasing growth. 3-4 days per week. **Recommended Progression:** Strong → Hypertrophy → Balance → Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
+  description: "A 12-week muscle building program that progresses through three distinct phases: Bridge (5x8), Growth (4x10-12), and Metabolic (3x12-15). This program is designed to run immediately after Kinetiq Strength — you\'ve built the strength foundation, now it\'s time to build the muscle. Volume increases, intensity adjusts, and your body adapts. Every session includes mobility work because joint health is non-negotiable when you\'re chasing growth. 3-4 days per week. **Recommended Progression:** Strong → Hypertrophy → Balance → Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
   difficulty: 'Intermediate',
   duration: '12 weeks (3 phases)',
   phases: [
@@ -1118,13 +1118,13 @@ var kinetiqHypertrophyData = {
     // ===================== PHASE 1: BRIDGE =====================
     {
       name: 'Phase 1 — Bridge (Weeks 1-4)',
-      objective: 'Transition from strength to hypertrophy. Maintain the intensity from Kinetiq Strong while adding volume. Your body learns to handle more sets, more exercises, and longer time under tension. This phase bridges the gap between pure strength and pure muscle building.',
+      objective: 'Transition from strength to hypertrophy. Maintain the intensity from Kinetiq Strength while adding volume. Your body learns to handle more sets, more exercises, and longer time under tension. This phase bridges the gap between pure strength and pure muscle building.',
       length: '4 weeks',
       sets: '5 sets',
       reps: '8 reps',
       rest: '2-3 minutes',
       frequency: '3-4 days per week. If running 3 days: Mon/Wed/Fri or any 3 non-consecutive days. If running 4 days: Mon/Tue, Thu/Fri (upper/lower split with rest days between).',
-      notes: 'Drop your Kinetiq Strong working weight by 10-15%. If you were squatting 225 for 3x5, start this program at 185-200 for 5x8. The volume increase is significant — respect it. Add 5 lbs per week on upper body, 10 lbs per week on lower body when all reps are clean.',
+      notes: 'Drop your Kinetiq Strength working weight by 10-15%. If you were squatting 225 for 3x5, start this program at 185-200 for 5x8. The volume increase is significant — respect it. Add 5 lbs per week on upper body, 10 lbs per week on lower body when all reps are clean.',
       weeks: [
         {
           name: 'Week 1 — Volume Adaptation',
@@ -2348,7 +2348,7 @@ var kinetiqBalanceData = {
                 { name: 'Single-Leg Press (Machine)', sets: '3', reps: '15 each leg', notes: 'Same weight. Perfect reps. Start with your weaker leg.' },
                 { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '3', reps: '12-15 each leg', notes: 'Same weight. Final test of your balance and hamstring control. Start with your weaker leg.' },
                 { name: 'Walking Lunge', sets: '3', reps: '15 each leg', notes: 'Finish strong.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '20 each leg', notes: 'Final calf burn. You are done. Take your deload week and restart the cycle with Kinetiq Strong at heavier weights.' }
+                { name: 'Single-Leg Calf Raise', sets: '3', reps: '20 each leg', notes: 'Final calf burn. You are done. Take your deload week and restart the cycle with Kinetiq Strength at heavier weights.' }
               ]
             },
             {
