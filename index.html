@@ -141,7 +141,10 @@
     <div id="pd-hdr">
       <div class="pd-top">
         <div><h2 id="pd-title"></h2><p id="pd-desc"></p></div>
-        <button class="btn-d btn-sm" onclick="delProg()">Delete</button>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button id="pd-activate-btn" class="btn-p btn-sm" onclick="activateProgram(curPid)" style="display:none">&#9654; Start Program</button>
+          <button class="btn-d btn-sm" onclick="delProg()">Delete</button>
+        </div>
       </div>
     </div>
     <div id="phase-scroll"></div>
