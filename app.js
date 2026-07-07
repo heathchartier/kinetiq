@@ -1912,7 +1912,8 @@ function saveMeasurement() {
   measurements.unshift(measurement);
   localStorage.setItem('bodyMeasurements', JSON.stringify(measurements));
   renderMeasurements();
-  
+  if (typeof syncBodyMeasurementsToCloud === 'function') syncBodyMeasurementsToCloud().catch(function(){});
+
   // Clear form
   document.getElementById('measure-weight').value = '';
   document.getElementById('measure-bf').value = '';
@@ -2539,6 +2540,7 @@ function saveNutritionGoals() {
   };
   localStorage.setItem('nutritionGoals', JSON.stringify(nutritionGoals));
   updateNutritionSummary();
+  if (typeof syncNutritionGoalsToCloud === 'function') syncNutritionGoalsToCloud().catch(function(){});
   alert('Goals saved!');
 }
 
@@ -2604,6 +2606,7 @@ function deleteFood(id) {
 function saveFoodLog() {
   var today = new Date().toISOString().split('T')[0];
   localStorage.setItem('foodLog_' + today, JSON.stringify(foodLog));
+  if (typeof syncTodaysFoodLogToCloud === 'function') syncTodaysFoodLogToCloud().catch(function(){});
 }
 
 function renderFoodLog() {
