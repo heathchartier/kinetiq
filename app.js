@@ -1,4 +1,4 @@
-// ===== STORAGE =====
+﻿// ===== STORAGE =====
 var DB = {
   get: function(k, d) {
     try { var v = localStorage.getItem('ls_' + k); return v !== null ? JSON.parse(v) : d; } catch(e) { return d; }
@@ -56,6 +56,24 @@ function allProgs() {
     : uProgs.filter(function(p){ return p.type !== 'corrective'; });
 
   return list.concat(filtered);
+}
+
+// ===== TOAST NOTIFICATIONS =====
+function toast(msg, type) {
+  var container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+  var t = document.createElement('div');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.textContent = msg;
+  container.appendChild(t);
+  setTimeout(function() {
+    t.classList.add('out');
+    setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 350);
+  }, 2500);
 }
 
 // ===== ROUTING =====
@@ -1247,7 +1265,7 @@ function startQL() {
       sets: Array.from({length: s}, function(_, i) { return {num: i+1, w: '', r: rv, done: false}; })
     });
   });
-  if (!exercises.length) { alert('Add at least one exercise'); return; }
+  if (!exercises.length) { toast('Add at least one exercise', 'error'); return; }
   closeM('ql-modal');
   launch({name: name, meta: '', exercises: exercises});
 }
@@ -1320,7 +1338,11 @@ function cs(eid, si) {
   if (row) {
     row.classList.toggle('done-row', s.done);
     var b = row.querySelector('.done-btn');
-    if (b) { b.classList.toggle('done', s.done); b.innerHTML = s.done ? '&#10003;' : 'Done'; }
+    if (b) {
+      b.classList.toggle('done', s.done);
+      b.innerHTML = s.done ? '&#10003;' : 'Done';
+      if (s.done) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+    }
   }
   var dn = e.sets.filter(function(x){ return x.done; }).length;
   var fill = document.getElementById('ap-' + eid);
@@ -1815,7 +1837,7 @@ async function processFile(file) {
     rProgs(); openProg(prog.id);
   } catch(err) {
     al.classList.remove('show'); uz.style.display = '';
-    alert('Error: ' + err.message + '\n\nTip: Text-based PDFs work best. If scanned, copy text into a .txt file first.');
+    toast('Upload error: ' + err.message, 'error');
   }
 }
 
@@ -1888,7 +1910,7 @@ function openCP() {
 }
 function createProg() {
   var name = document.getElementById('cp-name').value.trim();
-  if (!name) { alert('Enter a program name'); return; }
+  if (!name) { toast('Enter a program name', 'error'); return; }
   var p = {
     id: uid(), name: name,
     description: document.getElementById('cp-desc').value,
@@ -1940,7 +1962,7 @@ function calcTDEE() {
   var goal = document.getElementById('tdee-goal').value;
   
   if (!weight || !height || !age) {
-    alert('Please fill in all fields');
+    toast('Please fill in all fields', 'error');
     return;
   }
   
@@ -2034,12 +2056,12 @@ function calcORM() {
   var reps = parseInt(document.getElementById('orm-reps').value);
   
   if (!weight || !reps || reps < 1) {
-    alert('Please enter valid weight and reps');
+    toast('Enter valid weight and reps', 'error');
     return;
   }
   
   if (reps > 12) {
-    alert('Formula is most accurate for 1-12 reps. Results may be less reliable.');
+    toast('Most accurate for 1-12 reps', 'info');
   }
   
   // Epley Formula: 1RM = weight × (1 + reps/30)
@@ -2060,7 +2082,7 @@ function saveMeasurement() {
   var thighs = parseFloat(document.getElementById('measure-thighs').value) || null;
   
   if (!weight) {
-    alert('Please enter at least your weight');
+    toast('Enter at least your weight', 'error');
     return;
   }
   
@@ -2132,7 +2154,7 @@ function downloadCSV(filename, rows) {
 }
 
 function exportWorkouts() {
-  if (!hist.length) { alert('No workout history to export.'); return; }
+  if (!hist.length) { toast('No workout history to export', 'error'); return; }
   var rows = [['Date', 'Workout', 'Duration (min)', 'Volume (lbs)', 'Exercises']];
   hist.forEach(function(w) {
     var exStr = (w.exercises || []).map(function(e) {
@@ -2152,7 +2174,7 @@ function exportWorkouts() {
 
 function exportPRs() {
   var keys = Object.keys(prs);
-  if (!keys.length) { alert('No personal records to export.'); return; }
+  if (!keys.length) { toast('No personal records to export', 'error'); return; }
   var rows = [['Exercise', 'Weight (lbs)', 'Reps', 'Volume (lbs)', 'Date']];
   keys.sort().forEach(function(k) {
     var p = prs[k];
@@ -2162,7 +2184,7 @@ function exportPRs() {
 }
 
 function exportMeasurements() {
-  if (!measurements.length) { alert('No measurements to export.'); return; }
+  if (!measurements.length) { toast('No measurements to export', 'error'); return; }
   var rows = [['Date', 'Weight (lbs)', 'Body Fat (%)', 'Waist (in)', 'Chest (in)', 'Arms (in)', 'Thighs (in)']];
   measurements.forEach(function(m) {
     rows.push([
@@ -2202,7 +2224,7 @@ function exportNutrition() {
       ]);
     });
   }
-  if (!found) { alert('No nutrition logs to export.'); return; }
+  if (!found) { toast('No nutrition logs to export', 'error'); return; }
   downloadCSV('kinetiq-nutrition.csv', rows);
 }
 
@@ -2359,12 +2381,12 @@ function saveRecipe() {
   var servings = parseInt(document.getElementById('recipe-servings').value) || 1;
   
   if (!name) {
-    alert('Please enter a recipe name');
+    toast('Enter a recipe name', 'error');
     return;
   }
   
   if (!currentRecipe.ingredients.length) {
-    alert('Please add at least one ingredient');
+    toast('Add at least one ingredient', 'error');
     return;
   }
   
@@ -2398,7 +2420,7 @@ function saveRecipe() {
   
   cancelRecipe();
   renderSavedRecipes();
-  alert('Recipe saved! 🍳');
+  toast('Recipe saved!', 'success');
 }
 
 function renderSavedRecipes() {
@@ -2442,7 +2464,7 @@ function logRecipe(recipeId) {
   saveFoodLog();
   renderFoodLog();
   updateNutritionSummary();
-  alert('Recipe logged! 🍳');
+  toast('Recipe logged!', 'success');
 }
 
 function viewRecipeDetails(recipeId) {
@@ -2574,14 +2596,14 @@ function saveWaterGoal() {
   var newGoal = parseInt(input.value);
   
   if (!newGoal || newGoal < 8 || newGoal > 300) {
-    alert('Please enter a valid goal between 8 and 300 oz');
+    toast('Goal must be 8-300 oz', 'error');
     return;
   }
   
   waterGoal = newGoal;
   localStorage.setItem('waterGoal', waterGoal);
   renderWaterProgress();
-  alert('Water goal saved! 💧');
+  toast('Water goal saved!', 'success');
 }
 
 function loadWaterGoal() {
@@ -2615,7 +2637,7 @@ async function searchFatSecret() {
   var resultsDiv = document.getElementById('fatsecret-results');
   
   if (!query) {
-    alert('Please enter a search term');
+    toast('Enter a search term', 'error');
     return;
   }
   
@@ -2708,7 +2730,7 @@ function saveNutritionGoals() {
   localStorage.setItem('nutritionGoals', JSON.stringify(nutritionGoals));
   updateNutritionSummary();
   if (typeof syncNutritionGoalsToCloud === 'function') syncNutritionGoalsToCloud().catch(function(){});
-  alert('Goals saved!');
+  toast('Goals saved!', 'success');
 }
 
 function searchFoods() {
@@ -2893,7 +2915,7 @@ function addFavoriteFood(foodName) {
 // ===== MEAL TEMPLATES =====
 function showSaveMealModal() {
   if (!foodLog.length) {
-    alert('Log some foods first before saving a meal template!');
+    toast('Log some foods first', 'error');
     return;
   }
   document.getElementById('save-meal-modal').classList.add('show');
@@ -2903,12 +2925,12 @@ function showSaveMealModal() {
 function saveMealTemplate() {
   var name = document.getElementById('meal-name-input').value.trim();
   if (!name) {
-    alert('Please enter a meal name');
+    toast('Enter a meal name', 'error');
     return;
   }
   
   if (!foodLog.length) {
-    alert('No foods to save!');
+    toast('No foods to save', 'error');
     return;
   }
   
@@ -2936,7 +2958,7 @@ function saveMealTemplate() {
   
   closeM('save-meal-modal');
   renderMealTemplates();
-  alert('Meal template saved! 🎉');
+  toast('Meal template saved!', 'success');
 }
 
 function renderMealTemplates() {
@@ -2980,7 +3002,7 @@ function logMealTemplate(templateId) {
   saveFoodLog();
   renderFoodLog();
   updateNutritionSummary();
-  alert('Meal logged! 🍽️');
+  toast('Meal logged!', 'success');
 }
 
 function deleteMealTemplate(templateId) {
