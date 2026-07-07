@@ -627,16 +627,13 @@ function rExLib() {
   var query = (document.getElementById('ex-search') || {}).value || '';
 
   filterEl.innerHTML = cats.map(function(c) {
-    var active = exLibFilter === c;
-    return '<button onclick="exSetFilter(\'' + c + '\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;'
-      + 'background:' + (active ? 'var(--accent)' : 'var(--bg3)') + ';color:' + (active ? '#000' : 'var(--t2)') + '">'
-      + c + '</button>';
+    return '<button class="ex-filter-chip' + (exLibFilter === c ? ' active' : '') + '" onclick="exSetFilter(\'' + c + '\')">' + c + '</button>';
   }).join('');
 
   var muscleColor = {
-    Legs:'#22c55e', Back:'var(--accent)', Chest:'#f59e0b',
+    Legs:'#22c55e', Back:'#00e5b8', Chest:'#f59e0b',
     Shoulders:'#a855f7', Arms:'#ec4899', Core:'#ef4444',
-    Mobility:'#06b6d4', Cardio:'#f97316', Other:'var(--t3)'
+    Mobility:'#06b6d4', Cardio:'#f97316', Other:'#888'
   };
 
   var exercises = collectExercises().filter(function(ex) {
@@ -659,13 +656,13 @@ function rExLib() {
   listEl.innerHTML = Object.keys(grouped).sort().map(function(letter) {
     return '<div class="sec-lbl" style="margin-top:14px">' + letter + '</div>'
       + grouped[letter].map(function(ex) {
-        var col = muscleColor[ex.muscle] || 'var(--t3)';
-        return '<div class="row-item" style="cursor:default">'
-          + '<div style="flex:1;min-width:0">'
-          + '<div class="row-name">' + esc(ex.name) + '</div>'
-          + (ex.equipment ? '<div class="row-meta">' + esc(ex.equipment) + '</div>' : '')
+        var col = muscleColor[ex.muscle] || '#888';
+        return '<div class="ex-lib-row">'
+          + '<div class="ex-lib-name">' + esc(ex.name) + '</div>'
+          + '<div class="ex-lib-meta">'
+          + '<span class="ex-lib-badge" style="color:' + col + ';background:' + col + '20;border-color:' + col + '40">' + esc(ex.muscle || 'Other') + '</span>'
+          + (ex.equipment ? '<span class="ex-lib-sep">·</span><span class="ex-lib-equip">' + esc(ex.equipment) + '</span>' : '')
           + '</div>'
-          + '<span style="flex-shrink:0;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:' + col + '20;color:' + col + ';border:1px solid ' + col + '40">' + ex.muscle + '</span>'
           + '</div>';
       }).join('');
   }).join('');
