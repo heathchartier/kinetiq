@@ -8,9 +8,10 @@ var DB = {
   }
 };
 
-var uProgs = DB.get('programs', []);
-var hist   = DB.get('history', []);
-var prs    = DB.get('prs', {});
+var uProgs    = DB.get('programs', []);
+var hist      = DB.get('history', []);
+var prs       = DB.get('prs', {});
+var restDays  = DB.get('restDays', []);
 var aw = null, wt = null, wst = null, curPid = null, curPhi = 0;
 var rtIv = null, rtTot = 120, rtRem = 120, rtRun = false, rtLast = 120;
 
@@ -386,19 +387,41 @@ function renderWeekPreview() {
   var weekStart = new Date(now);
   weekStart.setDate(now.getDate() - now.getDay());
   weekStart.setHours(0, 0, 0, 0);
-  
+
   var thisWeekWorkouts = hist.filter(function(w) {
     return new Date(w.date) >= weekStart;
   });
-  
+
+  var todayStr = now.toISOString().split('T')[0];
+  var thisWeekRestDays = restDays.filter(function(d) {
+    return new Date(d + 'T12:00:00') >= weekStart;
+  });
+
+  var restRowsHtml = thisWeekRestDays.map(function(d) {
+    var label = new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    return '<div style="display:flex;align-items:center;padding:6px 0;gap:10px">'
+      + '<div style="width:20px;height:20px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:9px;color:#000;font-weight:700">R</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:13px;color:var(--t3)">Rest — ' + esc(label) + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  var todayWorkedOut = thisWeekWorkouts.some(function(w) {
+    return new Date(w.date).toISOString().split('T')[0] === todayStr;
+  });
+  var todayIsRest = restDays.indexOf(todayStr) !== -1;
+  var restBtnHtml = (!todayWorkedOut && !todayIsRest)
+    ? '<div style="padding:4px 14px 12px"><button class="btn-d btn-sm" onclick="logRestDay()" style="width:100%">Log Rest Day</button></div>'
+    : '';
+
   body.innerHTML = '<div style="padding:10px 14px">'
     + '<div style="margin-bottom:8px;font-size:12px;color:var(--t2);font-weight:600">' + esc(targetWeek.name) + '</div>'
     + targetWeek.days.map(function(day, idx) {
-      var dayNum = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       var completed = thisWeekWorkouts.some(function(w) {
         return w.name && w.name.toLowerCase().includes(day.name.toLowerCase());
       });
-      
+
       return '<div style="display:flex;align-items:center;padding:6px 0;gap:10px">'
         + '<div style="width:20px;height:20px;border-radius:50%;background:' + (completed ? 'var(--ok)' : 'var(--bg3)') + ';display:flex;align-items:center;justify-content:center;font-size:10px">'
         + (completed ? '✓' : (idx + 1))
@@ -408,9 +431,20 @@ function renderWeekPreview() {
         + '</div>'
         + '</div>';
     }).join('')
-    + '</div>';
-  
+    + restRowsHtml
+    + '</div>'
+    + restBtnHtml;
+
   card.style.display = 'block';
+}
+
+function logRestDay() {
+  var today = new Date().toISOString().split('T')[0];
+  if (restDays.indexOf(today) === -1) {
+    restDays.push(today);
+    DB.set('restDays', restDays);
+  }
+  renderWeekPreview();
 }
 
 function startQuick(progId, weekIdx, dayIdx) {
