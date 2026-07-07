@@ -2112,6 +2112,100 @@ function renderMeasurements() {
   }).join('');
 }
 
+// ===== EXPORT DATA =====
+function downloadCSV(filename, rows) {
+  var csv = rows.map(function(r) {
+    return r.map(function(cell) {
+      var s = String(cell == null ? '' : cell);
+      return (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0)
+        ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(',');
+  }).join('\n');
+  var blob = new Blob([csv], {type: 'text/csv'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function exportWorkouts() {
+  if (!hist.length) { alert('No workout history to export.'); return; }
+  var rows = [['Date', 'Workout', 'Duration (min)', 'Volume (lbs)', 'Exercises']];
+  hist.forEach(function(w) {
+    var exStr = (w.exercises || []).map(function(e) {
+      var sets = (e.sets || []).map(function(s) { return s.weight + 'x' + s.reps; }).join(', ');
+      return e.name + ': ' + sets;
+    }).join(' | ');
+    rows.push([
+      new Date(w.date).toLocaleDateString(),
+      w.name,
+      w.duration ? Math.round(w.duration / 60) : '',
+      w.volume || 0,
+      exStr
+    ]);
+  });
+  downloadCSV('kinetiq-workouts.csv', rows);
+}
+
+function exportPRs() {
+  var keys = Object.keys(prs);
+  if (!keys.length) { alert('No personal records to export.'); return; }
+  var rows = [['Exercise', 'Weight (lbs)', 'Reps', 'Volume (lbs)', 'Date']];
+  keys.sort().forEach(function(k) {
+    var p = prs[k];
+    rows.push([k, p.weight, p.reps, p.volume, p.date ? new Date(p.date).toLocaleDateString() : '']);
+  });
+  downloadCSV('kinetiq-prs.csv', rows);
+}
+
+function exportMeasurements() {
+  if (!measurements.length) { alert('No measurements to export.'); return; }
+  var rows = [['Date', 'Weight (lbs)', 'Body Fat (%)', 'Waist (in)', 'Chest (in)', 'Arms (in)', 'Thighs (in)']];
+  measurements.forEach(function(m) {
+    rows.push([
+      m.date ? new Date(m.date).toLocaleDateString() : '',
+      m.weight || '',
+      m.bodyFat || '',
+      m.waist || '',
+      m.chest || '',
+      m.arms || '',
+      m.thighs || ''
+    ]);
+  });
+  downloadCSV('kinetiq-measurements.csv', rows);
+}
+
+function exportNutrition() {
+  var rows = [['Date', 'Meal', 'Food', 'Calories', 'Protein (g)', 'Carbs (g)', 'Fat (g)', 'Servings']];
+  var today = new Date();
+  var found = false;
+  for (var i = 0; i < 30; i++) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - i);
+    var dateStr = d.toISOString().split('T')[0];
+    var log = JSON.parse(localStorage.getItem('foodLog_' + dateStr) || '[]');
+    log.forEach(function(e) {
+      if (!e.name) return;
+      found = true;
+      rows.push([
+        new Date(dateStr).toLocaleDateString(),
+        e.meal || '',
+        e.name,
+        e.calories || 0,
+        e.protein || 0,
+        e.carbs || 0,
+        e.fat || 0,
+        e.servings || 1
+      ]);
+    });
+  }
+  if (!found) { alert('No nutrition logs to export.'); return; }
+  downloadCSV('kinetiq-nutrition.csv', rows);
+}
+
 // Render measurements when progress tab loads - called from main DOMContentLoaded below
 function initNutritionTracking() {
   renderMeasurements();
