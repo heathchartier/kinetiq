@@ -538,6 +538,17 @@ function exSetFilter(cat) {
 function collectExercises() {
   var seen = {};
   var result = [];
+
+  // First: curated standalone database (muscle/equipment already accurate)
+  if (typeof EXERCISE_DB !== 'undefined') {
+    EXERCISE_DB.forEach(function(ex) {
+      if (!ex.name || seen[ex.name.toLowerCase()]) return;
+      seen[ex.name.toLowerCase()] = true;
+      result.push({ name: ex.name, muscle: ex.muscle, equipment: ex.equipment });
+    });
+  }
+
+  // Second: exercises from all programs (fills in anything not in the DB)
   allProgs().forEach(function(prog) {
     (prog.phases || []).forEach(function(phase) {
       (phase.weeks || []).forEach(function(week) {
@@ -555,6 +566,7 @@ function collectExercises() {
       });
     });
   });
+
   return result.sort(function(a, b) { return a.name.localeCompare(b.name); });
 }
 
@@ -2112,99 +2124,7 @@ function initNutritionTracking() {
   renderSavedRecipes();
 }
 
-// ===== KINETIQ FOODS DATABASE =====
-var kinetiqFoods = [
-  // Proteins - Meats
-  {name: 'Chicken Breast (4oz)', cals: 187, protein: 35, carbs: 0, fat: 4, serving: '4oz (113g)'},
-  {name: 'Chicken Thigh (4oz)', cals: 232, protein: 28, carbs: 0, fat: 13, serving: '4oz (113g)'},
-  {name: 'Ground Beef 90/10 (4oz)', cals: 200, protein: 23, carbs: 0, fat: 11, serving: '4oz (113g)'},
-  {name: 'Ground Beef 80/20 (4oz)', cals: 287, protein: 19, carbs: 0, fat: 23, serving: '4oz (113g)'},
-  {name: 'Steak (Sirloin, 6oz)', cals: 312, protein: 48, carbs: 0, fat: 12, serving: '6oz (170g)'},
-  {name: 'Pork Chop (4oz)', cals: 190, protein: 26, carbs: 0, fat: 9, serving: '4oz (113g)'},
-  {name: 'Turkey Breast (4oz)', cals: 153, protein: 34, carbs: 0, fat: 1, serving: '4oz (113g)'},
-  {name: 'Bacon (3 slices)', cals: 161, protein: 12, carbs: 1, fat: 12, serving: '3 slices'},
-  {name: 'Sausage Link (2 links)', cals: 180, protein: 7, carbs: 1, fat: 16, serving: '2 links'},
-  
-  // Proteins - Fish/Seafood
-  {name: 'Salmon (5oz)', cals: 280, protein: 39, carbs: 0, fat: 13, serving: '5oz (142g)'},
-  {name: 'Tuna (canned, 5oz)', cals: 191, protein: 42, carbs: 0, fat: 1, serving: '5oz (142g)'},
-  {name: 'Tilapia (5oz)', cals: 145, protein: 30, carbs: 0, fat: 3, serving: '5oz (142g)'},
-  {name: 'Shrimp (4oz)', cals: 112, protein: 23, carbs: 1, fat: 1, serving: '4oz (113g)'},
-  
-  // Proteins - Eggs/Dairy
-  {name: 'Whole Egg (large)', cals: 72, protein: 6, carbs: 0, fat: 5, serving: '1 egg'},
-  {name: 'Egg Whites (1 cup)', cals: 126, protein: 26, carbs: 2, fat: 0, serving: '1 cup'},
-  {name: 'Greek Yogurt (plain, 1 cup)', cals: 100, protein: 17, carbs: 6, fat: 0, serving: '1 cup'},
-  {name: 'Cottage Cheese (1 cup)', cals: 206, protein: 28, carbs: 8, fat: 9, serving: '1 cup'},
-  {name: 'Whey Protein Powder (1 scoop)', cals: 120, protein: 24, carbs: 3, fat: 1, serving: '1 scoop (30g)'},
-  {name: 'Milk (whole, 1 cup)', cals: 149, protein: 8, carbs: 12, fat: 8, serving: '1 cup'},
-  {name: 'Milk (2%, 1 cup)', cals: 122, protein: 8, carbs: 12, fat: 5, serving: '1 cup'},
-  {name: 'Cheddar Cheese (1oz)', cals: 114, protein: 7, carbs: 0, fat: 9, serving: '1oz (28g)'},
-  
-  // Carbs - Grains
-  {name: 'White Rice (cooked, 1 cup)', cals: 205, protein: 4, carbs: 45, fat: 0, serving: '1 cup'},
-  {name: 'Brown Rice (cooked, 1 cup)', cals: 218, protein: 5, carbs: 46, fat: 2, serving: '1 cup'},
-  {name: 'Quinoa (cooked, 1 cup)', cals: 222, protein: 8, carbs: 39, fat: 4, serving: '1 cup'},
-  {name: 'Oatmeal (cooked, 1 cup)', cals: 158, protein: 6, carbs: 28, fat: 3, serving: '1 cup'},
-  {name: 'Pasta (cooked, 1 cup)', cals: 221, protein: 8, carbs: 43, fat: 1, serving: '1 cup'},
-  {name: 'Bread (white, 2 slices)', cals: 160, protein: 5, carbs: 30, fat: 2, serving: '2 slices'},
-  {name: 'Bread (wheat, 2 slices)', cals: 138, protein: 8, carbs: 24, fat: 2, serving: '2 slices'},
-  {name: 'Bagel (plain)', cals: 289, protein: 11, carbs: 56, fat: 2, serving: '1 bagel'},
-  {name: 'Tortilla (flour, 8")', cals: 146, protein: 4, carbs: 24, fat: 4, serving: '1 tortilla'},
-  
-  // Carbs - Potatoes
-  {name: 'Sweet Potato (medium)', cals: 112, protein: 2, carbs: 26, fat: 0, serving: '1 medium'},
-  {name: 'White Potato (medium)', cals: 163, protein: 4, carbs: 37, fat: 0, serving: '1 medium'},
-  {name: 'French Fries (medium)', cals: 365, protein: 4, carbs: 48, fat: 17, serving: 'medium serving'},
-  
-  // Vegetables
-  {name: 'Broccoli (1 cup)', cals: 55, protein: 4, carbs: 11, fat: 0, serving: '1 cup'},
-  {name: 'Spinach (1 cup)', cals: 7, protein: 1, carbs: 1, fat: 0, serving: '1 cup raw'},
-  {name: 'Carrots (1 cup)', cals: 52, protein: 1, carbs: 12, fat: 0, serving: '1 cup'},
-  {name: 'Bell Pepper (1 cup)', cals: 39, protein: 1, carbs: 9, fat: 0, serving: '1 cup'},
-  {name: 'Cucumber (1 cup)', cals: 16, protein: 1, carbs: 4, fat: 0, serving: '1 cup'},
-  {name: 'Tomato (medium)', cals: 22, protein: 1, carbs: 5, fat: 0, serving: '1 medium'},
-  {name: 'Lettuce (1 cup)', cals: 5, protein: 0, carbs: 1, fat: 0, serving: '1 cup'},
-  {name: 'Green Beans (1 cup)', cals: 44, protein: 2, carbs: 10, fat: 0, serving: '1 cup'},
-  {name: 'Asparagus (1 cup)', cals: 27, protein: 3, carbs: 5, fat: 0, serving: '1 cup'},
-  
-  // Fruits
-  {name: 'Banana (medium)', cals: 105, protein: 1, carbs: 27, fat: 0, serving: '1 medium'},
-  {name: 'Apple (medium)', cals: 95, protein: 0, carbs: 25, fat: 0, serving: '1 medium'},
-  {name: 'Orange (medium)', cals: 62, protein: 1, carbs: 15, fat: 0, serving: '1 medium'},
-  {name: 'Strawberries (1 cup)', cals: 49, protein: 1, carbs: 12, fat: 0, serving: '1 cup'},
-  {name: 'Blueberries (1 cup)', cals: 84, protein: 1, carbs: 21, fat: 0, serving: '1 cup'},
-  {name: 'Grapes (1 cup)', cals: 104, protein: 1, carbs: 27, fat: 0, serving: '1 cup'},
-  {name: 'Watermelon (1 cup)', cals: 46, protein: 1, carbs: 12, fat: 0, serving: '1 cup'},
-  
-  // Fats - Nuts/Seeds
-  {name: 'Almonds (1oz, 23 nuts)', cals: 164, protein: 6, carbs: 6, fat: 14, serving: '1oz (28g)'},
-  {name: 'Peanuts (1oz)', cals: 161, protein: 7, carbs: 5, fat: 14, serving: '1oz (28g)'},
-  {name: 'Peanut Butter (2 tbsp)', cals: 188, protein: 8, carbs: 7, fat: 16, serving: '2 tbsp'},
-  {name: 'Almond Butter (2 tbsp)', cals: 196, protein: 7, carbs: 6, fat: 18, serving: '2 tbsp'},
-  {name: 'Walnuts (1oz)', cals: 185, protein: 4, carbs: 4, fat: 18, serving: '1oz (28g)'},
-  {name: 'Cashews (1oz)', cals: 157, protein: 5, carbs: 9, fat: 12, serving: '1oz (28g)'},
-  
-  // Fats - Oils/Spreads
-  {name: 'Olive Oil (1 tbsp)', cals: 119, protein: 0, carbs: 0, fat: 14, serving: '1 tbsp'},
-  {name: 'Coconut Oil (1 tbsp)', cals: 121, protein: 0, carbs: 0, fat: 14, serving: '1 tbsp'},
-  {name: 'Butter (1 tbsp)', cals: 102, protein: 0, carbs: 0, fat: 12, serving: '1 tbsp'},
-  {name: 'Avocado (half)', cals: 161, protein: 2, carbs: 9, fat: 15, serving: '1/2 avocado'},
-  
-  // Snacks/Common Foods
-  {name: 'Protein Bar (typical)', cals: 200, protein: 20, carbs: 24, fat: 6, serving: '1 bar'},
-  {name: 'Granola Bar', cals: 120, protein: 2, carbs: 20, fat: 4, serving: '1 bar'},
-  {name: 'Chips (1oz)', cals: 152, protein: 2, carbs: 15, fat: 10, serving: '1oz (about 15 chips)'},
-  {name: 'Popcorn (air-popped, 3 cups)', cals: 93, protein: 3, carbs: 19, fat: 1, serving: '3 cups'},
-  {name: 'Pretzels (1oz)', cals: 108, protein: 3, carbs: 23, fat: 1, serving: '1oz'},
-  
-  // Fast Food (Common)
-  {name: 'Big Mac', cals: 550, protein: 25, carbs: 45, fat: 30, serving: '1 sandwich'},
-  {name: 'Whopper', cals: 660, protein: 28, carbs: 49, fat: 40, serving: '1 sandwich'},
-  {name: 'Pizza (cheese, 1 slice)', cals: 285, protein: 12, carbs: 36, fat: 10, serving: '1 slice'},
-  {name: 'Chipotle Chicken Bowl', cals: 630, protein: 42, carbs: 62, fat: 24, serving: '1 bowl (est.)'},
-  {name: 'Subway 6" Turkey', cals: 280, protein: 18, carbs: 46, fat: 4, serving: '6" sub'}
-];
+// kinetiqFoods is defined in foods-db.js (loaded before app.js)
 
 // ===== NUTRITION TRACKING =====
 var foodLog = JSON.parse(localStorage.getItem('foodLog_' + new Date().toISOString().split('T')[0]) || '[]');

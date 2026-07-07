@@ -3,7 +3,7 @@
 // Enables offline functionality and app-like experience
 // ============================================================================
 
-const CACHE_NAME = 'kinetiq-v2.7.8';
+const CACHE_NAME = 'kinetiq-v2.7.9';
 const RUNTIME_CACHE = 'kinetiq-runtime-v2';
 
 // Base path — root now that kinetiqfit.pro custom domain is active
@@ -17,6 +17,8 @@ const STATIC_ASSETS = [
   BASE_PATH + 'data.js',
   BASE_PATH + 'maps-data.js',
   BASE_PATH + 'style.css',
+  BASE_PATH + 'exercises-db.js',
+  BASE_PATH + 'foods-db.js',
   BASE_PATH + 'auth.js',
   BASE_PATH + 'achievements.js',
   BASE_PATH + 'onboarding.js',
