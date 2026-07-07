@@ -12,6 +12,30 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 let currentUser = null;
 
 // ============================================================================
+// iOS STORAGE PERSISTENCE
+// ============================================================================
+
+// Ask Safari to treat this origin as persistent so it won't evict localStorage
+// under storage pressure. Fires once, silently, on every page load.
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(function(granted) {
+    console.log('[Storage] Persistent storage:', granted ? 'granted' : 'denied (will still sync from cloud)');
+  });
+}
+
+// Re-sync from cloud whenever the app returns to the foreground.
+// Covers the case where Safari evicted localStorage while the app was backgrounded.
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible' && currentUser) {
+    if (typeof syncDataFromCloud === 'function') {
+      syncDataFromCloud().catch(function(e) {
+        console.warn('[Storage] Foreground re-sync failed:', e);
+      });
+    }
+  }
+});
+
+// ============================================================================
 // AUTH FUNCTIONS
 // ============================================================================
 
