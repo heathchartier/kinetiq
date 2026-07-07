@@ -185,6 +185,28 @@ function rDash() {
     progressCard.style.display = 'none';
   }
 
+  // Recommended program card — visible only when onboarding gave a suggestion but no program is active yet
+  var recCard = document.getElementById('recommended-card');
+  var recBody = document.getElementById('recommended-body');
+  if (recCard && recBody) {
+    var recId = localStorage.getItem('ls_recommended_program');
+    if (!currentProg && recId) {
+      var recProg = allProgs().find(function(p) { return p.id === recId; });
+      if (recProg) {
+        recBody.innerHTML = '<div style="padding:14px 16px">'
+          + '<div style="font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px">' + esc(recProg.name) + '</div>'
+          + '<div style="font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:14px">' + esc(recProg.description || '') + '</div>'
+          + '<button class="btn-p" style="width:100%" onclick="activateProgram(\'' + recProg.id + '\')">&#9654; Start This Program</button>'
+          + '</div>';
+        recCard.style.display = 'block';
+      } else {
+        recCard.style.display = 'none';
+      }
+    } else {
+      recCard.style.display = 'none';
+    }
+  }
+
   var rl = document.getElementById('d-recent');
   if (!hist.length) {
     rl.innerHTML = '<div class="empty"><div class="eico">&#127947;</div><div class="esub">No workouts yet. Start a program below.</div></div>';
