@@ -416,31 +416,62 @@ async function syncFavoriteFoodsToCloud() {
 }
 
 async function syncFoodLogsToCloud() {
-  // Sync last 30 days of food logs
+  // Sync last 30 days — delete-then-insert per day to prevent duplicates
   const today = new Date();
-  
+
   for (let i = 0; i < 30; i++) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
     const dateStr = date.toISOString().split('T')[0];
-    
+
     const dayLog = JSON.parse(localStorage.getItem('foodLog_' + dateStr) || '[]');
-    
     if (dayLog.length === 0) continue;
-    
-    for (const entry of dayLog) {
-      await supabaseClient.from('food_log').insert({
-        user_id: currentUser.id,
-        logged_date: dateStr,
-        meal_type: entry.meal || 'other',
-        food_name: entry.name,
-        servings: entry.servings || 1,
-        calories: entry.calories || 0,
-        protein: entry.protein || 0,
-        carbs: entry.carbs || 0,
-        fat: entry.fat || 0
-      });
+
+    await supabaseClient.from('food_log').delete()
+      .eq('user_id', currentUser.id)
+      .eq('logged_date', dateStr);
+
+    const rows = dayLog.filter(e => e.name).map(entry => ({
+      user_id: currentUser.id,
+      logged_date: dateStr,
+      meal_type: entry.meal || 'other',
+      food_name: entry.name,
+      servings: entry.servings || 1,
+      calories: entry.calories || 0,
+      protein: entry.protein || 0,
+      carbs: entry.carbs || 0,
+      fat: entry.fat || 0
+    }));
+
+    if (rows.length > 0) {
+      await supabaseClient.from('food_log').insert(rows);
     }
+  }
+}
+
+async function syncTodaysFoodLogToCloud() {
+  if (!currentUser) return;
+  const dateStr = new Date().toISOString().split('T')[0];
+  const dayLog = JSON.parse(localStorage.getItem('foodLog_' + dateStr) || '[]');
+
+  await supabaseClient.from('food_log').delete()
+    .eq('user_id', currentUser.id)
+    .eq('logged_date', dateStr);
+
+  const rows = dayLog.filter(e => e.name).map(entry => ({
+    user_id: currentUser.id,
+    logged_date: dateStr,
+    meal_type: entry.meal || 'other',
+    food_name: entry.name,
+    servings: entry.servings || 1,
+    calories: entry.calories || 0,
+    protein: entry.protein || 0,
+    carbs: entry.carbs || 0,
+    fat: entry.fat || 0
+  }));
+
+  if (rows.length > 0) {
+    await supabaseClient.from('food_log').insert(rows);
   }
 }
 
@@ -722,7 +753,6 @@ async function syncFoodLogsFromCloud() {
     const { data: entries, error } = await supabaseClient
       .from('food_log')
       .select('*')
-      .eq('user_id', currentUser.id)
       .eq('user_id', currentUser.id)
       .eq('logged_date', dateStr);
     
