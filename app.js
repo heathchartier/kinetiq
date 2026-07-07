@@ -1908,13 +1908,15 @@ async function parseAI(content, filename) {
 function openQL() {
   document.getElementById('ql-name').value = '';
   document.getElementById('ex-builder').innerHTML = '';
+  var dl = document.getElementById('ex-name-list');
+  if (dl) dl.innerHTML = collectExercises().map(function(e) { return '<option value="' + esc(e.name) + '">'; }).join('');
   addER(); addER();
   openM('ql-modal');
 }
 function addER() {
   var d = document.createElement('div');
   d.className = 'erb-row';
-  d.innerHTML = '<input class="fi en" placeholder="Exercise name" autocomplete="off" style="font-size:15px">'
+  d.innerHTML = '<input class="fi en" list="ex-name-list" placeholder="Exercise name" autocomplete="off" style="font-size:15px">'
     + '<input class="fi es" type="number" inputmode="numeric" placeholder="Sets" value="3" min="1" style="font-size:15px;text-align:center;padding:11px 4px">'
     + '<input class="fi er" placeholder="Reps" value="10" autocomplete="off" style="font-size:15px;text-align:center;padding:11px 4px">'
     + '<button class="erb-del" onclick="this.parentElement.remove()">&#10005;</button>';
@@ -2251,6 +2253,7 @@ function initNutritionTracking() {
   renderMeasurements();
   loadNutritionGoals();
   renderFoodLog();
+  renderFrequentFoods();
   renderFavorites();
   renderMealTemplates();
   loadWaterGoal();
@@ -2887,6 +2890,56 @@ function toggleFavorite(foodName, cals, protein, carbs, fat) {
 
 function isFavorite(foodName) {
   return favoriteFoods.some(function(f) { return f.name === foodName; });
+}
+
+function getFrequentFoods() {
+  var counts = {};
+  var today = new Date();
+  for (var i = 0; i < 30; i++) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - i);
+    var dateStr = d.toISOString().split('T')[0];
+    var log = JSON.parse(localStorage.getItem('foodLog_' + dateStr) || '[]');
+    log.forEach(function(f) {
+      if (!f.name) return;
+      var key = f.name.toLowerCase();
+      if (!counts[key]) counts[key] = { name: f.name, cals: f.cals, protein: f.protein, carbs: f.carbs, fat: f.fat, count: 0 };
+      counts[key].count++;
+    });
+  }
+  return Object.keys(counts).map(function(k) { return counts[k]; })
+    .filter(function(f) { return f.count >= 2; })
+    .sort(function(a, b) { return b.count - a.count; })
+    .slice(0, 8);
+}
+
+function renderFrequentFoods() {
+  var card = document.getElementById('frequent-foods-card');
+  var list = document.getElementById('frequent-foods-list');
+  if (!card || !list) return;
+
+  var frequent = getFrequentFoods();
+  if (!frequent.length) {
+    card.style.display = 'none';
+    return;
+  }
+
+  card.style.display = 'block';
+  list.innerHTML = frequent.map(function(f) {
+    return '<div class="food-result-item">'
+      + '<div style="flex: 1;"><div class="food-result-name">' + esc(f.name) + '</div>'
+      + '<div class="food-result-macros">' + f.cals + ' cal • P: ' + f.protein + 'g C: ' + f.carbs + 'g F: ' + f.fat + 'g</div></div>'
+      + '<button class="food-result-add" onclick="addFrequentFood(\'' + esc(f.name.replace(/'/g, "\\'")) + '\',' + f.cals + ',' + f.protein + ',' + f.carbs + ',' + f.fat + ')">+ Add</button>'
+      + '</div>';
+  }).join('');
+}
+
+function addFrequentFood(name, cals, protein, carbs, fat) {
+  var entry = { id: uid(), name: name, cals: cals, protein: protein, carbs: carbs, fat: fat, time: new Date().toISOString() };
+  foodLog.push(entry);
+  saveFoodLog();
+  renderFoodLog();
+  updateNutritionSummary();
 }
 
 function renderFavorites() {

@@ -542,6 +542,7 @@ async function syncDataFromCloud() {
     if (typeof rHist === 'function') rHist();
     if (typeof loadNutritionGoals === 'function') loadNutritionGoals();
     if (typeof renderFoodLog === 'function') renderFoodLog();
+    if (typeof renderFrequentFoods === 'function') renderFrequentFoods();
     if (typeof updateNutritionSummary === 'function') updateNutritionSummary();
     if (typeof rProg === 'function') rProg();
     if (typeof rProgs === 'function') rProgs();
