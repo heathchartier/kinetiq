@@ -517,25 +517,32 @@ async function syncDataFromCloud() {
 async function syncActiveProgramFromCloud() {
   if (!currentUser) return;
 
-  // Only restore if localStorage is missing the active program — don't overwrite a local selection
+  // Only restore if localStorage is missing — don't overwrite a local selection
   if (localStorage.getItem('currentProgram')) return;
 
-  const { data, error } = await supabaseClient
-    .from('active_programs')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .eq('is_active', true)
-    .maybeSingle();
+  const { data: profile, error } = await supabaseClient
+    .from('profiles')
+    .select('active_program_id, active_week, active_day')
+    .eq('id', currentUser.id)
+    .single();
 
   if (error) { console.error('Error loading active program from cloud:', error); return; }
-  if (!data) return;
+  if (!profile || !profile.active_program_id) return;
 
-  // Restore the three keys app.js uses
-  localStorage.setItem('currentProgram', data.program_id);
-  localStorage.setItem('currentWeek',    String(data.current_week || 1));
-  localStorage.setItem('currentDay',     String(data.current_day  || 0));
-  console.log('📥 Active program restored from cloud:', data.program_id,
-              'week', data.current_week, 'day', data.current_day);
+  localStorage.setItem('currentProgram', profile.active_program_id);
+  localStorage.setItem('currentWeek',    String(profile.active_week || 1));
+  localStorage.setItem('currentDay',     String(profile.active_day  || 0));
+  console.log('📥 Active program restored from cloud:', profile.active_program_id,
+              'week', profile.active_week, 'day', profile.active_day);
+}
+
+async function saveActiveProgramToCloud(progId, week, day) {
+  if (!currentUser) return;
+  await supabaseClient
+    .from('profiles')
+    .update({ active_program_id: progId, active_week: week, active_day: day })
+    .eq('id', currentUser.id);
+  console.log('☁️ Active program saved to cloud:', progId, 'week', week, 'day', day);
 }
 
 async function syncOnboardingPrefsFromCloud() {

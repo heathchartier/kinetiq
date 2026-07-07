@@ -414,7 +414,7 @@ function startQuick(progId, weekIdx, dayIdx) {
   }
   
   if (!targetDay) return;
-  
+
   // Start workout
   aw = {
     name: targetDay.name,
@@ -433,7 +433,15 @@ function startQuick(progId, weekIdx, dayIdx) {
       };
     })
   };
-  
+
+  // Tag as active-program workout so finishW() can auto-advance
+  if (localStorage.getItem('currentProgram') === progId) {
+    aw.apProgId = progId;
+    aw.apWeek   = parseInt(localStorage.getItem('currentWeek') || '1');
+    aw.apDay    = dayIdx;
+    aw.apDaysInWeek = targetWeek ? targetWeek.days.length : 0;
+  }
+
   wst = Date.now();
   document.getElementById('pill').classList.add('show');
   startWT();
@@ -554,6 +562,17 @@ function openProg(id) {
   document.getElementById('pd-title').textContent = p.name;
   document.getElementById('pd-desc').textContent = p.description || '';
   document.getElementById('pd-bc').textContent = p.name;
+
+  // Show activate button for non-corrective programs
+  var activateBtn = document.getElementById('pd-activate-btn');
+  if (activateBtn && p.type !== 'corrective') {
+    var isActive = localStorage.getItem('currentProgram') === id;
+    activateBtn.textContent = isActive ? '↺ Restart from Week 1' : '► Start Program';
+    activateBtn.style.display = 'inline-flex';
+  } else if (activateBtn) {
+    activateBtn.style.display = 'none';
+  }
+
   if (p.type === 'corrective') {
     document.getElementById('phase-scroll').innerHTML = '';
     document.getElementById('pd-body').innerHTML = renderCorrective(p);
@@ -564,7 +583,7 @@ function openProg(id) {
   nav.innerHTML = (p.phases || []).map(function(ph, i) {
     return '<button class="ptab' + (i === 0 ? ' active' : '') + '" onclick="selPh(' + i + ')">' + esc(ph.name) + '</button>';
   }).join('');
-  
+
   // Add mouse wheel scroll support for phase navigation
   nav.addEventListener('wheel', function(e) {
     if (e.deltaY !== 0) {
@@ -572,10 +591,26 @@ function openProg(id) {
       nav.scrollLeft += e.deltaY;
     }
   }, { passive: false });
-  
+
   curPhi = 0;
   renderPh(p, 0);
   showView('program-detail');
+}
+
+function activateProgram(progId) {
+  var p = allProgs().find(function(x){ return x.id === progId; });
+  if (!p) return;
+  localStorage.setItem('currentProgram', progId);
+  localStorage.setItem('currentWeek', '1');
+  localStorage.setItem('currentDay', '0');
+  if (typeof saveActiveProgramToCloud === 'function') {
+    saveActiveProgramToCloud(progId, 1, 0).catch(function(){});
+  }
+  // Update button to reflect active state
+  var activateBtn = document.getElementById('pd-activate-btn');
+  if (activateBtn) activateBtn.textContent = '↺ Restart from Week 1';
+  showView('dashboard');
+  rDash();
 }
 
 function selPh(i) {
@@ -1208,13 +1243,28 @@ function finishW() {
     }, 500); // Small delay so notification appears after workout finishes
   }
   
+  // Advance active program position
+  if (aw.apProgId) {
+    var nextDay  = aw.apDay + 1;
+    var nextWeek = aw.apWeek;
+    if (aw.apDaysInWeek > 0 && nextDay >= aw.apDaysInWeek) {
+      nextDay  = 0;
+      nextWeek = nextWeek + 1;
+    }
+    localStorage.setItem('currentDay',  String(nextDay));
+    localStorage.setItem('currentWeek', String(nextWeek));
+    if (typeof saveActiveProgramToCloud === 'function') {
+      saveActiveProgramToCloud(aw.apProgId, nextWeek, nextDay).catch(function(){});
+    }
+  }
+
   // Auto-sync to cloud if logged in
   if (typeof syncDataToCloud === 'function') {
     syncDataToCloud().catch(function(err) {
       console.error('Auto-sync failed:', err);
     });
   }
-  
+
   aw = null;
   document.getElementById('pill').classList.remove('show');
   showView('history');
