@@ -4,7 +4,7 @@ var kinetiqFoundationData = {
   source: 'builtin',
   description: "A 10-week beginner program built around dumbbells and kettlebells — not machines. Learn movement patterns with free weights from day one because that is how you build real strength and symmetry. Machines lock you into fixed paths. Dumbbells force you to stabilize. This program teaches the fundamental patterns while building coordination, balance, and work capacity. 3 days per week. **Recommended Progression:** Foundation → Strength → Hypertrophy. Start here if you are new to lifting.",
   difficulty: 'Beginner',
-  duration: '10 weeks (2 phases)',
+  duration: '10 weeks',
   phases: [
 
     // ===================== PHASE 1: LEARN THE PATTERNS =====================
@@ -522,7 +522,7 @@ var kinetiqStrengthData = {
   source: 'builtin',
   description: "A 12-week strength program built around the Big 4 lifts. Progressive overload is the only rule that matters — add weight, get stronger, don\'t get hurt. Every session includes a built-in mobility warmup because the smartest thing a strong person can do is stay healthy enough to keep training. 3 days per week. No fluff. **Recommended Progression:** Strength → Hypertrophy → Balance → Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
   difficulty: 'Intermediate',
-  duration: '12 weeks (3 phases)',
+  duration: '12 weeks',
   phases: [
 
     // ===================== PHASE 1 =====================
@@ -1112,7 +1112,7 @@ var kinetiqHypertrophyData = {
   source: 'builtin',
   description: "A 12-week muscle building program that progresses through three distinct phases: Bridge (5x8), Growth (4x10-12), and Metabolic (3x12-15). This program is designed to run immediately after Kinetiq Strength — you\'ve built the strength foundation, now it\'s time to build the muscle. Volume increases, intensity adjusts, and your body adapts. Every session includes mobility work because joint health is non-negotiable when you\'re chasing growth. 3-4 days per week. **Recommended Progression:** Strong → Hypertrophy → Balance → Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
   difficulty: 'Intermediate',
-  duration: '12 weeks (3 phases)',
+  duration: '12 weeks',
   phases: [
 
     // ===================== PHASE 1: BRIDGE =====================
@@ -2918,7 +2918,7 @@ var kinetiqHIITData = {
   source: 'builtin',
   description: "A 6-week high-intensity interval training program built around compound movements, not cardio machines. This is not burpees and box jumps — this is kettlebell swings, thrusters, and loaded carries performed in intervals. The goal is simple: improve your work capacity, burn fat, and build conditioning without losing muscle. Each session is 20-30 minutes. You can run this standalone during a cut, or add 1-2 sessions per week alongside your lifting program. Low stamina friendly — you start where you are and build from there. 3-4 days per week. Standalone program — run anytime.",
   difficulty: 'All Levels',
-  duration: '6 weeks (2 phases)',
+  duration: '6 weeks',
   phases: [
 
     // ===================== PHASE 1: BUILD THE ENGINE =====================
@@ -3551,7 +3551,7 @@ var kinetiqBodyweightData = {
   source: 'builtin',
   description: "An 8-week bodyweight program that trains your entire body every session. No equipment required — just you and gravity. Built for consistency when life happens: if you miss a day, you haven't skipped a muscle group. Each workout hits push, pull, legs, and core. Perfect for home training, travel, or building a movement foundation. 3 days per week. **Recommended Progression:** Bodyweight → Foundation → Strength. Use this program when you can't access a gym or want to master bodyweight fundamentals.",
   difficulty: 'Beginner',
-  duration: '8 weeks (2 phases)',
+  duration: '8 weeks',
   phases: [
 
     // ===================== PHASE 1: MOVEMENT FOUNDATION =====================
