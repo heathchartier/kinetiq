@@ -522,6 +522,125 @@ function fmtRelease(dateStr) {
   return 'Coming ' + months[release.getMonth()] + ' ' + release.getFullYear();
 }
 
+// ===== EXERCISE LIBRARY =====
+var exLibFilter = 'All';
+
+function openExLib() {
+  showView('exercises');
+  rExLib();
+}
+
+function exSetFilter(cat) {
+  exLibFilter = cat;
+  rExLib();
+}
+
+function collectExercises() {
+  var seen = {};
+  var result = [];
+  allProgs().forEach(function(prog) {
+    (prog.phases || []).forEach(function(phase) {
+      (phase.weeks || []).forEach(function(week) {
+        (week.days || []).forEach(function(day) {
+          (day.exercises || []).forEach(function(ex) {
+            if (!ex.name) return;
+            var name = ex.name
+              .replace(/^(Mobility Warmup|Warmup|Interval \d+|Finisher)\s*[–—\-]\s*/i, '')
+              .trim();
+            if (!name || seen[name.toLowerCase()]) return;
+            seen[name.toLowerCase()] = true;
+            result.push({ name: name, muscle: getExMuscle(name), equipment: getExEquipment(name) });
+          });
+        });
+      });
+    });
+  });
+  return result.sort(function(a, b) { return a.name.localeCompare(b.name); });
+}
+
+function getExMuscle(name) {
+  var n = name.toLowerCase();
+  if (/circuit|complex\s*[–\-]|treadmill|walk or bike|cooldown|burpee|mountain climber|jumping jack|high knees|butt kick|squat jump|jump squat|jump lunge|broad jump/.test(n)) return 'Cardio';
+  if (/foam roll|cat.cow|pigeon|90\/90|hip car|ankle car|shoulder car|scorpion|thread.the.needle|wall angel|sleeper|frog stretch|lat hang|thoracic|quadruped|breathing|deep squat hold|hip airplane|inchworm|cossack|windmill|turkish get.up|flow:|arm circle|leg swing|scapular shrug|prone y|shoulder flexion hang/.test(n)) return 'Mobility';
+  if (/static stretch|hip flexor stretch|calf stretch/.test(n)) return 'Mobility';
+  if (/squat|lunge|leg press|leg curl|leg extension|calf|hip thrust|glute bridge|glute kickback|romanian deadlift|rdl|pistol|kettlebell swing|bulgarian|single.leg glute/.test(n)) return 'Legs';
+  if (/\bdeadlift\b/.test(n) && !/row/.test(n)) return 'Legs';
+  if (/plank|dead bug|deadbug|crunch|hollow|v.up|pallof|bird.dog|superman|loaded beast|dragon flag|bicycle|copenhagen|bear crawl/.test(n)) return 'Core';
+  if (/farmer carry|single.arm.*carry|overhead carry/.test(n)) return 'Core';
+  if (/row|pulldown|pull.up|inverted row|chest.supported|weighted pull/.test(n)) return 'Back';
+  if (/bench press|floor press|chest press|incline|flye|fly|dips|close.grip/.test(n)) return 'Chest';
+  if (/push.up|pushup/.test(n) && !/pike push/.test(n)) return 'Chest';
+  if (/shoulder press|overhead press|lateral raise|band pull.apart|face pull|pike push/.test(n)) return 'Shoulders';
+  if (/\bpress\b/.test(n)) return 'Shoulders';
+  if (/curl|tricep|extension/.test(n)) return 'Arms';
+  return 'Mobility';
+}
+
+function getExEquipment(name) {
+  var n = name.toLowerCase();
+  if (/barbell/.test(n)) return 'Barbell';
+  if (/dumbbell/.test(n)) return 'Dumbbell';
+  if (/kettlebell/.test(n)) return 'Kettlebell';
+  if (/cable/.test(n)) return 'Cable';
+  if (/machine|leg press|leg curl|leg extension/.test(n) && !/dumbbell|barbell/.test(n)) return 'Machine';
+  if (/\bband\b/.test(n)) return 'Band';
+  if (/foam roll/.test(n)) return 'Foam Roller';
+  return '';
+}
+
+function rExLib() {
+  var cats = ['All', 'Legs', 'Back', 'Chest', 'Shoulders', 'Arms', 'Core', 'Mobility', 'Cardio'];
+  var filterEl = document.getElementById('ex-filters');
+  var listEl   = document.getElementById('ex-list');
+  if (!filterEl || !listEl) return;
+
+  var query = (document.getElementById('ex-search') || {}).value || '';
+
+  filterEl.innerHTML = cats.map(function(c) {
+    var active = exLibFilter === c;
+    return '<button onclick="exSetFilter(\'' + c + '\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;'
+      + 'background:' + (active ? 'var(--accent)' : 'var(--bg3)') + ';color:' + (active ? '#000' : 'var(--t2)') + '">'
+      + c + '</button>';
+  }).join('');
+
+  var muscleColor = {
+    Legs:'#22c55e', Back:'var(--accent)', Chest:'#f59e0b',
+    Shoulders:'#a855f7', Arms:'#ec4899', Core:'#ef4444',
+    Mobility:'#06b6d4', Cardio:'#f97316', Other:'var(--t3)'
+  };
+
+  var exercises = collectExercises().filter(function(ex) {
+    return (exLibFilter === 'All' || ex.muscle === exLibFilter)
+        && (!query || ex.name.toLowerCase().includes(query.toLowerCase()));
+  });
+
+  if (!exercises.length) {
+    listEl.innerHTML = '<div class="empty" style="min-height:200px;padding:40px 20px"><div class="esub">No exercises found</div></div>';
+    return;
+  }
+
+  var grouped = {};
+  exercises.forEach(function(ex) {
+    var k = ex.name[0].toUpperCase();
+    if (!grouped[k]) grouped[k] = [];
+    grouped[k].push(ex);
+  });
+
+  listEl.innerHTML = Object.keys(grouped).sort().map(function(letter) {
+    return '<div class="sec-lbl" style="margin-top:14px">' + letter + '</div>'
+      + grouped[letter].map(function(ex) {
+        var col = muscleColor[ex.muscle] || 'var(--t3)';
+        return '<div class="row-item" style="cursor:default">'
+          + '<div style="flex:1;min-width:0">'
+          + '<div class="row-name">' + esc(ex.name) + '</div>'
+          + (ex.equipment ? '<div class="row-meta">' + esc(ex.equipment) + '</div>' : '')
+          + '</div>'
+          + '<span style="flex-shrink:0;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:' + col + '20;color:' + col + ';border:1px solid ' + col + '40">' + ex.muscle + '</span>'
+          + '</div>';
+      }).join('');
+  }).join('');
+}
+
 function rProgs() {
   var pl = document.getElementById('prog-list');
   var pg = allProgs();

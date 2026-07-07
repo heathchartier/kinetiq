@@ -104,7 +104,7 @@
 
   <!-- PROGRAMS -->
   <section id="view-programs" class="view">
-    <div class="ph"><div><h1 class="ptitle">Programs</h1><p class="psub">Import or create plans</p></div><button class="btn-s btn-sm" onclick="openCP()">+ Create</button></div>
+    <div class="ph"><div><h1 class="ptitle">Programs</h1><p class="psub">Import or create plans</p></div><div style="display:flex;gap:8px"><button class="btn-d btn-sm" onclick="openExLib()">Library</button><button class="btn-s btn-sm" onclick="openCP()">+ Create</button></div></div>
     
     <!-- Program Ecosystem Info Card -->
     <div id="program-info-card" style="margin: 0 14px 16px 14px; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: #fff; font-size: 14px; line-height: 1.6; position: relative;">
@@ -155,6 +155,20 @@
     </div>
     <div id="phase-scroll"></div>
     <div id="pd-body"></div>
+  </section>
+
+  <!-- EXERCISE LIBRARY -->
+  <section id="view-exercises" class="view" style="padding:0">
+    <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;position:sticky;top:var(--topbar-h);z-index:50;background:var(--bg1)">
+      <button class="back-btn" onclick="showView('programs')">&larr; Programs</button>
+    </div>
+    <div style="padding:14px 14px 0">
+      <h2 style="margin:0 0 2px;font-size:20px;font-weight:800;color:var(--t1)">Exercise Library</h2>
+      <p style="margin:0 0 12px;font-size:13px;color:var(--t3)">All exercises used across Kinetiq programs</p>
+      <input type="text" class="fi" id="ex-search" placeholder="Search exercises..." oninput="rExLib()" style="margin-bottom:12px">
+      <div id="ex-filters" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch"></div>
+    </div>
+    <div id="ex-list" style="padding:0 14px 100px"></div>
   </section>
 
   <!-- ACTIVE WORKOUT -->
