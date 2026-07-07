@@ -249,7 +249,8 @@ function rDash() {
     pl.innerHTML = '<div class="empty"><div class="esub">' + (dashQ ? 'No programs match "' + esc(dashQ) + '"' : 'No programs yet') + '</div></div>';
   } else {
     pl.innerHTML = pg.map(function(p) {
-      var phaseStr = p.type === 'corrective' ? 'Corrective' : ((p.phases && p.phases.length || 0) + ' phases');
+      var pc = p.phases && p.phases.length || 0;
+      var phaseStr = p.type === 'corrective' ? 'Corrective' : (pc + ' phase' + (pc === 1 ? '' : 's'));
       return '<button class="row-item" onclick="openProg(\'' + p.id + '\')">'
         + '<div><div class="row-name">' + esc(p.name) + '</div>'
         + '<div class="row-meta">' + phaseStr + ' &middot; ' + (p.duration || '') + '</div></div>'
