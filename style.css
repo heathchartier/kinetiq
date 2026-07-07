@@ -450,11 +450,18 @@ body {
 .prog-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background-color: var(--bg3); color: var(--t2); border: 1px solid var(--border); font-weight: 500; }
 /* ===== EXERCISE LIBRARY ROWS ===== */
 .ex-lib-row {
-  padding: 12px 0;
+  padding: 12px 4px;
+  margin: 0 -4px;
   border-bottom: 1px solid var(--border);
-  cursor: default;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
 }
 .ex-lib-row:last-child { border-bottom: none; }
+.ex-lib-row:active { background-color: var(--bg3); }
+@media (hover: hover) {
+  .ex-lib-row:hover { background-color: var(--bg2); }
+}
 .ex-lib-name {
   font-size: 15px;
   font-weight: 600;

@@ -171,6 +171,20 @@
     <div id="ex-list" style="padding:0 14px 100px"></div>
   </section>
 
+  <!-- EXERCISE DETAIL MODAL -->
+  <div class="modal-ov" id="ex-detail-modal">
+    <div class="modal-box">
+      <div class="modal-hd"><span id="ex-detail-name">Exercise</span><button class="modal-close" onclick="closeM('ex-detail-modal')">&#10005;</button></div>
+      <div class="modal-body">
+        <div id="ex-detail-badges" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
+        <p id="ex-detail-desc" style="font-size:14px;color:var(--t2);line-height:1.6;margin:0"></p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-p btn-sm" onclick="closeM('ex-detail-modal')">Got it</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ACTIVE WORKOUT -->
   <section id="view-active-workout" class="view" style="padding:0">
     <div id="wtop">
