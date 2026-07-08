@@ -3,7 +3,7 @@
 // Enables offline functionality and app-like experience
 // ============================================================================
 
-const CACHE_NAME = 'kinetiq-v2.9.3';
+const CACHE_NAME = 'kinetiq-v2.9.4';
 const RUNTIME_CACHE = 'kinetiq-runtime-v2';
 
 // Base path — root now that kinetiqfit.pro custom domain is active

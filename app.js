@@ -2481,6 +2481,7 @@ function saveWaterLog() {
   waterLog.date = today;
   localStorage.setItem('waterLog_' + today, JSON.stringify(waterLog));
   updateWaterStreak();
+  if (typeof syncWaterLogsToCloud === 'function') syncWaterLogsToCloud().catch(function(){});
 }
 
 function renderWaterProgress() {
@@ -2573,6 +2574,7 @@ function saveWaterGoal() {
   waterGoal = newGoal;
   localStorage.setItem('waterGoal', waterGoal);
   renderWaterProgress();
+  if (typeof syncWaterLogsToCloud === 'function') syncWaterLogsToCloud().catch(function(){});
   toast('Water goal saved!', 'success');
 }
 
@@ -2835,6 +2837,7 @@ function toggleFavorite(foodName, cals, protein, carbs, fat) {
   
   localStorage.setItem('favoriteFoods', JSON.stringify(favoriteFoods));
   renderFavorites();
+  if (typeof syncFavoriteFoodsToCloud === 'function') syncFavoriteFoodsToCloud().catch(function(){});
 }
 
 function isFavorite(foodName) {

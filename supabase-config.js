@@ -35,6 +35,17 @@ document.addEventListener('visibilitychange', function() {
   }
 });
 
+// Push any locally-saved data (e.g. a workout finished with no signal) the
+// moment the connection comes back, instead of waiting for the next save.
+window.addEventListener('online', function() {
+  if (currentUser && typeof syncDataToCloud === 'function') {
+    console.log('🌐 Back online — pushing any unsynced local data');
+    syncDataToCloud().catch(function(e) {
+      console.warn('[Storage] Reconnect sync failed:', e);
+    });
+  }
+});
+
 // ============================================================================
 // AUTH FUNCTIONS
 // ============================================================================
