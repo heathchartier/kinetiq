@@ -555,68 +555,16 @@ function exSetFilter(cat) {
 }
 
 function collectExercises() {
-  var seen = {};
-  var result = [];
-
-  // First: curated standalone database (muscle/equipment already accurate)
-  if (typeof EXERCISE_DB !== 'undefined') {
-    EXERCISE_DB.forEach(function(ex) {
-      if (!ex.name || seen[ex.name.toLowerCase()]) return;
-      seen[ex.name.toLowerCase()] = true;
-      result.push({ name: ex.name, muscle: ex.muscle, equipment: ex.equipment, desc: ex.desc });
-    });
-  }
-
-  // Second: exercises from all programs (fills in anything not in the DB)
-  allProgs().forEach(function(prog) {
-    (prog.phases || []).forEach(function(phase) {
-      (phase.weeks || []).forEach(function(week) {
-        (week.days || []).forEach(function(day) {
-          (day.exercises || []).forEach(function(ex) {
-            if (!ex.name) return;
-            var name = ex.name
-              .replace(/^(Mobility Warmup|Warmup|Interval \d+|Finisher)\s*[–—\-]\s*/i, '')
-              .trim();
-            if (!name || seen[name.toLowerCase()]) return;
-            seen[name.toLowerCase()] = true;
-            result.push({ name: name, muscle: getExMuscle(name), equipment: getExEquipment(name) });
-          });
-        });
-      });
-    });
-  });
-
-  return result.sort(function(a, b) { return a.name.localeCompare(b.name); });
-}
-
-function getExMuscle(name) {
-  var n = name.toLowerCase();
-  if (/circuit|complex\s*[–\-]|treadmill|walk or bike|cooldown|burpee|mountain climber|jumping jack|high knees|butt kick|squat jump|jump squat|jump lunge|broad jump/.test(n)) return 'Cardio';
-  if (/foam roll|cat.cow|pigeon|90\/90|hip car|ankle car|shoulder car|scorpion|thread.the.needle|wall angel|sleeper|frog stretch|lat hang|thoracic|quadruped|breathing|deep squat hold|hip airplane|inchworm|cossack|windmill|turkish get.up|flow:|arm circle|leg swing|scapular shrug|prone y|shoulder flexion hang/.test(n)) return 'Mobility';
-  if (/static stretch|hip flexor stretch|calf stretch/.test(n)) return 'Mobility';
-  if (/squat|lunge|leg press|leg curl|leg extension|calf|hip thrust|glute bridge|glute kickback|romanian deadlift|rdl|pistol|kettlebell swing|bulgarian|single.leg glute/.test(n)) return 'Legs';
-  if (/\bdeadlift\b/.test(n) && !/row/.test(n)) return 'Legs';
-  if (/plank|dead bug|deadbug|crunch|hollow|v.up|pallof|bird.dog|superman|loaded beast|dragon flag|bicycle|copenhagen|bear crawl/.test(n)) return 'Core';
-  if (/farmer carry|single.arm.*carry|overhead carry/.test(n)) return 'Core';
-  if (/row|pulldown|pull.up|inverted row|chest.supported|weighted pull/.test(n)) return 'Back';
-  if (/bench press|floor press|chest press|incline|flye|fly|dips|close.grip/.test(n)) return 'Chest';
-  if (/push.up|pushup/.test(n) && !/pike push/.test(n)) return 'Chest';
-  if (/shoulder press|overhead press|lateral raise|band pull.apart|face pull|pike push/.test(n)) return 'Shoulders';
-  if (/\bpress\b/.test(n)) return 'Shoulders';
-  if (/curl|tricep|extension/.test(n)) return 'Arms';
-  return 'Mobility';
-}
-
-function getExEquipment(name) {
-  var n = name.toLowerCase();
-  if (/barbell/.test(n)) return 'Barbell';
-  if (/dumbbell/.test(n)) return 'Dumbbell';
-  if (/kettlebell/.test(n)) return 'Kettlebell';
-  if (/cable/.test(n)) return 'Cable';
-  if (/machine|leg press|leg curl|leg extension/.test(n) && !/dumbbell|barbell/.test(n)) return 'Machine';
-  if (/\bband\b/.test(n)) return 'Band';
-  if (/foam roll/.test(n)) return 'Foam Roller';
-  return '';
+  // Only the curated database — every entry here has an accurate muscle
+  // group, equipment tag, and a real how-to description. Program-derived
+  // exercise text used to be merged in as a fallback, but every program
+  // author writes exercise names differently (numbering, "(heavy)",
+  // "— SUPERSET" style suffixes, etc.), which produced dozens of near-
+  // duplicate entries that could never have a real description. The
+  // curated list already covers standard gym equipment and bodyweight
+  // movements, so it stays the single source of truth for the library.
+  if (typeof EXERCISE_DB === 'undefined') return [];
+  return EXERCISE_DB.slice().sort(function(a, b) { return a.name.localeCompare(b.name); });
 }
 
 function rExLib() {
