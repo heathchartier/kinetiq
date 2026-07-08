@@ -356,17 +356,73 @@ async function syncPRsToCloud() {
 }
 
 async function syncBodyMeasurementsToCloud() {
+  if (!currentUser) return;
   const measurements = JSON.parse(localStorage.getItem('bodyMeasurements') || '[]');
-  
-  // For now, just store in user's profile as JSON
-  // In future, create separate body_measurements table
-  if (measurements.length > 0) {
-    await supabaseClient
-      .from('profiles')
-      .update({ 
-        current_bodyweight: measurements[measurements.length - 1].weight || null
-      })
-      .eq('id', currentUser.id);
+  if (measurements.length === 0) return;
+
+  // Backfill ids for any measurements saved before id tracking existed
+  var changed = false;
+  measurements.forEach(function(m) {
+    if (!m.id) { m.id = 'm_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); changed = true; }
+  });
+  if (changed) localStorage.setItem('bodyMeasurements', JSON.stringify(measurements));
+
+  const rows = measurements.map(m => ({
+    id: m.id,
+    user_id: currentUser.id,
+    measured_at: m.date,
+    weight: m.weight || null,
+    body_fat: m.bodyFat || null,
+    waist: m.waist || null,
+    chest: m.chest || null,
+    arms: m.arms || null,
+    thighs: m.thighs || null
+  }));
+
+  await supabaseClient.from('body_measurements').upsert(rows, { onConflict: 'id' });
+
+  // measurements[0] is the newest entry (new saves are unshifted to the front)
+  await supabaseClient
+    .from('profiles')
+    .update({ current_bodyweight: measurements[0].weight || null })
+    .eq('id', currentUser.id);
+}
+
+async function syncBodyMeasurementsFromCloud() {
+  if (!currentUser) return;
+
+  const { data: cloudMeasurements, error } = await supabaseClient
+    .from('body_measurements')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('measured_at', { ascending: false });
+
+  if (error) { console.error('Error loading measurements from cloud:', error); return; }
+  if (!cloudMeasurements || cloudMeasurements.length === 0) return;
+
+  const cloudList = cloudMeasurements.map(m => ({
+    id: m.id,
+    date: m.measured_at,
+    weight: m.weight,
+    bodyFat: m.body_fat,
+    waist: m.waist,
+    chest: m.chest,
+    arms: m.arms,
+    thighs: m.thighs
+  }));
+
+  const localList = JSON.parse(localStorage.getItem('bodyMeasurements') || '[]');
+  const cloudIds = new Set(cloudList.map(m => m.id));
+  // Keep any local-only entries not yet synced (e.g. saved while offline)
+  const localOnly = localList.filter(m => m.id && !cloudIds.has(m.id));
+  const merged = cloudList.concat(localOnly).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  localStorage.setItem('bodyMeasurements', JSON.stringify(merged));
+
+  // Keep the in-memory measurements array (declared in app.js) in sync immediately.
+  if (typeof measurements !== 'undefined') {
+    measurements.length = 0;
+    Array.prototype.push.apply(measurements, merged);
   }
 }
 
@@ -526,13 +582,16 @@ async function syncDataFromCloud() {
     // 4. SYNC FOOD LOGS (last 7 days)
     await syncFoodLogsFromCloud();
 
-    // 5. SYNC ACTIVE PROGRAM (restores currentProgram/Week/Day if localStorage was cleared)
+    // 5. SYNC BODY MEASUREMENTS
+    await syncBodyMeasurementsFromCloud();
+
+    // 6. SYNC ACTIVE PROGRAM (restores currentProgram/Week/Day if localStorage was cleared)
     await syncActiveProgramFromCloud();
 
-    // 6. SYNC ONBOARDING PREFS (restores goal/level/equipment from profile)
+    // 7. SYNC ONBOARDING PREFS (restores goal/level/equipment from profile)
     await syncOnboardingPrefsFromCloud();
 
-    // 7. SYNC ACCESS TIER (premium unlocks MAPS + 5x5)
+    // 8. SYNC ACCESS TIER (premium unlocks MAPS + 5x5)
     await syncAccessTierFromCloud();
 
     console.log('✅ All cloud data synced to local');
@@ -544,6 +603,7 @@ async function syncDataFromCloud() {
     if (typeof renderFoodLog === 'function') renderFoodLog();
     if (typeof renderFrequentFoods === 'function') renderFrequentFoods();
     if (typeof updateNutritionSummary === 'function') updateNutritionSummary();
+    if (typeof renderMeasurements === 'function') renderMeasurements();
     if (typeof rProg === 'function') rProg();
     if (typeof rProgs === 'function') rProgs();
   } catch (error) {

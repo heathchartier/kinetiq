@@ -2055,6 +2055,7 @@ function saveMeasurement() {
   }
   
   var measurement = {
+    id: uid(),
     date: new Date().toISOString(),
     weight: weight,
     bodyFat: bf,
