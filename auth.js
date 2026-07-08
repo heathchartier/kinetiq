@@ -466,9 +466,48 @@ async function syncNutritionGoalsToCloud() {
 }
 
 async function syncFavoriteFoodsToCloud() {
-  // Favorite foods are just stored as flags on food items
-  // We'll handle this when we build the full food database sync
-  // For now, skip
+  if (!currentUser) return;
+  const favorites = JSON.parse(localStorage.getItem('favoriteFoods') || '[]');
+
+  // Full replace: simplest way to correctly handle both additions and removals
+  await supabaseClient.from('favorite_foods').delete().eq('user_id', currentUser.id);
+
+  if (favorites.length > 0) {
+    const rows = favorites.map(f => ({
+      user_id: currentUser.id,
+      name: f.name,
+      cals: f.cals || 0,
+      protein: f.protein || 0,
+      carbs: f.carbs || 0,
+      fat: f.fat || 0
+    }));
+    await supabaseClient.from('favorite_foods').insert(rows);
+  }
+}
+
+async function syncFavoriteFoodsFromCloud() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabaseClient
+    .from('favorite_foods')
+    .select('*')
+    .eq('user_id', currentUser.id);
+
+  if (error) { console.error('Error loading favorite foods from cloud:', error); return; }
+
+  const cloudList = (data || []).map(f => ({ name: f.name, cals: f.cals, protein: f.protein, carbs: f.carbs, fat: f.fat }));
+  const localList = JSON.parse(localStorage.getItem('favoriteFoods') || '[]');
+  // Keep any local-only favorites not yet pushed to the cloud (e.g. added while offline)
+  const cloudNames = new Set(cloudList.map(f => f.name));
+  const localOnly = localList.filter(f => !cloudNames.has(f.name));
+  const merged = cloudList.concat(localOnly);
+
+  localStorage.setItem('favoriteFoods', JSON.stringify(merged));
+
+  if (typeof favoriteFoods !== 'undefined') {
+    favoriteFoods.length = 0;
+    Array.prototype.push.apply(favoriteFoods, merged);
+  }
 }
 
 async function syncFoodLogsToCloud() {
@@ -532,8 +571,81 @@ async function syncTodaysFoodLogToCloud() {
 }
 
 async function syncWaterLogsToCloud() {
-  // Water logs don't have a table yet, skip for now
-  // TODO: Add water_log table in future
+  if (!currentUser) return;
+  const today = new Date();
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+
+    const dayLog = JSON.parse(localStorage.getItem('waterLog_' + dateStr) || 'null');
+    if (!dayLog || !dayLog.entries || dayLog.entries.length === 0) continue;
+
+    await supabaseClient.from('water_log').delete()
+      .eq('user_id', currentUser.id)
+      .eq('logged_date', dateStr);
+
+    const rows = dayLog.entries.map(e => ({
+      user_id: currentUser.id,
+      logged_date: dateStr,
+      amount: e.amount,
+      logged_at: e.time
+    }));
+
+    if (rows.length > 0) {
+      await supabaseClient.from('water_log').insert(rows);
+    }
+  }
+
+  const goal = parseInt(localStorage.getItem('waterGoal') || '64');
+  await supabaseClient.from('profiles').update({ water_goal_oz: goal }).eq('id', currentUser.id);
+}
+
+async function syncWaterLogsFromCloud() {
+  if (!currentUser) return;
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+
+    const { data: entries, error } = await supabaseClient
+      .from('water_log')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .eq('logged_date', dateStr);
+
+    if (error || !entries || entries.length === 0) continue;
+
+    const total = entries.reduce((sum, e) => sum + Number(e.amount), 0);
+    const dayLog = {
+      total: total,
+      entries: entries.map(e => ({ time: e.logged_at, amount: e.amount })),
+      date: dateStr
+    };
+
+    localStorage.setItem('waterLog_' + dateStr, JSON.stringify(dayLog));
+
+    if (dateStr === todayStr && typeof waterLog !== 'undefined') {
+      waterLog.total = dayLog.total;
+      waterLog.entries = dayLog.entries;
+      waterLog.date = dayLog.date;
+    }
+  }
+
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('water_goal_oz')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (!profileError && profile && profile.water_goal_oz) {
+    localStorage.setItem('waterGoal', String(profile.water_goal_oz));
+    if (typeof waterGoal !== 'undefined') waterGoal = profile.water_goal_oz;
+  }
 }
 
 async function syncOnboardingPrefsToCloud() {
@@ -585,13 +697,19 @@ async function syncDataFromCloud() {
     // 5. SYNC BODY MEASUREMENTS
     await syncBodyMeasurementsFromCloud();
 
-    // 6. SYNC ACTIVE PROGRAM (restores currentProgram/Week/Day if localStorage was cleared)
+    // 6. SYNC FAVORITE FOODS
+    await syncFavoriteFoodsFromCloud();
+
+    // 7. SYNC WATER LOGS (last 30 days) + water goal
+    await syncWaterLogsFromCloud();
+
+    // 8. SYNC ACTIVE PROGRAM (restores currentProgram/Week/Day if localStorage was cleared)
     await syncActiveProgramFromCloud();
 
-    // 7. SYNC ONBOARDING PREFS (restores goal/level/equipment from profile)
+    // 9. SYNC ONBOARDING PREFS (restores goal/level/equipment from profile)
     await syncOnboardingPrefsFromCloud();
 
-    // 8. SYNC ACCESS TIER (premium unlocks MAPS + 5x5)
+    // 10. SYNC ACCESS TIER (premium unlocks MAPS + 5x5)
     await syncAccessTierFromCloud();
 
     console.log('✅ All cloud data synced to local');
@@ -604,6 +722,9 @@ async function syncDataFromCloud() {
     if (typeof renderFrequentFoods === 'function') renderFrequentFoods();
     if (typeof updateNutritionSummary === 'function') updateNutritionSummary();
     if (typeof renderMeasurements === 'function') renderMeasurements();
+    if (typeof renderFavorites === 'function') renderFavorites();
+    if (typeof renderWaterProgress === 'function') renderWaterProgress();
+    if (typeof loadWaterGoal === 'function' && document.getElementById('water-goal-input')) loadWaterGoal();
     if (typeof rProg === 'function') rProg();
     if (typeof rProgs === 'function') rProgs();
   } catch (error) {
