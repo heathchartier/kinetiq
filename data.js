@@ -520,7 +520,7 @@ var kinetiqStrengthData = {
   id: 'kinetiq-strength-builtin',
   name: 'Kinetiq Strength',
   source: 'builtin',
-  description: "A 12-week strength program built around the Big 4 lifts. Progressive overload is the only rule that matters — add weight, get stronger, don\'t get hurt. Every session includes a built-in mobility warmup because the smartest thing a strong person can do is stay healthy enough to keep training. 3 days per week. No fluff. **Recommended Progression:** Strength → Hypertrophy → Balance → Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
+  description: "A 12-week strength program built around the Big 4 lifts. Progressive overload is the only rule that matters — add weight, get stronger, don\'t get hurt. Every session includes a built-in mobility warmup because the smartest thing a strong person can do is stay healthy enough to keep training. 3 days per week. No fluff. **Recommended Progression:** Kinetiq Strength → Kinetiq Hypertrophy → Kinetiq Balance → Kinetiq Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
   difficulty: 'Intermediate',
   duration: '12 weeks',
   phases: [
@@ -1110,7 +1110,7 @@ var kinetiqHypertrophyData = {
   id: 'kinetiq-hypertrophy-builtin',
   name: 'Kinetiq Hypertrophy',
   source: 'builtin',
-  description: "A 12-week muscle building program that progresses through three distinct phases: Bridge (5x8), Growth (4x10-12), and Metabolic (3x12-15). This program is designed to run immediately after Kinetiq Strength — you\'ve built the strength foundation, now it\'s time to build the muscle. Volume increases, intensity adjusts, and your body adapts. Every session includes mobility work because joint health is non-negotiable when you\'re chasing growth. 3-4 days per week. **Recommended Progression:** Strong → Hypertrophy → Balance → Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
+  description: "A 12-week muscle building program that progresses through three distinct phases: Bridge (5x8), Growth (4x10-12), and Metabolic (3x12-15). This program is designed to run immediately after Kinetiq Strength — you\'ve built the strength foundation, now it\'s time to build the muscle. Volume increases, intensity adjusts, and your body adapts. Every session includes mobility work because joint health is non-negotiable when you\'re chasing growth. 3-4 days per week. **Recommended Progression:** Kinetiq Strength → Kinetiq Hypertrophy → Kinetiq Balance → Kinetiq Deload (1 wk) → Repeat with heavier weights. Programs can also run standalone based on your goals.",
   difficulty: 'Intermediate',
   duration: '12 weeks',
   phases: [
@@ -1134,10 +1134,10 @@ var kinetiqHypertrophyData = {
               focus: 'Squat Pattern + Quad Emphasis',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '10 each side', notes: 'Same warmup from Strong. Always start here for lower body days.' },
+                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '10 each side', notes: 'Same warmup from Kinetiq Strength. Always start here for lower body days.' },
                 { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '12 each direction', notes: 'Mobile ankles = deeper squats = more quad growth.' },
                 { name: 'Mobility Warmup — Glute Bridge', sets: '2', reps: '15 reps', notes: 'Wake up the glutes before you load them. Squeeze at the top for 2 seconds.' },
-                { name: 'Barbell Back Squat', sets: '5', reps: '8', notes: 'Your first 5x8. Drop the weight from what you were hitting in Strong. Focus on tempo: 2 seconds down, 1 second pause at bottom, explode up. This is not a strength program anymore — muscle growth happens in the eccentric and the stretch.' },
+                { name: 'Barbell Back Squat', sets: '5', reps: '8', notes: 'Your first 5x8. Drop the weight from what you were hitting in Kinetiq Strength. Focus on tempo: 2 seconds down, 1 second pause at bottom, explode up. This is not a strength program anymore — muscle growth happens in the eccentric and the stretch.' },
                 { name: 'Leg Press', sets: '4', reps: '12', notes: 'First accessory movement. Feet shoulder-width, mid-platform. Push through heels. Control the descent — do not let the sled crash into the stack. This builds quad size without taxing your lower back after squats.' },
                 { name: 'Walking Lunges', sets: '3', reps: '12 each leg', notes: 'Bodyweight or holding dumbbells. Step far enough forward that your back knee nearly touches the ground. Stand tall at the top of each rep. These destroy your quads in the best way.' },
                 { name: 'Seated Calf Raise', sets: '4', reps: '15', notes: 'Calves respond to high reps. Full stretch at the bottom, full contraction at the top. Hold the peak for 1 second.' }
@@ -1148,10 +1148,10 @@ var kinetiqHypertrophyData = {
               focus: 'Chest + Shoulders + Triceps',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps', notes: 'Same as Strong. Keeps your shoulders healthy.' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps', notes: 'Same as Kinetiq Strength. Keeps your shoulders healthy.' },
                 { name: 'Mobility Warmup — Thoracic Extension over Foam Roller', sets: '2', reps: '12 reps', notes: 'Open up your upper back before pressing.' },
                 { name: 'Mobility Warmup — Wrist Circles', sets: '2', reps: '12 each direction', notes: 'Pressing is hard on wrists. Warm them up.' },
-                { name: 'Barbell Bench Press', sets: '5', reps: '8', notes: 'Drop the weight from Strong. Same cues: feet driving into floor, bar path straight, touch lower chest. But now you\'re doing 5 sets instead of 3. Control the descent for 2 seconds. Chest growth happens on the way down.' },
+                { name: 'Barbell Bench Press', sets: '5', reps: '8', notes: 'Drop the weight from Kinetiq Strength. Same cues: feet driving into floor, bar path straight, touch lower chest. But now you\'re doing 5 sets instead of 3. Control the descent for 2 seconds. Chest growth happens on the way down.' },
                 { name: 'Incline Dumbbell Press', sets: '4', reps: '10', notes: 'Bench set to 30-45 degrees. Dumbbells allow a deeper stretch than barbell. Lower the dumbbells until you feel a stretch across your upper chest. Press back up and squeeze at the top.' },
                 { name: 'Dumbbell Lateral Raise', sets: '4', reps: '12', notes: 'Light weight. Raise dumbbells out to the side until your arms are parallel to the floor. Lead with your elbows, not your hands. This builds shoulder width.' },
                 { name: 'Overhead Tricep Extension', sets: '3', reps: '12', notes: 'Dumbbell or cable. Elbows stay pinned next to your head — do not let them flare out. Full stretch at the bottom, full contraction at the top.' }
@@ -1165,7 +1165,7 @@ var kinetiqHypertrophyData = {
                 { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '12 reps', notes: 'Warm up your spine before deadlifting.' },
                 { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '6 each side', notes: 'Best single warmup for hip mobility and deadlift prep.' },
                 { name: 'Mobility Warmup — Leg Swings', sets: '2', reps: '15 each leg', notes: 'Forward/back and side-to-side. Loosen up the hips.' },
-                { name: 'Barbell Deadlift', sets: '5', reps: '8', notes: 'Same setup as Strong. Drop the weight 10-15%. Bar over mid-foot, hinge to the bar, lats tight, drive the floor away. The deadlift builds your entire posterior chain — hamstrings, glutes, lower back, upper back. You\'re doing 5 sets now. Stay disciplined with your setup on every single rep.' },
+                { name: 'Barbell Deadlift', sets: '5', reps: '8', notes: 'Same setup as Kinetiq Strength. Drop the weight 10-15%. Bar over mid-foot, hinge to the bar, lats tight, drive the floor away. The deadlift builds your entire posterior chain — hamstrings, glutes, lower back, upper back. You\'re doing 5 sets now. Stay disciplined with your setup on every single rep.' },
                 { name: 'Romanian Deadlift (Dumbbell)', sets: '4', reps: '12', notes: 'Lighter than barbell deadlifts. Focus on the hamstring stretch. Hinge at the hips, push your butt back, feel the dumbbells travel down your shins. When you feel a deep stretch in your hamstrings, reverse the movement by driving your hips forward.' },
                 { name: 'Lying Leg Curl', sets: '4', reps: '12', notes: 'Isolation work for hamstrings. Curl your heels toward your butt. Squeeze at the top for 1 second. Lower with control.' },
                 { name: 'Standing Calf Raise', sets: '4', reps: '15', notes: 'Bodyweight or machine. Full range — drop your heels as low as possible, then rise all the way up onto your toes. Calves need volume to grow.' }
@@ -1178,7 +1178,7 @@ var kinetiqHypertrophyData = {
               exercises: [
                 { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps' },
                 { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '10 reps', notes: 'Hang from a bar. Without bending your elbows, shrug your shoulders down and back. This activates your lats before pulling.' },
-                { name: 'Barbell Bent-Over Row', sets: '5', reps: '8', notes: 'Same row from Strong. Hinge to roughly 45 degrees. Pull the bar to your lower chest. Lead with your elbows. Your back should be doing the work — not your biceps.' },
+                { name: 'Barbell Bent-Over Row', sets: '5', reps: '8', notes: 'Same row from Kinetiq Strength. Hinge to roughly 45 degrees. Pull the bar to your lower chest. Lead with your elbows. Your back should be doing the work — not your biceps.' },
                 { name: 'Lat Pulldown', sets: '4', reps: '10', notes: 'Wide grip. Pull the bar down to your upper chest. Lean back slightly. Think about pulling your elbows down and back — not pulling with your hands. This builds lat width.' },
                 { name: 'Chest-Supported Dumbbell Row', sets: '4', reps: '12', notes: 'Set an incline bench to 45 degrees. Lie chest-down on it. Row dumbbells up to your ribs. This takes your lower back out of the equation and isolates your mid-back.' },
                 { name: 'Dumbbell Bicep Curl', sets: '4', reps: '12', notes: 'Standing. Dumbbells at your sides. Curl them up, supinating (rotating) your wrists as you lift. Full contraction at the top. Lower with control.' },
@@ -1840,142 +1840,189 @@ var kinetiqBalanceData = {
   id: 'kinetiq-balance-builtin',
   name: 'Kinetiq Balance',
   source: 'builtin',
-  description: "An 8-week program focused on single-leg and single-arm work to fix imbalances, build stability, and bulletproof your joints. After months of heavy bilateral training in Strong and Hypertrophy, your body has developed strength asymmetries — one side is always slightly stronger. This program fixes that. You will work one limb at a time, forcing each side to carry its own weight. CRITICAL RULE: Always start with your weaker side and match the reps on your stronger side. If your left leg can only do 8 reps, your right leg does 8 — not 10, not 12. This is how you build true balance. 3-4 days per week. Recommended Progression: Strong → Hypertrophy → Balance → Deload (1 wk) → Repeat. Programs can run standalone or mixed based on your goals.",
-  difficulty: 'Intermediate',
-  duration: '8 weeks',
+  description: "A 9-week full-body program built around suspension training, resistance bands, dumbbells, and cables — no barbell required. Phase 1 develops full-body strength and stability through suspension trainer and band holds and controlled reps. Phase 2 shifts to dumbbell and cable circuits for a metabolic, conditioning-style stimulus. Phase 3 moves into dumbbell and cable sculpting work, with an optional focus block each session so you can target the area you care about most. Every session trains your whole body — no split days. 3 days per week, with light mobility, walking, calves, and core work built into your off days. **Recommended Progression:** Kinetiq Balance → Kinetiq Strength or Kinetiq 5x5. A great starting point if you're newer to structured full-body training or want to build a stability base before moving into heavier barbell work.",
+  difficulty: 'Beginner–Intermediate',
+  duration: '9 weeks',
   phases: [
 
-    // ===================== PHASE 1: INTRODUCTION =====================
+    // ===================== PHASE 1: SUSPENSION & BANDS =====================
     {
-      name: 'Phase 1 — Introduction (Weeks 1-2)',
-      objective: 'Learn unilateral movements and identify imbalances. Single-leg and single-arm work is humbling — weights that feel light bilaterally will challenge you here. Your weaker side will dictate the pace. Accept it. This phase is about movement quality, not load.',
-      length: '2 weeks',
+      name: 'Phase 1 — Suspension & Bands (Weeks 1-3)',
+      objective: 'Build full-body strength and stability using a suspension trainer and resistance bands. Learn to control your own bodyweight through holds and controlled reps before adding heavier load. Every session trains your whole body — push, pull, legs, and core.',
+      length: '3 weeks',
       sets: '3 sets',
-      reps: '8-10 reps per side',
-      rest: '90 seconds between sets',
-      frequency: '3-4 days per week',
-      notes: 'Start light — use 50-60% of what you would use for bilateral work. Focus on balance and control. ALWAYS start with your weaker side and match reps on your stronger side. If left leg gets 8 reps, right leg does 8. Do not let your strong side do more reps.',
+      reps: '10-15 reps (or 20-45 second holds)',
+      rest: '60-75 seconds between sets',
+      frequency: '3 days per week — non-consecutive days (e.g. Mon/Wed/Fri)',
+      notes: 'Equipment: suspension trainer (TRX-style) and resistance bands only. Focus on control, not speed — a slow, stable rep beats a fast, sloppy one. On your off days: an easy 20-30 minute walk, calf raises, and core work (see the Active Recovery day each week).',
       weeks: [
         {
-          name: 'Week 1 — Find Your Imbalances',
+          name: 'Week 1 — Learn the Movements',
           days: [
             {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Squat Pattern + Balance',
+              name: 'Day A — Full Body Suspension Strength',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '10 each side', notes: 'Same warmup from Strong and Hypertrophy. Open up the hips before single-leg work.' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '10 each side', notes: 'Lie on your back, one foot on the ground, other leg extended. Drive through the planted heel and lift your hips. Squeeze your glute at the top. This activates each glute independently.' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '12 each direction (both ankles)', notes: 'Single-leg work demands mobile ankles.' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '3', reps: '8-10 each leg', notes: 'Back foot elevated on a bench, dumbbells in hands. Start with your WEAKER leg forward. Lower until your back knee nearly touches the ground. Drive through your front heel to stand. Count your reps. If your weak leg gets 8 reps, your strong leg does 8 — no more. This is the foundational movement of this program. Start light.' },
-                { name: 'Single-Leg Press (Machine)', sets: '3', reps: '10 each leg', notes: 'One foot on the platform, the other foot off to the side. Press through your heel. Lower with control. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '3', reps: '10 each leg', notes: 'Stand on one leg, dumbbell in the opposite hand. Hinge forward, letting the dumbbell travel down your standing leg. Your non-working leg extends behind you for balance. Feel the hamstring stretch. Drive your hips forward to stand. This challenges balance and hamstring strength simultaneously. Start with your weaker leg.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '15 each leg', notes: 'Stand on one leg, rise up onto your toes. Lower with control. Hold something for balance if needed. Start with your weaker leg.' }
+                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '10 reps', notes: 'Warm up your spine before loading it.' },
+                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps', notes: 'Wake up your shoulders and upper back.' },
+                { name: 'Suspension Trainer Row', sets: '3', reps: '10-12 reps', notes: 'Lean back, straps taut. Pull your chest to your hands, elbows close to your body. Walk your feet forward to make it easier, back to make it harder. This is your pull for the day.' },
+                { name: 'Suspension Trainer Chest Press', sets: '3', reps: '10-12 reps', notes: 'Face away from the anchor, lean forward into the straps. Press yourself back up. Keep your body in a straight line — no sagging hips.' },
+                { name: 'Suspension Trainer Squat', sets: '3', reps: '12-15 reps', notes: 'Hold the straps for balance, not for pulling. Sit your hips back and down like sitting into a chair. Drive through your heels to stand.' },
+                { name: 'Suspension Trainer Hamstring Curl', sets: '3', reps: '10-12 reps', notes: 'Lying on your back, heels in the straps. Bridge your hips up, then curl your heels toward your glutes. Extend back out with control.' },
+                { name: 'Suspension Trainer Plank Hold', sets: '3', reps: '20-30 second hold', notes: 'Feet in the straps, hands on the floor. Body in a straight line from head to heels. Brace your core — do not let your hips sag or pike.' }
               ]
             },
             {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Unilateral Pressing + Anti-Rotation',
+              name: 'Day B — Full Body Band Strength',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps', notes: 'Same as always. Healthy shoulders matter even more when working one arm at a time.' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '10 each side', notes: 'On all fours, place one hand behind your head. Rotate your elbow down toward the opposite elbow, then rotate up toward the ceiling. This opens up your thoracic spine before single-arm work.' },
-                { name: 'Single-Arm Dumbbell Press', sets: '3', reps: '8-10 each arm', notes: 'Standing or seated. Press one dumbbell overhead. Your core has to resist rotation — do not let your body twist. Start with your weaker arm. If your weak arm gets 8 reps, your strong arm does 8. This will feel strange at first. Your core is working hard to stabilize.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '10 each arm', notes: 'One hand and one knee on a bench, dumbbell in the free hand. Pull the dumbbell to your ribs. Do not rotate your torso — keep your shoulders square. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '3', reps: '10 each arm', notes: 'Stand facing away from a cable machine, handle in one hand at chest height. Press forward. Your core fights rotation. Do not let your body twist. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '3', reps: '12 each side', notes: 'Stand sideways to a cable machine, handle at chest height. Hold the handle with both hands at your chest. Press the handle straight out in front of you. The cable tries to pull you sideways — resist. Your core is learning to resist rotation under load. This is foundational core stability work.' },
-                { name: 'Single-Arm Farmer Carry', sets: '3', reps: '40 yards each arm', notes: 'Hold a heavy dumbbell or kettlebell in one hand. Walk. Do not lean to the side. Your core and obliques work to keep you upright. Start with your weaker side.' }
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '6 each side', notes: 'Best single warmup for full-body mobility.' },
+                { name: 'Band Squat', sets: '3', reps: '15 reps', notes: 'Stand on the band, handles at your shoulders. Squat down and drive back up against the band tension. Your legs, not your back, do the work.' },
+                { name: 'Band Row', sets: '3', reps: '15 reps', notes: 'Anchor the band in front of you at chest height. Pull the handles to your ribs, squeezing your shoulder blades together.' },
+                { name: 'Band Overhead Press', sets: '3', reps: '12 reps', notes: 'Stand on the band, handles at your shoulders. Press straight overhead. Keep your ribs down — don\'t arch your lower back.' },
+                { name: 'Band Deadlift', sets: '3', reps: '15 reps', notes: 'Stand on the band, feet hip-width apart. Hinge at your hips, letting the band lengthen, then drive your hips forward to stand tall. This is a hip hinge, not a squat.' },
+                { name: 'Band Pallof Press', sets: '3', reps: '12 each side', notes: 'Anchor the band to your side at chest height. Press the handle straight out in front of you. The band tries to pull you sideways — resist. This is anti-rotation core work.' }
               ]
             },
             {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Posterior Chain + Stability',
+              name: 'Day C — Full Body Suspension + Band Stability',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '12 reps', notes: 'Warm up your spine before hinge work.' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '6 each side', notes: 'Best single warmup for hip mobility.' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '10 each side', notes: 'Activate each glute independently.' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '3', reps: '8-10 each leg', notes: 'Stand on one leg, barbell in both hands. Hinge forward. Your non-working leg extends behind you. Feel the deep hamstring stretch on your standing leg. This is more challenging than the dumbbell version because the barbell forces you to balance more carefully. Start light. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '3', reps: '10 each leg', notes: 'Upper back on a bench, one foot planted on the ground, other leg extended. Drive your hips up. Squeeze your glute hard at the top for 2 seconds. This isolates each glute. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '3', reps: '10 each leg', notes: 'Lying leg curl machine, one leg at a time. Curl your heel toward your butt. Squeeze at the top. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '3', reps: '10 each leg', notes: 'Bodyweight or holding dumbbells. Step forward into a lunge. Your back knee nearly touches the ground. Stand up and bring your back leg forward into the next lunge. This is unilateral work in motion. Control every rep.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '15 each leg', notes: 'One leg at a time. Full range of motion.' }
+                { name: 'Mobility Warmup — Hip 90/90 Stretch', sets: '2', reps: '10 each side', notes: 'Open up your hips before lunge work.' },
+                { name: 'Suspension Trainer Lunge', sets: '3', reps: '10 each leg', notes: 'One foot in the strap behind you, other foot planted. Lower into a lunge, drive back up. The suspension trainer helps you balance while your legs do the work.' },
+                { name: 'Suspension Trainer Y-Raise', sets: '3', reps: '12 reps', notes: 'Lean back, straps taut, arms forming a Y overhead. Pull your body up by squeezing your shoulder blades down and back. Targets your rear delts and upper back.' },
+                { name: 'Band Bicep Curl', sets: '3', reps: '15 reps', notes: 'Stand on the band, curl the handles up. Keep your elbows pinned to your sides.' },
+                { name: 'Band Tricep Extension', sets: '3', reps: '15 reps', notes: 'Anchor the band overhead or step on it behind you. Extend your arms straight down or back, squeezing your triceps.' },
+                { name: 'Suspension Trainer Knee Tuck', sets: '3', reps: '10-12 reps', notes: 'Feet in the straps, hands on the floor in a plank. Drive your knees toward your chest, then extend back out. Full-body core control.' },
+                { name: 'Suspension Trainer Side Plank', sets: '3', reps: '20-30 second hold each side', notes: 'One foot in the strap, forearm on the floor. Body in a straight line. Do not let your hips drop.' }
               ]
             },
             {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Rowing + Anti-Lateral Flexion',
-              type: 'workout',
+              name: 'Active Recovery — Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '10 reps', notes: 'Hang from a bar. Shrug your shoulders down and back without bending your elbows.' },
-                { name: 'Single-Arm Cable Row', sets: '3', reps: '10 each arm', notes: 'Seated at a cable row station. Pull with one arm. Do not rotate your torso. Keep your shoulders square. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '3', reps: '10 each arm', notes: 'Pull the handle down to your chest with one arm. Your torso will want to rotate — do not let it. Core stays tight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '3', reps: '10 each arm', notes: 'Lie on a bench. Press one dumbbell. Your body will want to roll toward the working side — resist. Keep your shoulders flat on the bench. This teaches core stability under pressing load. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '3', reps: '30-45 seconds each side', notes: 'Forearm on the ground, body in a straight line. Do not let your hips sag. This builds anti-lateral flexion strength — your core resists bending sideways. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '3', reps: '40 yards each arm', notes: 'Hold a dumbbell or kettlebell overhead in one hand. Walk. Do not lean. Your shoulder stabilizers and core work together to keep you upright. Start with your weaker side.' }
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '20-30 minutes', notes: 'Easy pace — you should be able to hold a conversation. This is recovery, not cardio training.' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '15-20 reps', notes: 'Slow and controlled. Full range of motion — all the way up, all the way down.' },
+                { name: 'Plank', sets: '3', reps: '20-30 second hold', notes: 'Keep it light and controlled. This is maintenance, not a max effort.' },
+                { name: 'Cat-Cow', sets: '2', reps: '10 reps', notes: 'Gentle spinal mobility to stay loose between training days.' }
               ]
             }
           ]
         },
         {
-          name: 'Week 2 — Refine Technique',
+          name: 'Week 2 — Build Control',
           days: [
             {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Squat Pattern + Balance',
+              name: 'Day A — Full Body Suspension Strength',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '10 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '10 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '12 each direction (both ankles)' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '3', reps: '8-10 each leg', notes: 'Same weight as Week 1 or add 5 lbs per dumbbell if all reps were clean. Focus on depth and control. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Press (Machine)', sets: '3', reps: '10 each leg', notes: 'Add weight if Week 1 felt easy. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '3', reps: '10 each leg', notes: 'Add 5 lbs per dumbbell if balance felt solid in Week 1. Start with your weaker leg.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Unilateral Pressing + Anti-Rotation',
-              type: 'workout',
-              exercises: [
+                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '10 reps' },
                 { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '10 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '3', reps: '8-10 each arm', notes: 'Add 5 lbs if Week 1 was solid. Start with your weaker arm. Match reps.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '10 each arm', notes: 'Add weight if form was perfect in Week 1. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '3', reps: '10 each arm', notes: 'Add weight if you controlled rotation well in Week 1. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '3', reps: '12 each side', notes: 'Add weight or step further from the cable to increase difficulty.' },
-                { name: 'Single-Arm Farmer Carry', sets: '3', reps: '40 yards each arm', notes: 'Add 5-10 lbs if Week 1 felt easy. Start with your weaker side.' }
+                { name: 'Suspension Trainer Row', sets: '3', reps: '12 reps', notes: 'Walk your feet slightly forward from Week 1 to increase the difficulty if last week felt manageable.' },
+                { name: 'Suspension Trainer Chest Press', sets: '3', reps: '12 reps', notes: 'Same progression logic — adjust your foot position to add difficulty.' },
+                { name: 'Suspension Trainer Squat', sets: '3', reps: '15 reps' },
+                { name: 'Suspension Trainer Hamstring Curl', sets: '3', reps: '12 reps' },
+                { name: 'Suspension Trainer Plank Hold', sets: '3', reps: '30 second hold' }
               ]
             },
             {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Posterior Chain + Stability',
+              name: 'Day B — Full Body Band Strength',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '12 reps' },
                 { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '6 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '10 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '3', reps: '8-10 each leg', notes: 'Add 10 lbs if balance was solid in Week 1. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '3', reps: '10 each leg', notes: 'Add weight across your hips if Week 1 felt easy. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '3', reps: '10 each leg', notes: 'Add weight if form was solid. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '3', reps: '10 each leg', notes: 'Add 5 lbs per dumbbell if balance was good in Week 1.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '15 each leg' }
+                { name: 'Band Squat', sets: '3', reps: '15 reps', notes: 'Move to a heavier band if Week 1 felt easy.' },
+                { name: 'Band Row', sets: '3', reps: '15 reps' },
+                { name: 'Band Overhead Press', sets: '3', reps: '12-15 reps' },
+                { name: 'Band Deadlift', sets: '3', reps: '15 reps' },
+                { name: 'Band Pallof Press', sets: '3', reps: '12 each side' }
               ]
             },
             {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Rowing + Anti-Lateral Flexion',
+              name: 'Day C — Full Body Suspension + Band Stability',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
+                { name: 'Mobility Warmup — Hip 90/90 Stretch', sets: '2', reps: '10 each side' },
+                { name: 'Suspension Trainer Lunge', sets: '3', reps: '12 each leg' },
+                { name: 'Suspension Trainer Y-Raise', sets: '3', reps: '12-15 reps' },
+                { name: 'Band Bicep Curl', sets: '3', reps: '15 reps' },
+                { name: 'Band Tricep Extension', sets: '3', reps: '15 reps' },
+                { name: 'Suspension Trainer Knee Tuck', sets: '3', reps: '12 reps' },
+                { name: 'Suspension Trainer Side Plank', sets: '3', reps: '30 second hold each side' }
+              ]
+            },
+            {
+              name: 'Active Recovery — Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '20-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '15-20 reps' },
+                { name: 'Plank', sets: '3', reps: '30 second hold' },
+                { name: 'Cat-Cow', sets: '2', reps: '10 reps' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 3 — Own the Pattern',
+          days: [
+            {
+              name: 'Day A — Full Body Suspension Strength',
+              focus: 'Push + Pull + Legs + Core',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '10 reps' },
                 { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '20 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '10 reps' },
-                { name: 'Single-Arm Cable Row', sets: '3', reps: '10 each arm', notes: 'Add weight if you controlled rotation in Week 1. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '3', reps: '10 each arm', notes: 'Add weight if form was solid. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '3', reps: '10 each arm', notes: 'Add 5 lbs if you kept your shoulders square in Week 1. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '3', reps: '30-45 seconds each side', notes: 'Add 5-10 seconds if Week 1 was easy. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '3', reps: '40 yards each arm', notes: 'Add 5-10 lbs if form was solid. Start with your weaker side.' }
+                { name: 'Suspension Trainer Row', sets: '3', reps: '15 reps', notes: 'Final week of Phase 1 — push for clean, controlled reps at your hardest body angle so far.' },
+                { name: 'Suspension Trainer Chest Press', sets: '3', reps: '15 reps' },
+                { name: 'Suspension Trainer Squat', sets: '3', reps: '15-20 reps' },
+                { name: 'Suspension Trainer Hamstring Curl', sets: '3', reps: '12-15 reps' },
+                { name: 'Suspension Trainer Plank Hold', sets: '3', reps: '40-45 second hold' }
+              ]
+            },
+            {
+              name: 'Day B — Full Body Band Strength',
+              focus: 'Push + Pull + Legs + Core',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '6 each side' },
+                { name: 'Band Squat', sets: '3', reps: '15-20 reps' },
+                { name: 'Band Row', sets: '3', reps: '15-20 reps' },
+                { name: 'Band Overhead Press', sets: '3', reps: '15 reps' },
+                { name: 'Band Deadlift', sets: '3', reps: '15-20 reps' },
+                { name: 'Band Pallof Press', sets: '3', reps: '15 each side' }
+              ]
+            },
+            {
+              name: 'Day C — Full Body Suspension + Band Stability',
+              focus: 'Push + Pull + Legs + Core',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Hip 90/90 Stretch', sets: '2', reps: '10 each side' },
+                { name: 'Suspension Trainer Lunge', sets: '3', reps: '12-15 each leg' },
+                { name: 'Suspension Trainer Y-Raise', sets: '3', reps: '15 reps' },
+                { name: 'Band Bicep Curl', sets: '3', reps: '15-20 reps' },
+                { name: 'Band Tricep Extension', sets: '3', reps: '15-20 reps' },
+                { name: 'Suspension Trainer Knee Tuck', sets: '3', reps: '15 reps' },
+                { name: 'Suspension Trainer Side Plank', sets: '3', reps: '40-45 second hold each side' }
+              ]
+            },
+            {
+              name: 'Active Recovery — Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '25-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '20 reps' },
+                { name: 'Plank', sets: '3', reps: '40-45 second hold' },
+                { name: 'Cat-Cow', sets: '2', reps: '10 reps' }
               ]
             }
           ]
@@ -1983,415 +2030,384 @@ var kinetiqBalanceData = {
       ]
     },
 
-    // ===================== PHASE 2: LOAD PROGRESSION =====================
+    // ===================== PHASE 2: METABOLIC — DUMBBELL & CABLE =====================
     {
-      name: 'Phase 2 — Load Progression (Weeks 3-4)',
-      objective: 'Add weight. Your body has adapted to unilateral work. Time to increase the load while maintaining perfect form. The imbalances are shrinking — your weaker side is catching up. Keep the rule: weaker side dictates reps.',
-      length: '2 weeks',
-      sets: '4 sets',
-      reps: '8-10 reps per side',
-      rest: '90-120 seconds between sets',
-      frequency: '3-4 days per week',
-      notes: 'Increase weight by 5-10% from Week 2. Four sets now instead of three. Your weaker side still dictates the rep count. If your weak side hits 8 reps, your strong side does 8.',
-      weeks: [
-        {
-          name: 'Week 3 — Add Volume',
-          days: [
-            {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Squat Pattern + Balance',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '15 each direction' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '4', reps: '8-10 each leg', notes: 'Add 5 lbs per dumbbell from Week 2. Four sets now. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Press (Machine)', sets: '4', reps: '10 each leg', notes: 'Add weight. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '4', reps: '10 each leg', notes: 'Add 5 lbs per dumbbell. Start with your weaker leg.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Unilateral Pressing + Anti-Rotation',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '12 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '4', reps: '8-10 each arm', notes: 'Add 5 lbs from Week 2. Start with your weaker arm. Match reps.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '4', reps: '12 each side', notes: 'Increase resistance or step further from the cable.' },
-                { name: 'Single-Arm Farmer Carry', sets: '4', reps: '40 yards each arm', notes: 'Add 10 lbs from Week 2. Start with your weaker side.' }
-              ]
-            },
-            {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Posterior Chain + Stability',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '15 reps' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '8 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '4', reps: '8-10 each leg', notes: 'Add 10 lbs from Week 2. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '4', reps: '10 each leg', notes: 'Add weight across your hips. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '4', reps: '10 each leg', notes: 'Add weight. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '4', reps: '10 each leg', notes: 'Add 5 lbs per dumbbell.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Rowing + Anti-Lateral Flexion',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '12 reps' },
-                { name: 'Single-Arm Cable Row', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '4', reps: '10 each arm', notes: 'Add 5 lbs. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '4', reps: '45 seconds each side', notes: 'Increase hold time. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '4', reps: '40 yards each arm', notes: 'Add 10 lbs. Start with your weaker side.' }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'Week 4 — Peak Load',
-          days: [
-            {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Squat Pattern + Balance',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '15 each direction' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '4', reps: '8-10 each leg', notes: 'Add 5 lbs per dumbbell from Week 3 if all reps were clean. This is peak load for Phase 2. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Press (Machine)', sets: '4', reps: '10 each leg', notes: 'Add weight. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '4', reps: '10 each leg', notes: 'Add 5 lbs per dumbbell. Start with your weaker leg.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Unilateral Pressing + Anti-Rotation',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '12 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '4', reps: '8-10 each arm', notes: 'Add 5 lbs from Week 3 if form was perfect. Peak load week. Start with your weaker arm. Match reps.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '4', reps: '12 each side', notes: 'Max resistance or max distance from cable.' },
-                { name: 'Single-Arm Farmer Carry', sets: '4', reps: '40 yards each arm', notes: 'Add 10 lbs from Week 3. Start with your weaker side.' }
-              ]
-            },
-            {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Posterior Chain + Stability',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '15 reps' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '8 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '4', reps: '8-10 each leg', notes: 'Add 10 lbs from Week 3. Peak load. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '4', reps: '10 each leg', notes: 'Add weight. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '4', reps: '10 each leg', notes: 'Add weight. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '4', reps: '10 each leg', notes: 'Add 5 lbs per dumbbell.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Rowing + Anti-Lateral Flexion',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '12 reps' },
-                { name: 'Single-Arm Cable Row', sets: '4', reps: '10 each arm', notes: 'Add weight. Peak load week. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '4', reps: '10 each arm', notes: 'Add weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '4', reps: '10 each arm', notes: 'Add 5 lbs. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '4', reps: '45-60 seconds each side', notes: 'Max hold time. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '4', reps: '40 yards each arm', notes: 'Add 10 lbs. Start with your weaker side.' }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    // ===================== PHASE 3: CONSOLIDATION =====================
-    {
-      name: 'Phase 3 — Consolidation (Weeks 5-6)',
-      objective: 'Maintain the load from Phase 2 and refine movement quality. Your imbalances are mostly corrected now. Both sides should feel nearly equal in strength and control. This phase cements the gains.',
-      length: '2 weeks',
-      sets: '4 sets',
-      reps: '8-10 reps per side',
-      rest: '90-120 seconds between sets',
-      frequency: '3-4 days per week',
-      notes: 'Same weight as Week 4. Focus on perfect reps. Your weaker side should be approaching your stronger side in strength. Continue starting with your weaker side and matching reps.',
-      weeks: [
-        {
-          name: 'Week 5 — Maintain and Refine',
-          days: [
-            {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Squat Pattern + Balance',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '15 each direction' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '4', reps: '8-10 each leg', notes: 'Same weight as Week 4. Perfect every rep. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Press (Machine)', sets: '4', reps: '10 each leg', notes: 'Same weight. Focus on depth and control. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '4', reps: '10 each leg', notes: 'Same weight. Feel the hamstring stretch. Start with your weaker leg.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Unilateral Pressing + Anti-Rotation',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '12 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '4', reps: '8-10 each arm', notes: 'Same weight as Week 4. Control the eccentric. Start with your weaker arm. Match reps.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '4', reps: '10 each arm', notes: 'Same weight. Perfect form. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '4', reps: '10 each arm', notes: 'Same weight. No rotation. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '4', reps: '12 each side', notes: 'Same resistance. Your core should feel rock solid by now.' },
-                { name: 'Single-Arm Farmer Carry', sets: '4', reps: '40 yards each arm', notes: 'Same weight. Start with your weaker side.' }
-              ]
-            },
-            {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Posterior Chain + Stability',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '15 reps' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '8 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '4', reps: '8-10 each leg', notes: 'Same weight as Week 4. Perfect your balance. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '4', reps: '10 each leg', notes: 'Same weight. Squeeze hard at the top. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '4', reps: '10 each leg', notes: 'Same weight. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '4', reps: '10 each leg', notes: 'Same weight. Control every rep.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Rowing + Anti-Lateral Flexion',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '12 reps' },
-                { name: 'Single-Arm Cable Row', sets: '4', reps: '10 each arm', notes: 'Same weight. No rotation. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '4', reps: '10 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '4', reps: '10 each arm', notes: 'Same weight. Shoulders stay square. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '4', reps: '60 seconds each side', notes: 'Hold strong. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '4', reps: '40 yards each arm', notes: 'Same weight. Start with your weaker side.' }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'Week 6 — Final Consolidation',
-          days: [
-            {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Squat Pattern + Balance',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '15 each direction' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '4', reps: '8-10 each leg', notes: 'Same weight. By now both sides should feel nearly equal. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Press (Machine)', sets: '4', reps: '10 each leg', notes: 'Same weight. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '4', reps: '10 each leg', notes: 'Same weight. Start with your weaker leg.' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Unilateral Pressing + Anti-Rotation',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '12 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '4', reps: '8-10 each arm', notes: 'Same weight. Both arms should feel nearly equal now. Start with your weaker arm. Match reps.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '4', reps: '10 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '4', reps: '10 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '4', reps: '12 each side' },
-                { name: 'Single-Arm Farmer Carry', sets: '4', reps: '40 yards each arm', notes: 'Same weight. Start with your weaker side.' }
-              ]
-            },
-            {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Posterior Chain + Stability',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '15 reps' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '8 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '12 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '4', reps: '8-10 each leg', notes: 'Same weight. Your balance should be excellent by now. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '4', reps: '10 each leg', notes: 'Same weight. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '4', reps: '10 each leg', notes: 'Same weight. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '4', reps: '10 each leg' },
-                { name: 'Single-Leg Calf Raise', sets: '4', reps: '15 each leg' }
-              ]
-            },
-            {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Rowing + Anti-Lateral Flexion',
-              type: 'workout',
-              exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '25 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '12 reps' },
-                { name: 'Single-Arm Cable Row', sets: '4', reps: '10 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '4', reps: '10 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '4', reps: '10 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '4', reps: '60 seconds each side', notes: 'Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '4', reps: '40 yards each arm', notes: 'Same weight. Start with your weaker side.' }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    // ===================== PHASE 4: METABOLIC FINISH =====================
-    {
-      name: 'Phase 4 — Metabolic Finish (Weeks 7-8)',
-      objective: 'High-rep unilateral work under fatigue. You have built strength and balance. Now you test it with metabolic stress. Lighter weights, higher reps, shorter rest. Your stability under fatigue is the final test.',
-      length: '2 weeks',
+      name: 'Phase 2 — Metabolic Dumbbell & Cable (Weeks 4-6)',
+      objective: 'Shift to dumbbell and cable full-body circuits for a metabolic, conditioning-style stimulus. Moderate loads, shorter rest, elevated heart rate. You are building work capacity and burning fat on top of the strength base from Phase 1.',
+      length: '3 weeks',
       sets: '3 sets',
-      reps: '12-15 reps per side',
-      rest: '60-90 seconds between sets',
-      frequency: '3-4 days per week',
-      notes: 'Drop weight by 20-30% from Week 6. High reps, short rest. This is about control under fatigue. Your weaker side still dictates reps. By the end of this phase, your imbalances should be minimal.',
+      reps: '12-15 reps',
+      rest: '30-45 seconds between exercises (circuit style)',
+      frequency: '3 days per week — non-consecutive days (e.g. Mon/Wed/Fri)',
+      notes: 'Equipment: dumbbells and cables. Move through each day as a circuit — complete one round of all exercises, rest briefly, then repeat. On your off days: dynamic mobility, an easy walk, calves, and core.',
       weeks: [
         {
-          name: 'Week 7 — High-Rep Stability',
+          name: 'Week 4 — Introduce the Circuits',
           days: [
             {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'High-Rep Endurance',
+              name: 'Day A — Full Body Dumbbell Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '15 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '15 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '20 each direction' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '3', reps: '12-15 each leg', notes: 'Drop weight by 25% from Week 6. High reps. Your legs will burn. Start with your weaker leg. Match reps.' },
-                { name: 'Single-Leg Press (Machine)', sets: '3', reps: '15 each leg', notes: 'Lighter weight, more reps. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '3', reps: '12-15 each leg', notes: 'Lighter weight. Control every inch of the movement. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '3', reps: '15 each leg', notes: 'Light dumbbells or bodyweight. High volume.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '20 each leg', notes: 'Burn out your calves. Start with your weaker leg.' }
+                { name: 'Mobility Warmup — Inchworm', sets: '2', reps: '8 reps', notes: 'Walk the hands out to a plank and back — warms up the whole body at once.' },
+                { name: 'Dumbbell Goblet Squat', sets: '3', reps: '15 reps', notes: 'Hold one dumbbell at your chest. Squat between your knees, drive back up.' },
+                { name: 'Dumbbell Bench Press', sets: '3', reps: '12 reps', notes: 'Flat or floor press. Press with control, no bouncing.' },
+                { name: 'Dumbbell Row', sets: '3', reps: '12 each arm', notes: 'One hand and knee on a bench, row the dumbbell to your ribs.' },
+                { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12 reps', notes: 'Hinge at your hips, dumbbells travel down your shins. Feel the hamstring stretch.' },
+                { name: 'Dumbbell Shoulder Press', sets: '3', reps: '12 reps', notes: 'Press overhead without arching your lower back.' },
+                { name: 'Plank with Shoulder Tap', sets: '3', reps: '30-45 second hold', notes: 'From a high plank, tap the opposite shoulder with each hand. Resist rotating your hips.' }
               ]
             },
             {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'High-Rep Stability',
+              name: 'Day B — Full Body Cable Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '30 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '15 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '3', reps: '12-15 each arm', notes: 'Drop weight by 25%. High reps. Your core works overtime to stabilize. Start with your weaker arm. Match reps.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '15 each arm', notes: 'Lighter weight. Focus on control. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '3', reps: '15 each arm', notes: 'Lighter weight. No rotation. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '3', reps: '15 each side', notes: 'High reps. Your core should be on fire by the end of each set.' },
-                { name: 'Single-Arm Farmer Carry', sets: '3', reps: '60 yards each arm', notes: 'Same weight as Week 6 but longer distance. Start with your weaker side.' }
+                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '10 each side', notes: 'Open up your upper back before pulling work.' },
+                { name: 'Seated Cable Row', sets: '3', reps: '15 reps', notes: 'Keep your chest tall, pull to your torso, control the return.' },
+                { name: 'Cable Chest Flye (Low to High)', sets: '3', reps: '12 reps' },
+                { name: 'Lat Pulldown (Wide Grip)', sets: '3', reps: '12 reps' },
+                { name: 'Woodchop (Cable)', sets: '3', reps: '12 each side', notes: 'Pull the cable diagonally across your body, rotating through your core — not just your arms.' },
+                { name: 'Dumbbell Walking Lunge', sets: '3', reps: '10 each leg' },
+                { name: 'Mountain Climbers', sets: '3', reps: '30 seconds', notes: 'Fast pace, but keep your hips level — don\'t let them bounce up and down.' }
               ]
             },
             {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'High-Rep Endurance',
+              name: 'Day C — Full Body Dumbbell + Cable Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '20 reps' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '10 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '15 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '3', reps: '12-15 each leg', notes: 'Drop weight by 25%. High reps. Feel the hamstring burn. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '3', reps: '15 each leg', notes: 'Lighter weight. Squeeze at the top of every rep. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '3', reps: '15 each leg', notes: 'Lighter weight. High reps. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '3', reps: '15 each leg' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '20 each leg' }
+                { name: 'Mobility Warmup — Scorpion Stretch', sets: '2', reps: '6 each side' },
+                { name: 'Dumbbell Reverse Lunge', sets: '3', reps: '10 each leg' },
+                { name: 'Cable Tricep Pushdown (Rope)', sets: '3', reps: '15 reps' },
+                { name: 'Hammer Curl', sets: '3', reps: '15 reps' },
+                { name: 'Dumbbell Hip Thrust', sets: '3', reps: '15 reps' },
+                { name: 'Face Pull', sets: '3', reps: '15 reps', notes: 'Elbows high, pull toward your face. Great for shoulder health.' },
+                { name: 'Russian Twist', sets: '3', reps: '20 reps (10 each side)' }
               ]
             },
             {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'High-Rep Stability',
-              type: 'workout',
+              name: 'Active Recovery — Dynamic Mobility + Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '30 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '15 reps' },
-                { name: 'Single-Arm Cable Row', sets: '3', reps: '15 each arm', notes: 'Lighter weight. Control the rotation. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '3', reps: '15 each arm', notes: 'Lighter weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '3', reps: '15 each arm', notes: 'Lighter weight. Shoulders stay square. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '3', reps: '60 seconds each side', notes: 'Max hold. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '3', reps: '60 yards each arm', notes: 'Same weight, longer distance. Start with your weaker side.' }
+                { name: 'Inchworm', sets: '2', reps: '8 reps', notes: 'Dynamic full-body movement to keep you loose without adding fatigue.' },
+                { name: 'World\'s Greatest Stretch', sets: '2', reps: '6 each side' },
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '20-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '15-20 reps' },
+                { name: 'Dead Bug', sets: '3', reps: '10 each side', notes: 'Slow and controlled — keep your low back pressed to the floor.' }
               ]
             }
           ]
         },
         {
-          name: 'Week 8 — Final Test',
+          name: 'Week 5 — Increase the Pace',
           days: [
             {
-              name: 'Day A — Lower Body Single-Leg',
-              focus: 'Final Test',
+              name: 'Day A — Full Body Dumbbell Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Hip 90/90', sets: '2', reps: '15 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '15 each side' },
-                { name: 'Mobility Warmup — Ankle Circles', sets: '2', reps: '20 each direction' },
-                { name: 'Bulgarian Split Squat (Dumbbell)', sets: '3', reps: '12-15 each leg', notes: 'Final week. Same weight as Week 7. Both sides should feel nearly identical in strength and stability. Start with your weaker leg. Match reps. You have fixed the imbalance.' },
-                { name: 'Single-Leg Press (Machine)', sets: '3', reps: '15 each leg', notes: 'Same weight. Perfect reps. Start with your weaker leg.' },
-                { name: 'Single-Leg Romanian Deadlift (Dumbbell)', sets: '3', reps: '12-15 each leg', notes: 'Same weight. Final test of your balance and hamstring control. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '3', reps: '15 each leg', notes: 'Finish strong.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '20 each leg', notes: 'Final calf burn. You are done. Take your deload week and restart the cycle with Kinetiq Strength at heavier weights.' }
+                { name: 'Mobility Warmup — Inchworm', sets: '2', reps: '8 reps' },
+                { name: 'Dumbbell Goblet Squat', sets: '3', reps: '15 reps', notes: 'Add weight if Week 4 felt manageable for all 3 sets.' },
+                { name: 'Dumbbell Bench Press', sets: '3', reps: '12-15 reps' },
+                { name: 'Dumbbell Row', sets: '3', reps: '12-15 each arm' },
+                { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12-15 reps' },
+                { name: 'Dumbbell Shoulder Press', sets: '3', reps: '12-15 reps' },
+                { name: 'Plank with Shoulder Tap', sets: '3', reps: '45 second hold' }
               ]
             },
             {
-              name: 'Day B — Upper Body Single-Arm + Core',
-              focus: 'Final Test',
+              name: 'Day B — Full Body Cable Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '30 reps' },
-                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '15 each side' },
-                { name: 'Single-Arm Dumbbell Press', sets: '3', reps: '12-15 each arm', notes: 'Same weight as Week 7. Both arms should feel balanced. Start with your weaker arm. Match reps. You have built symmetry.' },
-                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '15 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Cable Chest Press', sets: '3', reps: '15 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Pallof Press (Anti-Rotation Core)', sets: '3', reps: '15 each side', notes: 'Your core is bulletproof now.' },
-                { name: 'Single-Arm Farmer Carry', sets: '3', reps: '60 yards each arm', notes: 'Final carry. Well done. You have completed Kinetiq Balance.' }
+                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '10 each side' },
+                { name: 'Seated Cable Row', sets: '3', reps: '15 reps', notes: 'Add a plate if Week 4 felt easy.' },
+                { name: 'Cable Chest Flye (Low to High)', sets: '3', reps: '12-15 reps' },
+                { name: 'Lat Pulldown (Wide Grip)', sets: '3', reps: '12-15 reps' },
+                { name: 'Woodchop (Cable)', sets: '3', reps: '15 each side' },
+                { name: 'Dumbbell Walking Lunge', sets: '3', reps: '12 each leg' },
+                { name: 'Mountain Climbers', sets: '3', reps: '40 seconds' }
               ]
             },
             {
-              name: 'Day C — Lower Body Single-Leg (Hip Hinge Focus)',
-              focus: 'Final Test',
+              name: 'Day C — Full Body Dumbbell + Cable Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Cat-Cow', sets: '2', reps: '20 reps' },
-                { name: 'Mobility Warmup — World\'s Greatest Stretch', sets: '2', reps: '10 each side' },
-                { name: 'Mobility Warmup — Single-Leg Glute Bridge', sets: '2', reps: '15 each side' },
-                { name: 'Single-Leg Romanian Deadlift (Barbell)', sets: '3', reps: '12-15 each leg', notes: 'Same weight as Week 7. Final test. Both legs should feel equal. Start with your weaker leg.' },
-                { name: 'Single-Leg Hip Thrust', sets: '3', reps: '15 each leg', notes: 'Same weight. Final glute burn. Start with your weaker side.' },
-                { name: 'Single-Leg Leg Curl', sets: '3', reps: '15 each leg', notes: 'Same weight. Start with your weaker leg.' },
-                { name: 'Walking Lunge', sets: '3', reps: '15 each leg', notes: 'Final set of lunges.' },
-                { name: 'Single-Leg Calf Raise', sets: '3', reps: '20 each leg', notes: 'You are done. Move on to Kinetiq Deload for one week of active recovery, then restart the cycle.' }
+                { name: 'Mobility Warmup — Scorpion Stretch', sets: '2', reps: '6 each side' },
+                { name: 'Dumbbell Reverse Lunge', sets: '3', reps: '12 each leg' },
+                { name: 'Cable Tricep Pushdown (Rope)', sets: '3', reps: '15 reps' },
+                { name: 'Hammer Curl', sets: '3', reps: '15 reps' },
+                { name: 'Dumbbell Hip Thrust', sets: '3', reps: '15-20 reps' },
+                { name: 'Face Pull', sets: '3', reps: '15 reps' },
+                { name: 'Russian Twist', sets: '3', reps: '24 reps (12 each side)' }
               ]
             },
             {
-              name: 'Day D — Upper Body Single-Arm + Core (Optional 4th Day)',
-              focus: 'Final Test',
+              name: 'Active Recovery — Dynamic Mobility + Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Inchworm', sets: '2', reps: '8-10 reps' },
+                { name: 'World\'s Greatest Stretch', sets: '2', reps: '6-8 each side' },
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '20-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '20 reps' },
+                { name: 'Dead Bug', sets: '3', reps: '12 each side' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 6 — Peak Conditioning',
+          days: [
+            {
+              name: 'Day A — Full Body Dumbbell Circuit',
+              focus: 'Push + Pull + Legs + Core',
               type: 'workout',
               exercises: [
-                { name: 'Mobility Warmup — Band Pull-Apart', sets: '2', reps: '30 reps' },
-                { name: 'Mobility Warmup — Scapular Shrugs (Hanging)', sets: '2', reps: '15 reps' },
-                { name: 'Single-Arm Cable Row', sets: '3', reps: '15 each arm', notes: 'Same weight. Final test. Start with your weaker arm.' },
-                { name: 'Single-Arm Lat Pulldown', sets: '3', reps: '15 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Single-Arm Dumbbell Bench Press', sets: '3', reps: '15 each arm', notes: 'Same weight. Start with your weaker arm.' },
-                { name: 'Side Plank', sets: '3', reps: '60 seconds each side', notes: 'Final hold. Start with your weaker side.' },
-                { name: 'Single-Arm Overhead Carry', sets: '3', reps: '60 yards each arm', notes: 'Final carry. Congratulations. You have completed Kinetiq Balance. Your body is now balanced, stable, and bulletproof. Take your deload week and restart the cycle.' }
+                { name: 'Mobility Warmup — Inchworm', sets: '2', reps: '8 reps' },
+                { name: 'Dumbbell Goblet Squat', sets: '3', reps: '15-20 reps', notes: 'Final week of Phase 2 — push the pace while keeping form clean.' },
+                { name: 'Dumbbell Bench Press', sets: '3', reps: '15 reps' },
+                { name: 'Dumbbell Row', sets: '3', reps: '15 each arm' },
+                { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '15 reps' },
+                { name: 'Dumbbell Shoulder Press', sets: '3', reps: '15 reps' },
+                { name: 'Plank with Shoulder Tap', sets: '3', reps: '45-60 second hold' }
+              ]
+            },
+            {
+              name: 'Day B — Full Body Cable Circuit',
+              focus: 'Push + Pull + Legs + Core',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Thoracic Rotation', sets: '2', reps: '10 each side' },
+                { name: 'Seated Cable Row', sets: '3', reps: '15-20 reps' },
+                { name: 'Cable Chest Flye (Low to High)', sets: '3', reps: '15 reps' },
+                { name: 'Lat Pulldown (Wide Grip)', sets: '3', reps: '15 reps' },
+                { name: 'Woodchop (Cable)', sets: '3', reps: '15 each side' },
+                { name: 'Dumbbell Walking Lunge', sets: '3', reps: '12-15 each leg' },
+                { name: 'Mountain Climbers', sets: '3', reps: '45 seconds' }
+              ]
+            },
+            {
+              name: 'Day C — Full Body Dumbbell + Cable Circuit',
+              focus: 'Push + Pull + Legs + Core',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Scorpion Stretch', sets: '2', reps: '6-8 each side' },
+                { name: 'Dumbbell Reverse Lunge', sets: '3', reps: '12-15 each leg' },
+                { name: 'Cable Tricep Pushdown (Rope)', sets: '3', reps: '15-20 reps' },
+                { name: 'Hammer Curl', sets: '3', reps: '15-20 reps' },
+                { name: 'Dumbbell Hip Thrust', sets: '3', reps: '20 reps' },
+                { name: 'Face Pull', sets: '3', reps: '15-20 reps' },
+                { name: 'Russian Twist', sets: '3', reps: '30 reps (15 each side)' }
+              ]
+            },
+            {
+              name: 'Active Recovery — Dynamic Mobility + Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Inchworm', sets: '2', reps: '10 reps' },
+                { name: 'World\'s Greatest Stretch', sets: '2', reps: '8 each side' },
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '25-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '20 reps' },
+                { name: 'Dead Bug', sets: '3', reps: '12-15 each side' }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    // ===================== PHASE 3: PHYSIQUE — DUMBBELL & CABLE + FOCUS AREA =====================
+    {
+      name: 'Phase 3 — Physique Dumbbell & Cable (Weeks 7-9)',
+      objective: 'Full-body dumbbell and cable training with a physique-sculpting emphasis — controlled tempo, moderate reps, mind-muscle connection. Each session ends with an optional focus block so you can add extra volume to the one area you care about most.',
+      length: '3 weeks',
+      sets: '3 sets',
+      reps: '12 reps',
+      rest: '60-75 seconds between sets',
+      frequency: '3 days per week — non-consecutive days (e.g. Mon/Wed/Fri)',
+      notes: 'Equipment: dumbbells and cables. Slow the tempo down here — a 2-3 second lowering phase on every rep. On your off days: an easy walk, calves, and core. At the end of each workout, pick ONE focus area (Arms, Shoulders, Glutes, Abs, or Back) and add 2 exercises for that area, 3 sets each — rotate which area you pick session to session.',
+      weeks: [
+        {
+          name: 'Week 7 — Sculpt Foundation',
+          days: [
+            {
+              name: 'Day A — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Doorway Chest Stretch', sets: '2', reps: '20-30 second hold', notes: 'Open up your chest before pressing work.' },
+                { name: 'Dumbbell Goblet Squat', sets: '3', reps: '12 reps', notes: 'Slow tempo — 3 seconds down, controlled drive up.' },
+                { name: 'Incline Dumbbell Press', sets: '3', reps: '12 reps' },
+                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '12 each arm' },
+                { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12 reps' },
+                { name: 'Cable Lateral Raise', sets: '3', reps: '15 reps' },
+                { name: 'Cable Crunch', sets: '3', reps: '15 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Pick ONE area to add extra volume to today. Arms: Hammer Curl + Cable Tricep Pushdown. Shoulders: Cable Front Raise + Cable Rear Delt Fly. Glutes: Dumbbell Hip Thrust + Cable Glute Kickback. Abs: Hanging Knee Raise + Weighted Crunch. Back: Cable Straight-Arm Pulldown + Chest-Supported Dumbbell Row.' }
+              ]
+            },
+            {
+              name: 'Day B — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Foam Roll Quads', sets: '1', reps: '60 seconds each leg' },
+                { name: 'Dumbbell Step-Up', sets: '3', reps: '10 each leg' },
+                { name: 'Dumbbell Flye', sets: '3', reps: '12 reps' },
+                { name: 'Seated Cable Row', sets: '3', reps: '12 reps' },
+                { name: 'Dumbbell Hip Thrust', sets: '3', reps: '15 reps' },
+                { name: 'Dumbbell Lateral Raise', sets: '3', reps: '15 reps' },
+                { name: 'Hanging Knee Raise', sets: '3', reps: '15 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Pick a different area than last session if you can. Same menu as Day A — Arms, Shoulders, Glutes, Abs, or Back.' }
+              ]
+            },
+            {
+              name: 'Day C — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Thread the Needle', sets: '2', reps: '8 each side' },
+                { name: 'Bulgarian Split Squat', sets: '3', reps: '10 each leg' },
+                { name: 'Cable Chest Flye (High to Low)', sets: '3', reps: '12 reps' },
+                { name: 'Lat Pulldown (Wide Grip)', sets: '3', reps: '12 reps' },
+                { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '10 each leg' },
+                { name: 'Dumbbell Rear Delt Fly', sets: '3', reps: '15 reps' },
+                { name: 'Weighted Crunch', sets: '3', reps: '15 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Rotate to a third area this session so you hit all your priorities across the week.' }
+              ]
+            },
+            {
+              name: 'Active Recovery — Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '20-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '20 reps' },
+                { name: 'Plank', sets: '3', reps: '40-45 second hold' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 8 — Deepen the Mind-Muscle Connection',
+          days: [
+            {
+              name: 'Day A — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Doorway Chest Stretch', sets: '2', reps: '20-30 second hold' },
+                { name: 'Dumbbell Goblet Squat', sets: '3', reps: '12 reps', notes: 'Add weight if Week 7 felt controlled through the full tempo.' },
+                { name: 'Incline Dumbbell Press', sets: '3', reps: '12 reps' },
+                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '12 each arm' },
+                { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12 reps' },
+                { name: 'Cable Lateral Raise', sets: '3', reps: '15 reps' },
+                { name: 'Cable Crunch', sets: '3', reps: '15-20 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Same menu as Week 7 — Arms, Shoulders, Glutes, Abs, or Back.' }
+              ]
+            },
+            {
+              name: 'Day B — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Foam Roll Quads', sets: '1', reps: '60 seconds each leg' },
+                { name: 'Dumbbell Step-Up', sets: '3', reps: '12 each leg' },
+                { name: 'Dumbbell Flye', sets: '3', reps: '12-15 reps' },
+                { name: 'Seated Cable Row', sets: '3', reps: '12-15 reps' },
+                { name: 'Dumbbell Hip Thrust', sets: '3', reps: '15-20 reps' },
+                { name: 'Dumbbell Lateral Raise', sets: '3', reps: '15 reps' },
+                { name: 'Hanging Knee Raise', sets: '3', reps: '15-20 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises' }
+              ]
+            },
+            {
+              name: 'Day C — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Thread the Needle', sets: '2', reps: '8 each side' },
+                { name: 'Bulgarian Split Squat', sets: '3', reps: '12 each leg' },
+                { name: 'Cable Chest Flye (High to Low)', sets: '3', reps: '12-15 reps' },
+                { name: 'Lat Pulldown (Wide Grip)', sets: '3', reps: '12-15 reps' },
+                { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '12 each leg' },
+                { name: 'Dumbbell Rear Delt Fly', sets: '3', reps: '15 reps' },
+                { name: 'Weighted Crunch', sets: '3', reps: '15-20 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises' }
+              ]
+            },
+            {
+              name: 'Active Recovery — Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '20-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '20-25 reps' },
+                { name: 'Plank', sets: '3', reps: '45 second hold' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Week 9 — Finish Strong',
+          days: [
+            {
+              name: 'Day A — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Doorway Chest Stretch', sets: '2', reps: '20-30 second hold' },
+                { name: 'Dumbbell Goblet Squat', sets: '3', reps: '12-15 reps', notes: 'Final week — this is your best version of every movement so far.' },
+                { name: 'Incline Dumbbell Press', sets: '3', reps: '12-15 reps' },
+                { name: 'Single-Arm Dumbbell Row', sets: '3', reps: '12-15 each arm' },
+                { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12-15 reps' },
+                { name: 'Cable Lateral Raise', sets: '3', reps: '15-20 reps' },
+                { name: 'Cable Crunch', sets: '3', reps: '20 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Last focus block of the program — go with whatever area you have enjoyed working on most.' }
+              ]
+            },
+            {
+              name: 'Day B — Full Body Sculpt',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Foam Roll Quads', sets: '1', reps: '60 seconds each leg' },
+                { name: 'Dumbbell Step-Up', sets: '3', reps: '12-15 each leg' },
+                { name: 'Dumbbell Flye', sets: '3', reps: '15 reps' },
+                { name: 'Seated Cable Row', sets: '3', reps: '15 reps' },
+                { name: 'Dumbbell Hip Thrust', sets: '3', reps: '20 reps' },
+                { name: 'Dumbbell Lateral Raise', sets: '3', reps: '15-20 reps' },
+                { name: 'Hanging Knee Raise', sets: '3', reps: '20 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises' }
+              ]
+            },
+            {
+              name: 'Day C — Full Body Sculpt (Graduation)',
+              focus: 'Push + Pull + Legs + Core + Focus Block',
+              type: 'workout',
+              exercises: [
+                { name: 'Mobility Warmup — Thread the Needle', sets: '2', reps: '8 each side' },
+                { name: 'Bulgarian Split Squat', sets: '3', reps: '12-15 each leg' },
+                { name: 'Cable Chest Flye (High to Low)', sets: '3', reps: '15 reps' },
+                { name: 'Lat Pulldown (Wide Grip)', sets: '3', reps: '15 reps' },
+                { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '12-15 each leg' },
+                { name: 'Dumbbell Rear Delt Fly', sets: '3', reps: '15-20 reps' },
+                { name: 'Weighted Crunch', sets: '3', reps: '20 reps' },
+                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'You have built a full-body strength and stability base across all 3 phases. Next up: Kinetiq Strength for a barbell-focused strength cycle, or Kinetiq 5x5 if you want a simple, repeatable strength progression.' }
+              ]
+            },
+            {
+              name: 'Active Recovery — Walk + Calves + Core',
+              focus: 'Off-Day Mobility',
+              type: 'mobility',
+              exercises: [
+                { name: 'Treadmill Walk (Incline)', sets: '1', reps: '25-30 minutes' },
+                { name: 'Calf Raise (Bodyweight)', sets: '3', reps: '25 reps' },
+                { name: 'Plank', sets: '3', reps: '45-60 second hold' }
               ]
             }
           ]
@@ -2407,7 +2423,7 @@ var kinetiqDeloadData = {
   id: 'kinetiq-deload-builtin',
   name: 'Kinetiq Deload',
   source: 'builtin',
-  description: "A 1-week active recovery program designed to be run after completing a 12-week training cycle. This is not rest — this is recovery. You move, but you move light. You lift, but you lift with zero ego. The goal is to flush fatigue from your system, restore movement quality, and prepare your body to attack the next cycle with heavier weights. Do not skip this week. Your body needs it. Recommended Progression: Strong → Hypertrophy → Balance → Deload (1 wk) → Repeat. Run this between training cycles.",
+  description: "A 1-week active recovery program designed to be run after completing a 12-week training cycle. This is not rest — this is recovery. You move, but you move light. You lift, but you lift with zero ego. The goal is to flush fatigue from your system, restore movement quality, and prepare your body to attack the next cycle with heavier weights. Do not skip this week. Your body needs it. Recommended Progression: Kinetiq Strength → Kinetiq Hypertrophy → Kinetiq Balance → Kinetiq Deload (1 wk) → Repeat. Run this between training cycles.",
   difficulty: 'All Levels',
   duration: '1 week',
   phases: [
