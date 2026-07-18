@@ -185,6 +185,20 @@
     </div>
   </div>
 
+  <!-- FOCUS AREA PICKER MODAL -->
+  <div class="modal-ov" id="focus-picker-modal">
+    <div class="modal-box">
+      <div class="modal-hd"><span>Pick a Focus Area</span><button class="modal-close" onclick="closeM('focus-picker-modal')">&#10005;</button></div>
+      <div class="modal-body">
+        <p style="font-size:13px;color:var(--t2);margin:0 0 14px">Choose one area to add extra volume to for today's session.</p>
+        <div id="focus-picker-list" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-s btn-sm" onclick="pickFocusArea(null)" style="width:100%">Skip — Just Do the Main Workout</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ACTIVE WORKOUT -->
   <section id="view-active-workout" class="view" style="padding:0">
     <div id="wtop">
