@@ -1834,8 +1834,35 @@ var kinetiqHypertrophyData = {
   ]
 };
 // =============================================
-// KINETIQ BALANCE — 8-Week Unilateral Training Program
+// KINETIQ BALANCE — 9-Week Full-Body Program
 // =============================================
+
+// Phase 3 "Focus Area" picker options — shared across all Phase 3 days.
+// Consumed by the interactive focus-area picker in app.js (openFocusPicker/
+// launchWithFocus) whenever a day carries a `focusOptions` field.
+var KINETIQ_BALANCE_FOCUS_OPTIONS = [
+  { area: 'Arms', exercises: [
+      { name: 'Hammer Curl', sets: '3', reps: '12-15' },
+      { name: 'Cable Tricep Pushdown (Rope)', sets: '3', reps: '12-15' }
+  ]},
+  { area: 'Shoulders', exercises: [
+      { name: 'Cable Front Raise', sets: '3', reps: '12-15' },
+      { name: 'Cable Rear Delt Fly', sets: '3', reps: '12-15' }
+  ]},
+  { area: 'Glutes', exercises: [
+      { name: 'Dumbbell Hip Thrust', sets: '3', reps: '12-15' },
+      { name: 'Cable Glute Kickback', sets: '3', reps: '12-15' }
+  ]},
+  { area: 'Abs', exercises: [
+      { name: 'Hanging Knee Raise', sets: '3', reps: '12-15' },
+      { name: 'Weighted Crunch', sets: '3', reps: '12-15' }
+  ]},
+  { area: 'Back', exercises: [
+      { name: 'Cable Straight-Arm Pulldown', sets: '3', reps: '12-15' },
+      { name: 'Chest-Supported Dumbbell Row', sets: '3', reps: '12-15' }
+  ]}
+];
+
 var kinetiqBalanceData = {
   id: 'kinetiq-balance-builtin',
   name: 'Kinetiq Balance',
@@ -2230,7 +2257,7 @@ var kinetiqBalanceData = {
       reps: '12 reps',
       rest: '60-75 seconds between sets',
       frequency: '3 days per week — non-consecutive days (e.g. Mon/Wed/Fri)',
-      notes: 'Equipment: dumbbells and cables. Slow the tempo down here — a 2-3 second lowering phase on every rep. On your off days: an easy walk, calves, and core. At the end of each workout, pick ONE focus area (Arms, Shoulders, Glutes, Abs, or Back) and add 2 exercises for that area, 3 sets each — rotate which area you pick session to session.',
+      notes: 'Equipment: dumbbells and cables. Slow the tempo down here — a 2-3 second lowering phase on every rep. On your off days: an easy walk, calves, and core. When you start each workout you\'ll be asked to pick ONE focus area (Arms, Shoulders, Glutes, Abs, or Back) to add 2 extra exercises for, 3 sets each — rotate which area you pick session to session.',
       weeks: [
         {
           name: 'Week 7 — Sculpt Foundation',
@@ -2239,6 +2266,7 @@ var kinetiqBalanceData = {
               name: 'Day A — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Doorway Chest Stretch', sets: '2', reps: '20-30 second hold', notes: 'Open up your chest before pressing work.' },
                 { name: 'Dumbbell Goblet Squat', sets: '3', reps: '12 reps', notes: 'Slow tempo — 3 seconds down, controlled drive up.' },
@@ -2247,13 +2275,13 @@ var kinetiqBalanceData = {
                 { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12 reps' },
                 { name: 'Cable Lateral Raise', sets: '3', reps: '15 reps' },
                 { name: 'Cable Crunch', sets: '3', reps: '15 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Pick ONE area to add extra volume to today. Arms: Hammer Curl + Cable Tricep Pushdown. Shoulders: Cable Front Raise + Cable Rear Delt Fly. Glutes: Dumbbell Hip Thrust + Cable Glute Kickback. Abs: Hanging Knee Raise + Weighted Crunch. Back: Cable Straight-Arm Pulldown + Chest-Supported Dumbbell Row.' }
               ]
             },
             {
               name: 'Day B — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Foam Roll Quads', sets: '1', reps: '60 seconds each leg' },
                 { name: 'Dumbbell Step-Up', sets: '3', reps: '10 each leg' },
@@ -2262,13 +2290,13 @@ var kinetiqBalanceData = {
                 { name: 'Dumbbell Hip Thrust', sets: '3', reps: '15 reps' },
                 { name: 'Dumbbell Lateral Raise', sets: '3', reps: '15 reps' },
                 { name: 'Hanging Knee Raise', sets: '3', reps: '15 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Pick a different area than last session if you can. Same menu as Day A — Arms, Shoulders, Glutes, Abs, or Back.' }
               ]
             },
             {
               name: 'Day C — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Thread the Needle', sets: '2', reps: '8 each side' },
                 { name: 'Bulgarian Split Squat', sets: '3', reps: '10 each leg' },
@@ -2277,7 +2305,6 @@ var kinetiqBalanceData = {
                 { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '10 each leg' },
                 { name: 'Dumbbell Rear Delt Fly', sets: '3', reps: '15 reps' },
                 { name: 'Weighted Crunch', sets: '3', reps: '15 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Rotate to a third area this session so you hit all your priorities across the week.' }
               ]
             },
             {
@@ -2299,6 +2326,7 @@ var kinetiqBalanceData = {
               name: 'Day A — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Doorway Chest Stretch', sets: '2', reps: '20-30 second hold' },
                 { name: 'Dumbbell Goblet Squat', sets: '3', reps: '12 reps', notes: 'Add weight if Week 7 felt controlled through the full tempo.' },
@@ -2307,13 +2335,13 @@ var kinetiqBalanceData = {
                 { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12 reps' },
                 { name: 'Cable Lateral Raise', sets: '3', reps: '15 reps' },
                 { name: 'Cable Crunch', sets: '3', reps: '15-20 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Same menu as Week 7 — Arms, Shoulders, Glutes, Abs, or Back.' }
               ]
             },
             {
               name: 'Day B — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Foam Roll Quads', sets: '1', reps: '60 seconds each leg' },
                 { name: 'Dumbbell Step-Up', sets: '3', reps: '12 each leg' },
@@ -2322,13 +2350,13 @@ var kinetiqBalanceData = {
                 { name: 'Dumbbell Hip Thrust', sets: '3', reps: '15-20 reps' },
                 { name: 'Dumbbell Lateral Raise', sets: '3', reps: '15 reps' },
                 { name: 'Hanging Knee Raise', sets: '3', reps: '15-20 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises' }
               ]
             },
             {
               name: 'Day C — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Thread the Needle', sets: '2', reps: '8 each side' },
                 { name: 'Bulgarian Split Squat', sets: '3', reps: '12 each leg' },
@@ -2337,7 +2365,6 @@ var kinetiqBalanceData = {
                 { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '12 each leg' },
                 { name: 'Dumbbell Rear Delt Fly', sets: '3', reps: '15 reps' },
                 { name: 'Weighted Crunch', sets: '3', reps: '15-20 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises' }
               ]
             },
             {
@@ -2359,6 +2386,7 @@ var kinetiqBalanceData = {
               name: 'Day A — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Doorway Chest Stretch', sets: '2', reps: '20-30 second hold' },
                 { name: 'Dumbbell Goblet Squat', sets: '3', reps: '12-15 reps', notes: 'Final week — this is your best version of every movement so far.' },
@@ -2367,13 +2395,13 @@ var kinetiqBalanceData = {
                 { name: 'Dumbbell Romanian Deadlift', sets: '3', reps: '12-15 reps' },
                 { name: 'Cable Lateral Raise', sets: '3', reps: '15-20 reps' },
                 { name: 'Cable Crunch', sets: '3', reps: '20 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'Last focus block of the program — go with whatever area you have enjoyed working on most.' }
               ]
             },
             {
               name: 'Day B — Full Body Sculpt',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Foam Roll Quads', sets: '1', reps: '60 seconds each leg' },
                 { name: 'Dumbbell Step-Up', sets: '3', reps: '12-15 each leg' },
@@ -2382,13 +2410,13 @@ var kinetiqBalanceData = {
                 { name: 'Dumbbell Hip Thrust', sets: '3', reps: '20 reps' },
                 { name: 'Dumbbell Lateral Raise', sets: '3', reps: '15-20 reps' },
                 { name: 'Hanging Knee Raise', sets: '3', reps: '20 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises' }
               ]
             },
             {
               name: 'Day C — Full Body Sculpt (Graduation)',
               focus: 'Push + Pull + Legs + Core + Focus Block',
               type: 'workout',
+              focusOptions: KINETIQ_BALANCE_FOCUS_OPTIONS,
               exercises: [
                 { name: 'Mobility Warmup — Thread the Needle', sets: '2', reps: '8 each side' },
                 { name: 'Bulgarian Split Squat', sets: '3', reps: '12-15 each leg' },
@@ -2397,7 +2425,6 @@ var kinetiqBalanceData = {
                 { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '12-15 each leg' },
                 { name: 'Dumbbell Rear Delt Fly', sets: '3', reps: '15-20 reps' },
                 { name: 'Weighted Crunch', sets: '3', reps: '20 reps' },
-                { name: 'Focus Area — Your Choice', sets: '3', reps: '12-15 reps, 2 exercises', notes: 'You have built a full-body strength and stability base across all 3 phases. Next up: Kinetiq Strength for a barbell-focused strength cycle, or Kinetiq 5x5 if you want a simple, repeatable strength progression.' }
               ]
             },
             {

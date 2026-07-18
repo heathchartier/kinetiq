@@ -490,39 +490,41 @@ function startQuick(progId, weekIdx, dayIdx) {
   
   if (!targetDay) return;
 
-  // Start workout
-  aw = {
-    name: targetDay.name,
-    exercises: (targetDay.exercises || []).map(function(e) {
-      return {
-        id: uid(),
-        name: e.name,
-        notes: e.notes || '',
-        tS: e.sets || '',
-        tR: e.reps || '',
-        tW: e.weight || '',
-        sets: Array.from({length: parseInt(e.sets) || 3}, function(_, i) {
-          return {num: i + 1, w: '', r: '', done: false};
-        }),
-        workoutNotes: ''
-      };
-    })
-  };
+  maybeOpenFocusPicker(targetDay, function(extraEx) {
+    // Start workout
+    aw = {
+      name: targetDay.name,
+      exercises: (targetDay.exercises || []).concat(extraEx).map(function(e) {
+        return {
+          id: uid(),
+          name: e.name,
+          notes: e.notes || '',
+          tS: e.sets || '',
+          tR: e.reps || '',
+          tW: e.weight || '',
+          sets: Array.from({length: parseInt(e.sets) || 3}, function(_, i) {
+            return {num: i + 1, w: '', r: '', done: false};
+          }),
+          workoutNotes: ''
+        };
+      })
+    };
 
-  // Tag as active-program workout so finishW() can auto-advance
-  if (localStorage.getItem('currentProgram') === progId) {
-    aw.apProgId = progId;
-    aw.apWeek   = parseInt(localStorage.getItem('currentWeek') || '1');
-    aw.apDay    = dayIdx;
-    aw.apDaysInWeek = targetWeek ? targetWeek.days.length : 0;
-  }
+    // Tag as active-program workout so finishW() can auto-advance
+    if (localStorage.getItem('currentProgram') === progId) {
+      aw.apProgId = progId;
+      aw.apWeek   = parseInt(localStorage.getItem('currentWeek') || '1');
+      aw.apDay    = dayIdx;
+      aw.apDaysInWeek = targetWeek ? targetWeek.days.length : 0;
+    }
 
-  wst = Date.now();
-  document.getElementById('pill').classList.add('show');
-  startWT();
-  renderAW();
-  showView('dashboard');
-  document.getElementById('pill').scrollIntoView({behavior: 'smooth'});
+    wst = Date.now();
+    document.getElementById('pill').classList.add('show');
+    startWT();
+    renderAW();
+    showView('dashboard');
+    document.getElementById('pill').scrollIntoView({behavior: 'smooth'});
+  });
 }
 
 // ===== PROGRAMS LIST =====
@@ -1199,6 +1201,37 @@ function delProg() {
   showView('programs');
 }
 
+// ===== FOCUS AREA PICKER =====
+// Some program days (e.g. Kinetiq Balance Phase 3) let the user pick one body
+// part to add 2 extra exercises for. day.focusOptions holds the menu; if a
+// day has no focusOptions, onProceed fires immediately with an empty list.
+var pendingFocusPicker = null;
+
+function maybeOpenFocusPicker(day, onProceed) {
+  if (!day.focusOptions || !day.focusOptions.length) { onProceed([]); return; }
+  pendingFocusPicker = { options: day.focusOptions, onProceed: onProceed };
+  var list = document.getElementById('focus-picker-list');
+  if (list) {
+    list.innerHTML = day.focusOptions.map(function(opt) {
+      var exNames = opt.exercises.map(function(e) { return e.name; }).join(' + ');
+      return '<button class="focus-pick-btn" onclick="pickFocusArea(\'' + esc(opt.area.replace(/'/g, "\\'")) + '\')">'
+        + '<span class="focus-pick-area">' + esc(opt.area) + '</span>'
+        + '<span class="focus-pick-ex">' + esc(exNames) + '</span>'
+        + '</button>';
+    }).join('');
+  }
+  openM('focus-picker-modal');
+}
+
+function pickFocusArea(areaName) {
+  if (!pendingFocusPicker) return;
+  var opt = pendingFocusPicker.options.filter(function(o) { return o.area === areaName; })[0];
+  var onProceed = pendingFocusPicker.onProceed;
+  pendingFocusPicker = null;
+  closeM('focus-picker-modal');
+  onProceed(opt ? opt.exercises : []);
+}
+
 // ===== ACTIVE WORKOUT =====
 function startPW(pid, phi, wi, di) {
   var p = allProgs().filter(function(x){ return x.id === pid; })[0];
@@ -1206,16 +1239,19 @@ function startPW(pid, phi, wi, di) {
   var wk = p.phases && p.phases[phi] && p.phases[phi].weeks && p.phases[phi].weeks[wi];
   var day = wk && wk.days && wk.days[di];
   if (!day) return;
-  var exercises = (day.exercises || []).filter(function(e) {
-    return e.notes !== 'separator' && e.name.indexOf('—') !== 0;
-  }).map(function(e) {
-    var s = Math.max(parseInt(e.sets) || 2, 1);
-    return {
-      id: uid(), name: e.name, tS: s, tR: e.reps || '—', tW: e.weight || '', notes: e.notes || '',
-      sets: Array.from({length: s}, function(_, i) { return {num: i+1, w: '', r: '', done: false}; })
-    };
+
+  maybeOpenFocusPicker(day, function(extraEx) {
+    var exercises = (day.exercises || []).filter(function(e) {
+      return e.notes !== 'separator' && e.name.indexOf('—') !== 0;
+    }).concat(extraEx).map(function(e) {
+      var s = Math.max(parseInt(e.sets) || 2, 1);
+      return {
+        id: uid(), name: e.name, tS: s, tR: e.reps || '—', tW: e.weight || '', notes: e.notes || '',
+        sets: Array.from({length: s}, function(_, i) { return {num: i+1, w: '', r: '', done: false}; })
+      };
+    });
+    launch({name: day.name, meta: p.name + ' · ' + p.phases[phi].name, exercises: exercises});
   });
-  launch({name: day.name, meta: p.name + ' · ' + p.phases[phi].name, exercises: exercises});
 }
 
 function startQL() {
