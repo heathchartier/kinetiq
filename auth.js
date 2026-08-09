@@ -805,6 +805,35 @@ async function syncAccessTierFromCloud() {
   var tier = profile.access_tier || 'standard';
   localStorage.setItem('ls_access_tier', tier);
   console.log('📥 Access tier synced from cloud:', tier);
+
+  // MAPS programs are premium-only licensed content and must never ship as a
+  // public static file (that's the whole point of this fetch) -- only load
+  // them from the RLS-protected maps_programs table once we know the user
+  // is actually premium. Non-premium/downgraded users get an empty list.
+  if (tier === 'premium') {
+    await loadMapsProgramsFromCloud();
+  } else {
+    window.MAPS_ALL_PROGRAMS = [];
+  }
+}
+
+async function loadMapsProgramsFromCloud() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabaseClient
+    .from('maps_programs')
+    .select('programs')
+    .eq('id', 1)
+    .single();
+
+  if (error) {
+    console.warn('Could not load MAPS programs from cloud:', error);
+    window.MAPS_ALL_PROGRAMS = [];
+    return;
+  }
+
+  window.MAPS_ALL_PROGRAMS = (data && data.programs) || [];
+  console.log('📥 MAPS programs loaded from cloud:', window.MAPS_ALL_PROGRAMS.length);
 }
 
 // === INDIVIDUAL SYNC FUNCTIONS (FROM CLOUD) ===
