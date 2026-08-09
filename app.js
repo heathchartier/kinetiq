@@ -2618,9 +2618,10 @@ function loadWaterGoal() {
   document.getElementById('water-goal-input').value = waterGoal;
 }
 
-// USDA FoodData Central API (free, no auth required, no CORS issues)
-var USDA_API_KEY = 'rKv11ptpNXXk35XGWMqleUBkOk5nVhVAE3cBgbNv';
-var USDA_API_URL = 'https://api.nal.usda.gov/fdc/v1';
+// USDA FoodData Central searches go through a Cloudflare Worker proxy so the
+// real USDA API key stays server-side (Cloudflare secret), never shipped in
+// client JS. See kinetiq-usda-proxy/worker.js.
+var USDA_PROXY_URL = 'https://kinetiq-usda-proxy.heathchartier.workers.dev';
 
 function showQuickAdd() {
   document.getElementById('quick-add-section').style.display = 'block';
@@ -2652,10 +2653,10 @@ async function searchFatSecret() {
   resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--t2);">🔍 Searching 350,000+ foods...</div>';
   
   try {
-    var response = await fetch(USDA_API_URL + '/foods/search?api_key=' + USDA_API_KEY + '&query=' + encodeURIComponent(query) + '&pageSize=20');
-    
+    var response = await fetch(USDA_PROXY_URL + '?query=' + encodeURIComponent(query) + '&pageSize=20');
+
     if (response.status === 429) {
-      resultsDiv.innerHTML = '<div class="empty" style="padding: 20px;"><div class="esub">⚠️ Rate limit hit. Please get a free API key at <a href="https://fdc.nal.usda.gov/api-key-signup.html" target="_blank" style="color: var(--acc);">fdc.nal.usda.gov</a> and replace DEMO_KEY in app.js</div></div>';
+      resultsDiv.innerHTML = '<div class="empty" style="padding: 20px;"><div class="esub">⚠️ Rate limit hit. Try again in a bit.</div></div>';
       return;
     }
     
