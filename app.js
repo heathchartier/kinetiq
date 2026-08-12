@@ -13,7 +13,7 @@ var hist      = DB.get('history', []);
 var prs       = DB.get('prs', {});
 var restDays  = DB.get('restDays', []);
 var aw = null, wt = null, wst = null, curPid = null, curPhi = 0;
-var rtIv = null, rtTot = 120, rtRem = 120, rtRun = false, rtLast = 120;
+var rtIv = null, rtTot = 120, rtRem = 120, rtRun = false, rtLast = 120, rtEndTime = 0;
 
 function isPremium() {
   return localStorage.getItem('ls_access_tier') === 'premium';
@@ -1535,13 +1535,41 @@ function showRT() {
   _rtRender();
   setRT(s);
   document.getElementById('rt-ov').classList.add('show');
+
+  // Ask once (browser only shows the prompt if permission is still
+  // 'default' -- repeat calls are a silent no-op once granted or denied)
+  // so a completed timer can notify even if the app is backgrounded.
+  if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
 }
 function setRT(s) {
   if (rtIv) clearInterval(rtIv);
-  rtTot = s; rtRem = s; rtRun = true; updRT();
+  rtTot = s; rtRem = s; rtRun = true;
+  rtEndTime = Date.now() + s * 1000;
+  updRT();
   rtIv = setInterval(tickRT, 1000);
 }
-function tickRT() { if (!rtRun) return; rtRem--; updRT(); if (rtRem <= 0) { clearInterval(rtIv); closeRT(); beep(); } }
+function tickRT() {
+  if (!rtRun) return;
+  // Compute remaining time from the wall clock, not a decremented counter --
+  // setInterval gets throttled/paused when the app is backgrounded on iOS,
+  // so a simple rtRem-- drifts or stalls. Deriving from rtEndTime means the
+  // display is always correct the moment this (or the visibilitychange
+  // handler below) actually gets to run, no matter how long the gap was.
+  rtRem = Math.max(0, Math.round((rtEndTime - Date.now()) / 1000));
+  updRT();
+  if (rtRem <= 0) { clearInterval(rtIv); closeRT(); onRestTimerComplete(); }
+}
+
+// Instantly resync the moment the tab/app becomes visible again, instead of
+// waiting for the next throttled tick -- and catch a completion that
+// happened while backgrounded, since a paused JS timer can't fire on time.
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible' && rtRun && rtIv) {
+    tickRT();
+  }
+});
 function updRT() {
   var m = Math.floor(rtRem / 60), s = rtRem % 60;
   document.getElementById('rt-num').textContent = m + ':' + String(s).padStart(2, '0');
@@ -1558,7 +1586,16 @@ function updRT() {
     circle.style.strokeDashoffset = offset;
   }
 }
-function togRT() { rtRun = !rtRun; document.getElementById('rt-pbtn').textContent = rtRun ? 'Pause' : 'Resume'; }
+function togRT() {
+  rtRun = !rtRun;
+  if (rtRun) {
+    // Resuming: re-anchor the wall-clock target to the frozen remaining time.
+    rtEndTime = Date.now() + rtRem * 1000;
+  }
+  // Pausing needs no extra work -- rtRem already holds the correct frozen
+  // value from the last tick, and tickRT() no-ops while !rtRun.
+  document.getElementById('rt-pbtn').textContent = rtRun ? 'Pause' : 'Resume';
+}
 function closeRT() { clearInterval(rtIv); document.getElementById('rt-ov').classList.remove('show'); }
 function beep() {
   try {
@@ -1572,6 +1609,35 @@ function beep() {
       o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.15);
     });
   } catch(e) {}
+}
+
+// Fired when the rest timer actually hits zero. beep() only works when the
+// tab is in the foreground and the phone isn't on silent -- neither is
+// guaranteed to hold, so this also tries a system notification as a
+// best-effort second channel. NOTE: iOS's physical mute switch silences both
+// paths for any web app; there is no JS API that can override it. A true
+// fix (audio that plays through silent mode, plus a live countdown on the
+// lock screen) needs the native iOS wrapper, not this PWA -- see
+// kinetiq-ios project notes.
+function onRestTimerComplete() {
+  beep();
+
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  if (document.visibilityState === 'visible') return; // already looking at it, no need to notify
+
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+      navigator.serviceWorker.ready.then(function(reg) {
+        reg.showNotification('Rest complete', {
+          body: 'Time to get back to it.',
+          icon: 'icons/kinetiq-192.png',
+          tag: 'kinetiq-rest-timer'
+        });
+      });
+    } else {
+      new Notification('Rest complete', { body: 'Time to get back to it.' });
+    }
+  } catch (e) {}
 }
 
 // ===== HISTORY =====
