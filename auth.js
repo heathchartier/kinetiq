@@ -148,6 +148,8 @@ async function handleSignIn() {
     // Show sign out button
     const signoutBtn = document.getElementById('signout-btn');
     if (signoutBtn) signoutBtn.style.display = 'block';
+    const adminBtn = document.getElementById('admin-btn');
+    if (adminBtn) adminBtn.style.display = (typeof isAdmin === 'function' && isAdmin()) ? 'block' : 'none';
     
     // Sync data from cloud
     await syncDataFromCloud();
@@ -806,15 +808,12 @@ async function syncAccessTierFromCloud() {
   localStorage.setItem('ls_access_tier', tier);
   console.log('📥 Access tier synced from cloud:', tier);
 
-  // MAPS programs are premium-only licensed content and must never ship as a
-  // public static file (that's the whole point of this fetch) -- only load
-  // them from the RLS-protected maps_programs table once we know the user
-  // is actually premium. Non-premium/downgraded users get an empty list.
-  if (tier === 'premium') {
-    await loadMapsProgramsFromCloud();
-  } else {
-    window.MAPS_ALL_PROGRAMS = [];
-  }
+  // Always attempt this. maps_programs is one row per program with RLS
+  // that only returns rows this user is actually allowed to see -- every
+  // row if premium, just their individually-granted programs otherwise
+  // (see program_grants), or zero rows if neither. The database itself
+  // enforces this, not this function -- there's no tier check needed here.
+  await loadMapsProgramsFromCloud();
 }
 
 async function loadMapsProgramsFromCloud() {
@@ -822,9 +821,7 @@ async function loadMapsProgramsFromCloud() {
 
   const { data, error } = await supabaseClient
     .from('maps_programs')
-    .select('programs')
-    .eq('id', 1)
-    .single();
+    .select('program_data');
 
   if (error) {
     console.warn('Could not load MAPS programs from cloud:', error);
@@ -832,7 +829,7 @@ async function loadMapsProgramsFromCloud() {
     return;
   }
 
-  window.MAPS_ALL_PROGRAMS = (data && data.programs) || [];
+  window.MAPS_ALL_PROGRAMS = (data || []).map(function(row) { return row.program_data; });
   console.log('📥 MAPS programs loaded from cloud:', window.MAPS_ALL_PROGRAMS.length);
 }
 
@@ -1030,6 +1027,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Logged in - show sign out button and sync data
     const signoutBtn = document.getElementById('signout-btn');
     if (signoutBtn) signoutBtn.style.display = 'block';
+    const adminBtn = document.getElementById('admin-btn');
+    if (adminBtn) adminBtn.style.display = (typeof isAdmin === 'function' && isAdmin()) ? 'block' : 'none';
     await syncDataFromCloud();
   }
 });
@@ -1114,3 +1113,62 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// ============================================================================
+// ADMIN: grant individual MAPS programs to specific users
+// ============================================================================
+// Gated purely by email match here on the client (just controls whether the
+// Admin screen renders) -- the real enforcement is server-side: every query
+// below only succeeds because of the "auth.jwt() ->> 'email' = ..." RLS
+// policies on program_grants/profiles. A non-admin user calling these
+// functions directly would just get RLS errors back, not real access.
+var ADMIN_EMAIL = 'heathchartier@gmail.com';
+
+function isAdmin() {
+  return !!(currentUser && currentUser.email === ADMIN_EMAIL);
+}
+
+async function adminSearchUsersByEmail(query) {
+  if (!isAdmin() || !query) return [];
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('id, email, access_tier')
+    .ilike('email', '%' + query + '%')
+    .limit(10);
+
+  if (error) { console.warn('Admin user search failed:', error); return []; }
+  return data || [];
+}
+
+async function adminGetUserGrants(userId) {
+  if (!isAdmin() || !userId) return [];
+  const { data, error } = await supabaseClient
+    .from('program_grants')
+    .select('program_id')
+    .eq('user_id', userId);
+
+  if (error) { console.warn('Admin grant lookup failed:', error); return []; }
+  return (data || []).map(function(row) { return row.program_id; });
+}
+
+async function adminGrantProgram(userId, programId) {
+  if (!isAdmin()) return false;
+  const { error } = await supabaseClient
+    .from('program_grants')
+    .insert({ user_id: userId, program_id: programId });
+
+  if (error) { console.warn('Admin grant failed:', error); return false; }
+  return true;
+}
+
+async function adminRevokeProgram(userId, programId) {
+  if (!isAdmin()) return false;
+  const { error } = await supabaseClient
+    .from('program_grants')
+    .delete()
+    .eq('user_id', userId)
+    .eq('program_id', programId);
+
+  if (error) { console.warn('Admin revoke failed:', error); return false; }
+  return true;
+}

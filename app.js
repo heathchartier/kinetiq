@@ -42,8 +42,12 @@ function allProgs() {
     if (del.indexOf(b.id) === -1) list.push(b.prog);
   });
 
-  // Premium: add all MAPS built-in programs
-  if (premium && typeof MAPS_ALL_PROGRAMS !== 'undefined') {
+  // MAPS built-in programs -- MAPS_ALL_PROGRAMS is already pre-filtered by
+  // Supabase RLS to only whatever this specific user is allowed to see
+  // (everything if premium, just individually-granted programs otherwise),
+  // so no tier check is needed here -- adding one back would wrongly hide
+  // a non-premium user's granted programs.
+  if (typeof MAPS_ALL_PROGRAMS !== 'undefined') {
     MAPS_ALL_PROGRAMS.forEach(function(prog){
       if (del.indexOf(prog.id) === -1) list.push(prog);
     });
@@ -3133,8 +3137,91 @@ function logMealTemplate(templateId) {
 
 function deleteMealTemplate(templateId) {
   if (!confirm('Delete this meal template?')) return;
-  
+
   mealTemplates = mealTemplates.filter(function(t) { return t.id !== templateId; });
   localStorage.setItem('mealTemplates', JSON.stringify(mealTemplates));
   renderMealTemplates();
+}
+
+// ===== ADMIN: grant individual MAPS programs to specific users =====
+// UI-level gating only -- the real enforcement is the RLS policies behind
+// adminSearchUsersByEmail/adminGetUserGrants/adminGrantProgram/adminRevokeProgram
+// (auth.js), which only succeed for the actual admin account regardless of
+// what this screen shows.
+var adminSelectedUser = null;
+var adminSearchTimer = null;
+
+function rAdmin() {
+  if (typeof isAdmin !== 'function' || !isAdmin()) { showView('dashboard'); return; }
+  document.getElementById('admin-search-input').value = '';
+  document.getElementById('admin-search-results').innerHTML = '';
+  document.getElementById('admin-user-panel').style.display = 'none';
+  adminSelectedUser = null;
+}
+
+function adminSearchDebounced() {
+  clearTimeout(adminSearchTimer);
+  adminSearchTimer = setTimeout(adminRunSearch, 350);
+}
+
+async function adminRunSearch() {
+  var query = document.getElementById('admin-search-input').value.trim();
+  var resultsEl = document.getElementById('admin-search-results');
+  if (!query) { resultsEl.innerHTML = ''; return; }
+
+  var users = await adminSearchUsersByEmail(query);
+  if (!users.length) {
+    resultsEl.innerHTML = '<div class="empty" style="min-height:80px;padding:20px"><div class="esub">No matching accounts</div></div>';
+    return;
+  }
+
+  resultsEl.innerHTML = users.map(function(u) {
+    var tier = u.access_tier || 'standard';
+    return '<div class="admin-search-row" onclick="adminSelectUser(\'' + u.id + '\',\'' + esc((u.email || '').replace(/'/g, "\\'")) + '\',\'' + tier + '\')">'
+      + '<span class="admin-search-email">' + esc(u.email || '') + '</span>'
+      + '<span class="admin-search-tier">' + esc(tier) + '</span>'
+      + '</div>';
+  }).join('');
+}
+
+async function adminSelectUser(userId, email, tier) {
+  adminSelectedUser = { id: userId, email: email, access_tier: tier };
+  document.getElementById('admin-selected-email').textContent = email;
+  document.getElementById('admin-selected-tier').textContent = tier === 'premium'
+    ? 'Premium — already has full MAPS access, grants here are redundant'
+    : 'Standard tier';
+  document.getElementById('admin-search-results').innerHTML = '';
+  document.getElementById('admin-user-panel').style.display = 'block';
+
+  var listEl = document.getElementById('admin-program-list');
+  listEl.innerHTML = '<div class="empty" style="min-height:80px;padding:20px"><div class="esub">Loading...</div></div>';
+
+  var grantedIds = await adminGetUserGrants(userId);
+  var progs = (typeof MAPS_ALL_PROGRAMS !== 'undefined' ? MAPS_ALL_PROGRAMS : [])
+    .slice().sort(function(a, b) { return a.name.localeCompare(b.name); });
+
+  if (!progs.length) {
+    listEl.innerHTML = '<div class="empty" style="min-height:80px;padding:20px"><div class="esub">No MAPS programs loaded on your own account to grant from.</div></div>';
+    return;
+  }
+
+  listEl.innerHTML = progs.map(function(p) {
+    var checked = grantedIds.indexOf(p.id) !== -1;
+    return '<div class="admin-prog-row">'
+      + '<span class="admin-prog-name">' + esc(p.name) + '</span>'
+      + '<label class="toggle-switch">'
+      + '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="adminToggleProgram(\'' + p.id + '\', this.checked)">'
+      + '<span class="toggle-slider"></span>'
+      + '</label>'
+      + '</div>';
+  }).join('');
+}
+
+async function adminToggleProgram(programId, checked) {
+  if (!adminSelectedUser) return;
+  var ok = checked
+    ? await adminGrantProgram(adminSelectedUser.id, programId)
+    : await adminRevokeProgram(adminSelectedUser.id, programId);
+
+  toast(ok ? (checked ? 'Access granted' : 'Access revoked') : 'Failed to update — try again', ok ? 'success' : 'error');
 }
