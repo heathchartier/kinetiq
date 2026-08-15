@@ -268,23 +268,31 @@ function showOnboardingRecommendation() {
 function startRecommendedProgram(programId) {
   // Mark onboarding as complete
   localStorage.setItem('ls_onboarding_complete', 'true');
-  
+
   // Save recommended program ID
   localStorage.setItem('ls_recommended_program', programId);
-  
+
   // Hide onboarding
   hideOnboarding();
-  
+
+  // Push onboarding_complete/primary_goal/fitness_level to Supabase right now
+  // -- without this, a logout (which clears localStorage) followed by a
+  // fresh login has nothing in the cloud to confirm this user already went
+  // through onboarding, so it wrongly shows the wizard again every time.
+  if (typeof syncOnboardingPrefsToCloud === 'function') {
+    syncOnboardingPrefsToCloud().catch(function(){});
+  }
+
   // Sync data now that onboarding is done
   if (typeof syncDataFromCloud === 'function') {
     syncDataFromCloud();
   }
-  
+
   // Navigate to programs
   if (typeof showView === 'function') {
     showView('programs');
   }
-  
+
   // Open the program using the global openProg function
   // Use a longer delay to ensure DOM is ready
   setTimeout(function() {
@@ -298,15 +306,21 @@ function startRecommendedProgram(programId) {
 function browseAllPrograms() {
   // Mark onboarding as complete
   localStorage.setItem('ls_onboarding_complete', 'true');
-  
+
   // Hide onboarding
   hideOnboarding();
-  
+
+  // Push onboarding_complete/primary_goal/fitness_level to Supabase right now
+  // -- see comment in startRecommendedProgram() for why this matters.
+  if (typeof syncOnboardingPrefsToCloud === 'function') {
+    syncOnboardingPrefsToCloud().catch(function(){});
+  }
+
   // Sync data now that onboarding is done
   if (typeof syncDataFromCloud === 'function') {
     syncDataFromCloud();
   }
-  
+
   // Navigate to programs tab
   if (typeof showView === 'function') {
     showView('programs');
@@ -317,11 +331,15 @@ function browseAllPrograms() {
 function skipOnboarding() {
   localStorage.setItem('ls_onboarding_complete', 'true');
   hideOnboarding();
-  
+
+  if (typeof syncOnboardingPrefsToCloud === 'function') {
+    syncOnboardingPrefsToCloud().catch(function(){});
+  }
+
   if (typeof syncDataFromCloud === 'function') {
     syncDataFromCloud();
   }
-  
+
   if (typeof showView === 'function') {
     showView('dashboard');
   }
