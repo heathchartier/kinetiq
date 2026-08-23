@@ -120,11 +120,16 @@ document.addEventListener('DOMContentLoaded', function() {
     })(nds[j]);
   }
   rDash();
-  
+
   // Initialize nutrition tracking
   if (typeof initNutritionTracking !== 'undefined') {
     initNutritionTracking();
   }
+
+  // If iOS discarded a backgrounded/killed session mid-workout, this picks
+  // right back up instead of losing the whole thing -- overrides the
+  // dashboard rDash() just did above.
+  restoreActiveWorkout();
 });
 
 // ===== DASHBOARD =====
@@ -523,11 +528,13 @@ function startQuick(progId, weekIdx, dayIdx) {
     }
 
     wst = Date.now();
+    document.getElementById('aw-name').textContent = aw.name;
+    document.getElementById('aw-meta').textContent = '';
     document.getElementById('pill').classList.add('show');
     startWT();
+    saveActiveWorkout();
     renderAW();
-    showView('dashboard');
-    document.getElementById('pill').scrollIntoView({behavior: 'smooth'});
+    showView('active-workout');
   });
 }
 
@@ -1283,6 +1290,7 @@ function launch(data) {
   renderAW();
   showView('active-workout');
   startWT();
+  saveActiveWorkout();
   var pill = document.getElementById('pill');
   pill.classList.add('show');
 }
@@ -1420,8 +1428,48 @@ function startWT() {
     var t = Math.floor(e / 60) + ':' + String(e % 60).padStart(2, '0');
     document.getElementById('aw-elapsed').textContent = t;
     document.getElementById('pill-t').textContent = t;
+    saveActiveWorkout();
   }, 1000);
 }
+
+// ===== ACTIVE WORKOUT PERSISTENCE =====
+// aw only ever lived in memory -- iOS can (and does) fully discard a
+// backgrounded PWA's JS state under memory pressure after just a couple
+// minutes, which silently wipes an in-progress workout with no warning.
+// Persisting to localStorage on every timer tick (while in the foreground,
+// which is when edits actually happen) and explicitly on visibilitychange
+// means a resume after that kind of wipe restores exactly where you left
+// off instead of losing the whole session.
+function saveActiveWorkout() {
+  if (!aw) { clearActiveWorkout(); return; }
+  try {
+    localStorage.setItem('ls_activeWorkout', JSON.stringify({ aw: aw, wst: wst, awName: document.getElementById('aw-name').textContent, awMeta: document.getElementById('aw-meta').textContent }));
+  } catch (e) {}
+}
+
+function clearActiveWorkout() {
+  try { localStorage.removeItem('ls_activeWorkout'); } catch (e) {}
+}
+
+function restoreActiveWorkout() {
+  var saved;
+  try { saved = JSON.parse(localStorage.getItem('ls_activeWorkout') || 'null'); } catch (e) { saved = null; }
+  if (!saved || !saved.aw) return false;
+
+  aw = saved.aw;
+  wst = saved.wst || Date.now();
+  document.getElementById('aw-name').textContent = saved.awName || aw.name || '';
+  document.getElementById('aw-meta').textContent = saved.awMeta || '';
+  renderAW();
+  showView('active-workout');
+  startWT();
+  document.getElementById('pill').classList.add('show');
+  return true;
+}
+
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden' && aw) saveActiveWorkout();
+});
 
 function finishW() {
   if (!aw || !confirm('Finish this workout?')) return;
@@ -1481,6 +1529,7 @@ function finishW() {
   }
 
   aw = null;
+  clearActiveWorkout();
   document.getElementById('pill').classList.remove('show');
   showView('history');
 }
@@ -1488,6 +1537,7 @@ function finishW() {
 function cancelW() {
   if (!confirm('Cancel? Progress will be lost.')) return;
   clearInterval(wt); aw = null;
+  clearActiveWorkout();
   document.getElementById('pill').classList.remove('show');
   showView('dashboard');
 }
