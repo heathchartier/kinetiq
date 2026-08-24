@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="1024" height="1024">
+  <!-- Kinetiq App Icon — Lightning Bolt concept -->
+  <!-- Brand: teal #00e5b8 on near-black #111318 -->
+  <!-- Decision: single bold lightning bolt = kinetic energy. No premium fitness competitor uses this. -->
+  <!-- Production: use Midjourney prompt below, or use this SVG directly as a starting point -->
+  <!-- Midjourney prompt: Minimalist iOS app icon, flat design, near-black background #111318, single bold lightning bolt centered, thick strokes, teal #00e5b8, no text, rounded square, app store ready -->
+  <!-- After generating: run through MakeAppIcon.com for all sizes (App Store, Play Store, PWA manifest) -->
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="44" fill="#111318"/>
+
+  <!-- Lightning bolt -->
+  <path d="M 122,24 L 64,108 L 102,108 L 80,176 L 140,92 L 102,92 Z" fill="#00e5b8"/>
+
+  <!-- Subtle inner highlight for depth -->
+  <path d="M 116,36 L 78,105 L 99,105" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
