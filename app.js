@@ -1593,7 +1593,8 @@ function showRT() {
   if (_rtM > 5)   { _rtM = 5; _rtS = 0; }
   _rtRender();
   setRT(s);
-  document.getElementById('rt-pill').classList.remove('show');
+  var rtp0 = document.getElementById('rt-pill');
+  if (rtp0) rtp0.classList.remove('show');
   document.getElementById('rt-ov').classList.add('show');
 
   // Ask once (browser only shows the prompt if permission is still
@@ -1663,21 +1664,27 @@ function togRT() {
 function closeRT() {
   clearInterval(rtIv);
   document.getElementById('rt-ov').classList.remove('show');
-  document.getElementById('rt-pill').classList.remove('show');
+  var rtp = document.getElementById('rt-pill');
+  if (rtp) rtp.classList.remove('show');
 }
 
 // Dismiss the full-screen overlay but keep the countdown running in the
 // background -- tickRT()/rtEndTime don't care whether the overlay is
 // visible, so this is purely a DOM swap: hide the overlay, show the pill.
+// Guarded with null checks throughout: a stale service-worker cache can
+// serve old HTML alongside new JS for a bit, and #rt-pill not existing
+// yet shouldn't be able to throw and take down the whole rest-timer flow.
 function minimizeRT() {
   document.getElementById('rt-ov').classList.remove('show');
-  document.getElementById('rt-pill').classList.add('show');
+  var rtp = document.getElementById('rt-pill');
+  if (rtp) rtp.classList.add('show');
   updRT(); // make sure the pill shows the current time immediately
 }
 
 // Bring the full-screen overlay back up from the minimized pill.
 function restoreRT() {
-  document.getElementById('rt-pill').classList.remove('show');
+  var rtp = document.getElementById('rt-pill');
+  if (rtp) rtp.classList.remove('show');
   document.getElementById('rt-ov').classList.add('show');
   updRT();
 }
@@ -1704,7 +1711,8 @@ function beep() {
 // lock screen) needs the native iOS wrapper, not this PWA -- see
 // kinetiq-ios project notes.
 function onRestTimerComplete() {
-  document.getElementById('rt-pill').classList.remove('show');
+  var rtp = document.getElementById('rt-pill');
+  if (rtp) rtp.classList.remove('show');
   beep();
 
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
