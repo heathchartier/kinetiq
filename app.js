@@ -632,20 +632,25 @@ function rExLib() {
 
 function openExDetail(name) {
   var ex = collectExercises().filter(function(e) { return e.name === name; })[0];
-  if (!ex) return;
 
   var muscleColor = {
     Legs:'#22c55e', Back:'#00e5b8', Chest:'#f59e0b',
     Shoulders:'#a855f7', Arms:'#ec4899', Core:'#ef4444',
     Mobility:'#06b6d4', Cardio:'#f97316', Other:'#888'
   };
-  var col = muscleColor[ex.muscle] || '#888';
 
-  document.getElementById('ex-detail-name').textContent = ex.name;
-  document.getElementById('ex-detail-badges').innerHTML =
-    '<span class="ex-lib-badge" style="color:' + col + ';background:' + col + '20;border-color:' + col + '40">' + esc(ex.muscle || 'Other') + '</span>'
-    + (ex.equipment ? '<span class="ex-lib-sep">·</span><span class="ex-lib-equip">' + esc(ex.equipment) + '</span>' : '');
-  document.getElementById('ex-detail-desc').textContent = ex.desc || 'No description available yet for this exercise.';
+  document.getElementById('ex-detail-name').textContent = ex ? ex.name : name;
+  if (ex) {
+    var col = muscleColor[ex.muscle] || '#888';
+    document.getElementById('ex-detail-badges').innerHTML =
+      '<span class="ex-lib-badge" style="color:' + col + ';background:' + col + '20;border-color:' + col + '40">' + esc(ex.muscle || 'Other') + '</span>'
+      + (ex.equipment ? '<span class="ex-lib-sep">·</span><span class="ex-lib-equip">' + esc(ex.equipment) + '</span>' : '');
+  } else {
+    // Not in the curated library (e.g. a program-specific exercise name) --
+    // still open the modal rather than silently doing nothing on tap.
+    document.getElementById('ex-detail-badges').innerHTML = '';
+  }
+  document.getElementById('ex-detail-desc').textContent = (ex && ex.desc) || 'No description available yet for this exercise.';
 
   openM('ex-detail-modal');
 }
@@ -1315,7 +1320,7 @@ function renderAW() {
     return '<div class="aex-card" id="aex-' + e.id + '">'
       + '<div class="aex-hd">'
       + '<div style="flex:1;min-width:0">'
-      + '<div class="aex-name">' + esc(e.name) + '</div>'
+      + '<div class="aex-name" style="cursor:pointer" onclick="openExDetail(\'' + esc(e.name.replace(/'/g, "\\'")) + '\')" title="Tap for description">' + esc(e.name) + ' &#8505;&#65039;</div>'
       + '<div class="aex-tgt">Target: ' + e.tS + ' x ' + esc(e.tR) + (e.tW ? ' @ ' + esc(e.tW) : '') + '</div>'
       + (e.notes ? '<div class="aex-note">&#128221; ' + esc(e.notes) + '</div>' : '')
       + '</div>'
@@ -1588,6 +1593,7 @@ function showRT() {
   if (_rtM > 5)   { _rtM = 5; _rtS = 0; }
   _rtRender();
   setRT(s);
+  document.getElementById('rt-pill').classList.remove('show');
   document.getElementById('rt-ov').classList.add('show');
 
   // Ask once (browser only shows the prompt if permission is still
@@ -1600,6 +1606,7 @@ function showRT() {
 function setRT(s) {
   if (rtIv) clearInterval(rtIv);
   rtTot = s; rtRem = s; rtRun = true;
+  rtLast = s; // remember this choice for the next set, however it was set
   rtEndTime = Date.now() + s * 1000;
   updRT();
   rtIv = setInterval(tickRT, 1000);
@@ -1626,8 +1633,11 @@ document.addEventListener('visibilitychange', function() {
 });
 function updRT() {
   var m = Math.floor(rtRem / 60), s = rtRem % 60;
-  document.getElementById('rt-num').textContent = m + ':' + String(s).padStart(2, '0');
-  
+  var t = m + ':' + String(s).padStart(2, '0');
+  document.getElementById('rt-num').textContent = t;
+  var pillT = document.getElementById('rt-pill-t');
+  if (pillT) pillT.textContent = t; // keep the minimized pill in sync too
+
   // Update linear progress bar
   var pct = (rtTot > 0 ? Math.round(rtRem / rtTot * 100) : 0);
   document.getElementById('rt-fill').style.width = pct + '%';
@@ -1650,7 +1660,27 @@ function togRT() {
   // value from the last tick, and tickRT() no-ops while !rtRun.
   document.getElementById('rt-pbtn').textContent = rtRun ? 'Pause' : 'Resume';
 }
-function closeRT() { clearInterval(rtIv); document.getElementById('rt-ov').classList.remove('show'); }
+function closeRT() {
+  clearInterval(rtIv);
+  document.getElementById('rt-ov').classList.remove('show');
+  document.getElementById('rt-pill').classList.remove('show');
+}
+
+// Dismiss the full-screen overlay but keep the countdown running in the
+// background -- tickRT()/rtEndTime don't care whether the overlay is
+// visible, so this is purely a DOM swap: hide the overlay, show the pill.
+function minimizeRT() {
+  document.getElementById('rt-ov').classList.remove('show');
+  document.getElementById('rt-pill').classList.add('show');
+  updRT(); // make sure the pill shows the current time immediately
+}
+
+// Bring the full-screen overlay back up from the minimized pill.
+function restoreRT() {
+  document.getElementById('rt-pill').classList.remove('show');
+  document.getElementById('rt-ov').classList.add('show');
+  updRT();
+}
 function beep() {
   try {
     var c = new (window.AudioContext || window.webkitAudioContext)();
@@ -1674,6 +1704,7 @@ function beep() {
 // lock screen) needs the native iOS wrapper, not this PWA -- see
 // kinetiq-ios project notes.
 function onRestTimerComplete() {
+  document.getElementById('rt-pill').classList.remove('show');
   beep();
 
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;

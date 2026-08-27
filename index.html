@@ -27,6 +27,7 @@
   </div>
   <div id="topbar-right">
     <button id="pill" onclick="showView('active-workout')">&#9889; <span id="pill-t">0:00</span></button>
+    <button id="rt-pill" onclick="restoreRT()">&#9203; <span id="rt-pill-t">1:00</span></button>
     <button class="btn-p btn-sm" onclick="openQL()">+ Log</button>
     <button class="btn-s btn-sm" id="trophy-btn" onclick="showAchievementsModal()" title="Achievements">🏆</button>
     <button class="btn-s btn-sm" onclick="showView('admin'); rAdmin();" style="display:none" id="admin-btn" title="Admin">🔑</button>
@@ -106,16 +107,20 @@
   <!-- PROGRAMS -->
   <section id="view-programs" class="view">
     <div class="ph"><div><h1 class="ptitle">Programs</h1><p class="psub">Import or create plans</p></div><div style="display:flex;gap:8px"><button class="btn-d btn-sm" onclick="openExLib()">Library</button><button class="btn-s btn-sm" onclick="openCP()">+ Create</button></div></div>
-    
+
+    <div style="padding:0 14px 12px">
+      <input type="text" class="fi" id="prog-search" placeholder="Search programs..." oninput="rProgs()">
+    </div>
+
     <!-- Program Ecosystem Info Card -->
     <div id="program-info-card" style="margin: 0 14px 16px 14px; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: #fff; font-size: 14px; line-height: 1.6; position: relative;">
       <button onclick="document.getElementById('program-info-card').style.display='none'" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.2); border: none; color: #fff; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; font-family: inherit;">×</button>
       <div style="font-weight: 700; font-size: 15px; margin-bottom: 8px;">💪 Recommended Program Flow</div>
       <div style="margin-bottom: 4px;">For optimal results, run programs in this order:</div>
-      <div style="font-weight: 600; margin: 8px 0;">Strong (12 wks) → Hypertrophy (12 wks) → Balance (8 wks) → Deload (1 wk) → Repeat</div>
+      <div style="font-weight: 600; margin: 8px 0;">Kinetiq Strength (12 wks) → Kinetiq Hypertrophy (12 wks) → Kinetiq Balance (9 wks) → Kinetiq Deload (1 wk) → Repeat</div>
       <div style="font-size: 13px; opacity: 0.9;">You can also run standalone programs (HIIT, Mobility) alongside or between cycles based on your goals.</div>
     </div>
-    
+
     <div id="save-banner" class="save-banner">&#10003; Program saved! It will be here every time you return.</div>
     <div id="uz" class="upload-zone" onclick="document.getElementById('fi').click()" ondragover="doDO(event)" ondragleave="doDL()" ondrop="doDrop(event)">
       <input type="file" id="fi" accept=".pdf,.txt" onchange="doFS(event)">
@@ -178,7 +183,7 @@
       <div class="modal-hd"><span id="ex-detail-name">Exercise</span><button class="modal-close" onclick="closeM('ex-detail-modal')">&#10005;</button></div>
       <div class="modal-body">
         <div id="ex-detail-badges" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
-        <p id="ex-detail-desc" style="font-size:14px;color:var(--t2);line-height:1.6;margin:0"></p>
+        <p id="ex-detail-desc" style="font-size:15px;color:var(--desc);line-height:1.6;margin:0"></p>
       </div>
       <div class="modal-foot">
         <button class="btn-p btn-sm" onclick="closeM('ex-detail-modal')">Got it</button>
@@ -729,6 +734,7 @@
     </div>
     <div id="rt-ctrl">
       <button class="btn-s btn-sm" id="rt-pbtn" onclick="togRT()">Pause</button>
+      <button class="btn-s btn-sm" onclick="minimizeRT()" title="Keep timer running and log info">Minimize</button>
       <button class="btn-p btn-sm" onclick="closeRT()">Skip</button>
     </div>
   </div>
