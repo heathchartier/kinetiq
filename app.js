@@ -652,6 +652,26 @@ function openExDetail(name) {
   }
   document.getElementById('ex-detail-desc').textContent = (ex && ex.desc) || 'No description available yet for this exercise.';
 
+  var histEl = document.getElementById('ex-detail-history');
+  if (histEl) {
+    var sessions = getExerciseHistory(name, 5);
+    if (!sessions.length) {
+      histEl.innerHTML = '<div class="sec-lbl" style="margin-top:14px">Your History</div>'
+        + '<div style="font-size:13px;color:var(--t2);padding:4px 0">No logged sets for this exercise yet.</div>';
+    } else {
+      var pr = prs[name];
+      histEl.innerHTML = '<div class="sec-lbl" style="margin-top:14px">Your History</div>'
+        + (pr ? '<div style="font-size:13px;color:var(--acc);font-weight:600;margin-bottom:6px">Best: ' + esc(pr.weight) + ' x ' + esc(pr.reps) + '</div>' : '')
+        + sessions.map(function(s) {
+            var setStr = s.sets.map(function(x) { return (x.weight || '—') + 'x' + (x.reps || '—'); }).join(', ');
+            return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)">'
+              + '<span style="font-size:12px;color:var(--t3);flex-shrink:0">' + fd(s.date) + '</span>'
+              + '<span style="font-size:13px;color:var(--t1);font-family:monospace;text-align:right">' + esc(setStr) + '</span>'
+              + '</div>';
+          }).join('');
+    }
+  }
+
   openM('ex-detail-modal');
 }
 
@@ -1388,6 +1408,21 @@ function updWP() {
     tot += e.sets.length;
   });
   document.getElementById('aw-prog').textContent = dn + ' / ' + tot + ' sets done';
+}
+
+// Full per-exercise history (not just the last set-position match getPrev()
+// does inline in the sets table) -- pulls the last few completed sessions
+// that included this exercise, so progression (weight/reps/sets trending up
+// or stalling) is visible at a glance from the description popup.
+function getExerciseHistory(name, limit) {
+  limit = limit || 5;
+  var out = [];
+  for (var i = 0; i < hist.length && out.length < limit; i++) { // hist is newest-first (unshift on finish)
+    var w = hist[i];
+    var e = w.exercises && w.exercises.filter(function(x){ return x.name.toLowerCase() === name.toLowerCase(); })[0];
+    if (e && e.sets && e.sets.length) out.push({ date: w.date, sets: e.sets });
+  }
+  return out;
 }
 
 function getPrev(name, si) {
