@@ -56,7 +56,7 @@ async function handleForgotPassword() {
     
     if (error) throw error;
     
-    showAuthError('✅ Password reset link sent! Check your email.');
+    showAuthError('✅ Password reset link sent! Check your email (and your spam/junk folder — first-time emails sometimes land there).');
     setTimeout(() => {
       showSignInForm();
     }, 3000);
@@ -188,7 +188,7 @@ async function handleSignUp() {
   
   if (result.success) {
     // Show success message
-    showAuthError('Account created! Please check your email to verify.');
+    showAuthError('Account created! Please check your email to verify (and your spam/junk folder — first-time emails sometimes land there).');
     // Auto switch to sign in after 3 seconds
     setTimeout(() => {
       showSignInForm();
