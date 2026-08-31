@@ -134,10 +134,17 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 async function onUserSignedIn(user) {
   console.log('User signed in:', user);
 
+  // Gate first, before hideAuthModal() reveals anything real behind it --
+  // initAppLock() is a no-op if no PIN is set, and idempotent if this fires
+  // alongside auth.js's own page-load check for the same restored session.
+  if (typeof initAppLock === 'function') initAppLock();
+
   if (typeof hideAuthModal === 'function') hideAuthModal();
 
   const signoutBtn = document.getElementById('signout-btn');
   if (signoutBtn) signoutBtn.style.display = 'block';
+  const securityBtn = document.getElementById('security-btn');
+  if (securityBtn) securityBtn.style.display = 'block';
 
   // Fast path: this device already recorded onboarding as done
   if (localStorage.getItem('ls_onboarding_complete')) {
@@ -188,11 +195,16 @@ async function onUserSignedIn(user) {
 
 function onUserSignedOut() {
   console.log('User signed out');
-  
+
   // Hide sign out button
   const signoutBtn = document.getElementById('signout-btn');
   if (signoutBtn) signoutBtn.style.display = 'none';
-  
+  const securityBtn = document.getElementById('security-btn');
+  if (securityBtn) securityBtn.style.display = 'none';
+  // Note: the PIN/Face ID lock itself is intentionally NOT cleared here --
+  // it's a device-level setting, not tied to the account session. See
+  // disableAppLock() in app.js for the actual way to turn it off.
+
   // Show auth modal
   showAuthModal();
 }

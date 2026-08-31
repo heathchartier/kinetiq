@@ -148,8 +148,13 @@ async function handleSignIn() {
     // Show sign out button
     const signoutBtn = document.getElementById('signout-btn');
     if (signoutBtn) signoutBtn.style.display = 'block';
+    const securityBtn = document.getElementById('security-btn');
+    if (securityBtn) securityBtn.style.display = 'block';
     const adminBtn = document.getElementById('admin-btn');
     if (adminBtn) adminBtn.style.display = (typeof isAdmin === 'function' && isAdmin()) ? 'block' : 'none';
+    // Re-lock immediately if a PIN was set on this device previously --
+    // signing out doesn't clear it, so a fresh sign-in should still gate.
+    if (typeof initAppLock === 'function') initAppLock();
     
     // Sync data from cloud
     await syncDataFromCloud();
@@ -1027,8 +1032,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Logged in - show sign out button and sync data
     const signoutBtn = document.getElementById('signout-btn');
     if (signoutBtn) signoutBtn.style.display = 'block';
+    const securityBtn = document.getElementById('security-btn');
+    if (securityBtn) securityBtn.style.display = 'block';
     const adminBtn = document.getElementById('admin-btn');
     if (adminBtn) adminBtn.style.display = (typeof isAdmin === 'function' && isAdmin()) ? 'block' : 'none';
+    // A remembered session restoring on app open is exactly when the lock
+    // screen needs to appear -- before any real data renders.
+    if (typeof initAppLock === 'function') initAppLock();
     await syncDataFromCloud();
   }
 });

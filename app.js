@@ -1859,6 +1859,208 @@ function onRestTimerComplete() {
   } catch (e) {}
 }
 
+// ===== APP LOCK / SECURITY (PIN + Face ID) =====
+// Device-level lock, independent of the Supabase account session -- signing
+// out does NOT clear the PIN/Face ID, and re-signing-in on the same device
+// re-locks immediately if one is set. Ported from the same pattern proven
+// working in FieldIQ (WebAuthn platform authenticator via navigator.credentials,
+// which works fine inside a WKWebView wrapper same as in a browser tab -- no
+// native bridge needed, unlike the rest timer chime).
+var _pinBuf = '';
+var _appUnlockedThisSession = false; // in-memory only -- cleared when the app process restarts
+
+// Called right when a session is confirmed (fresh load with a remembered
+// login, or right after signing in) -- before anything else renders, so a
+// locked app never flashes real data first. Idempotent: safe to call more
+// than once (page-load auth check + the auth-state-change listener can both
+// fire for the same session) since it no-ops once already shown/unlocked.
+function initAppLock() {
+  var pin = localStorage.getItem('ls_pin');
+  if (!pin) return;
+  if (_appUnlockedThisSession) return;
+  if (document.getElementById('lock-screen')) return; // already showing
+  showLockScreen();
+}
+
+function showLockScreen() {
+  var hasFaceID = !!localStorage.getItem('ls_faceid_cred');
+  _pinBuf = '';
+  var el = document.createElement('div');
+  el.id = 'lock-screen';
+  el.className = 'lock-screen';
+  el.innerHTML = '<div style="font-size:52px;margin-bottom:10px">&#128274;</div>'
+    + '<div style="font-size:22px;font-weight:800;color:var(--t1);margin-bottom:6px">Kinetiq</div>'
+    + '<div style="font-size:13px;color:var(--t2);margin-bottom:28px;text-align:center">Enter your PIN to continue</div>'
+    + '<div class="pin-dots" id="pin-dots">'
+      + '<div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>'
+      + '<div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>'
+    + '</div>'
+    + '<div id="lock-msg" style="font-size:13px;color:var(--danger);height:20px;margin-bottom:14px;text-align:center"></div>'
+    + '<div class="pin-pad">'
+      + '<button class="pin-key" onclick="enterPinDigit(\'1\')">1</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'2\')">2</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'3\')">3</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'4\')">4</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'5\')">5</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'6\')">6</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'7\')">7</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'8\')">8</button>'
+      + '<button class="pin-key" onclick="enterPinDigit(\'9\')">9</button>'
+      + (hasFaceID ? '<button class="pin-key" style="font-size:26px;background:transparent;border-color:rgba(0,229,184,.3);color:var(--acc)" onclick="tryFaceID()">&#129661;</button>' : '<div></div>')
+      + '<button class="pin-key" onclick="enterPinDigit(\'0\')">0</button>'
+      + '<button class="pin-key" style="font-size:18px" onclick="deletePinDigit()">&#9003;</button>'
+    + '</div>';
+  document.body.appendChild(el);
+  if (hasFaceID) setTimeout(function() { tryFaceID(); }, 500);
+}
+function enterPinDigit(d) {
+  if (_pinBuf.length >= 4) return;
+  _pinBuf += d;
+  updatePinDots();
+  if (_pinBuf.length === 4) setTimeout(function() { verifyPIN(_pinBuf); }, 80);
+}
+function deletePinDigit() {
+  if (_pinBuf.length > 0) { _pinBuf = _pinBuf.slice(0, -1); updatePinDots(); }
+}
+function updatePinDots() {
+  for (var i = 0; i < 4; i++) {
+    var d = document.getElementById('pd' + i);
+    if (d) d.className = 'pin-dot' + (i < _pinBuf.length ? ' filled' : '');
+  }
+  var msg = document.getElementById('lock-msg');
+  if (msg) msg.textContent = '';
+}
+function verifyPIN(pin) {
+  var stored = localStorage.getItem('ls_pin');
+  if (btoa('kq_' + pin + '_s7') === stored) {
+    unlockApp();
+  } else {
+    _pinBuf = '';
+    for (var i = 0; i < 4; i++) { var d = document.getElementById('pd' + i); if (d) d.className = 'pin-dot err'; }
+    var msg = document.getElementById('lock-msg');
+    if (msg) msg.textContent = 'Incorrect PIN — try again';
+    setTimeout(function() {
+      for (var i = 0; i < 4; i++) { var d = document.getElementById('pd' + i); if (d) d.className = 'pin-dot'; }
+      var msg2 = document.getElementById('lock-msg');
+      if (msg2) msg2.textContent = '';
+    }, 1200);
+  }
+}
+function unlockApp() {
+  _appUnlockedThisSession = true;
+  var el = document.getElementById('lock-screen');
+  if (el) { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300); }
+}
+function tryFaceID() {
+  var credId = localStorage.getItem('ls_faceid_cred');
+  if (!credId) return;
+  try {
+    var credIdBytes = Uint8Array.from(atob(credId), function(c) { return c.charCodeAt(0); });
+    navigator.credentials.get({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        allowCredentials: [{ id: credIdBytes, type: 'public-key' }],
+        userVerification: 'required',
+        timeout: 60000
+      }
+    }).then(function(assertion) { if (assertion) unlockApp(); }).catch(function() {});
+  } catch (e) {}
+}
+
+// Bottom sheet with the App Security card -- Kinetiq has no dedicated
+// Settings view yet, so this is built on demand (same pattern as the rest
+// timer's picker sheets) rather than living in static markup.
+function showSecuritySettings() {
+  var sheet = document.createElement('div');
+  sheet.id = 'security-sheet';
+  sheet.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)';
+  sheet.innerHTML = '<div style="background:var(--bg2);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:22px 20px calc(32px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--border)">'
+    + '<div style="width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px"></div>'
+    + '<div style="font-size:17px;font-weight:800;margin-bottom:4px">&#128274; App Security</div>'
+    + '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Protect your workout data with a PIN + Face ID</div>'
+    + '<div id="sec-status" style="font-size:13px;color:var(--t2);margin-bottom:14px"></div>'
+    + '<button onclick="showPINSetup()" id="btn-set-pin" style="width:100%;padding:12px;border-radius:var(--radius-md);background:rgba(0,229,184,.15);color:var(--acc);border:1px solid rgba(0,229,184,.3);cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;margin-bottom:8px">&#128273; Set PIN</button>'
+    + '<button onclick="showFaceIDSetup()" id="btn-faceid" style="width:100%;padding:12px;border-radius:var(--radius-md);background:rgba(48,184,255,.15);color:var(--acc3);border:1px solid rgba(48,184,255,.3);cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;margin-bottom:8px">&#129661; Enable Face ID</button>'
+    + '<button onclick="disableAppLock()" id="btn-dis-lock" style="display:none;width:100%;padding:12px;border-radius:var(--radius-md);background:transparent;border:1px solid var(--border);color:var(--t2);cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;margin-bottom:8px">&#128275; Disable Lock</button>'
+    + '<button onclick="document.getElementById(\'security-sheet\').remove()" style="width:100%;padding:11px;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--t2);font-size:13px;cursor:pointer;font-family:inherit">Close</button>'
+    + '</div>';
+  sheet.addEventListener('click', function(e) { if (e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+  updateSecurityStatus();
+}
+function showPINSetup() {
+  var sheet = document.createElement('div');
+  sheet.id = 'pin-setup-sheet';
+  sheet.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)';
+  var fi = 'width:100%;padding:12px;border-radius:var(--radius-md);background:var(--bg3);border:1px solid var(--border);color:var(--t1);font-family:inherit;font-size:22px;letter-spacing:8px;text-align:center;margin-bottom:10px;box-sizing:border-box';
+  sheet.innerHTML = '<div style="background:var(--bg2);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:22px 20px calc(32px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--border)">'
+    + '<div style="width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px"></div>'
+    + '<div style="font-size:17px;font-weight:800;margin-bottom:4px">Set PIN</div>'
+    + '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">4-digit PIN to lock the app on next open</div>'
+    + '<input id="pin-new1" type="tel" inputmode="numeric" maxlength="4" placeholder="New PIN" style="' + fi + '">'
+    + '<input id="pin-new2" type="tel" inputmode="numeric" maxlength="4" placeholder="Confirm PIN" style="' + fi.replace('margin-bottom:10px', 'margin-bottom:14px') + '">'
+    + '<button onclick="confirmNewPIN()" style="width:100%;padding:13px;border-radius:var(--radius-md);background:var(--acc);color:#000;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;border:none;margin-bottom:8px">Set PIN</button>'
+    + '<button onclick="document.getElementById(\'pin-setup-sheet\').remove()" style="width:100%;padding:11px;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--t2);font-size:13px;cursor:pointer;font-family:inherit">Cancel</button>'
+    + '</div>';
+  sheet.addEventListener('click', function(e) { if (e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+  setTimeout(function() { var el = document.getElementById('pin-new1'); if (el) el.focus(); }, 200);
+}
+function confirmNewPIN() {
+  var p1 = (document.getElementById('pin-new1') || {}).value || '';
+  var p2 = (document.getElementById('pin-new2') || {}).value || '';
+  if (!/^\d{4}$/.test(p1)) { toast('PIN must be exactly 4 digits'); return; }
+  if (p1 !== p2) { toast('PINs do not match'); return; }
+  localStorage.setItem('ls_pin', btoa('kq_' + p1 + '_s7'));
+  _appUnlockedThisSession = true; // just set it in-app -- don't immediately re-lock
+  var sheet = document.getElementById('pin-setup-sheet');
+  if (sheet) sheet.remove();
+  toast('&#128274; PIN set — app locks on next open');
+  updateSecurityStatus();
+}
+function showFaceIDSetup() {
+  if (!localStorage.getItem('ls_pin')) { toast('Set a PIN first'); return; }
+  if (!window.PublicKeyCredential) { toast('Face ID not supported on this device'); return; }
+  navigator.credentials.create({
+    publicKey: {
+      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      rp: { name: 'Kinetiq', id: location.hostname || 'localhost' },
+      user: { id: crypto.getRandomValues(new Uint8Array(16)), name: 'kinetiq-user', displayName: 'Kinetiq User' },
+      pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+      authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required', requireResidentKey: false },
+      timeout: 60000
+    }
+  }).then(function(cred) {
+    if (cred) {
+      var idB64 = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId)));
+      localStorage.setItem('ls_faceid_cred', idB64);
+      toast('&#129661; Face ID enabled!');
+      updateSecurityStatus();
+    }
+  }).catch(function() { toast('Face ID setup failed — make sure you have a passcode/Face ID set up on your iPhone'); });
+}
+function disableAppLock() {
+  localStorage.removeItem('ls_pin');
+  localStorage.removeItem('ls_faceid_cred');
+  _appUnlockedThisSession = false;
+  toast('&#128275; App lock disabled');
+  updateSecurityStatus();
+}
+function updateSecurityStatus() {
+  var el = document.getElementById('sec-status');
+  if (!el) return;
+  var hasPin = !!localStorage.getItem('ls_pin');
+  var hasFace = !!localStorage.getItem('ls_faceid_cred');
+  var btnDis = document.getElementById('btn-dis-lock');
+  if (hasPin) {
+    el.innerHTML = '<span style="color:var(--acc)">&#10003; PIN set</span>' + (hasFace ? ' &bull; <span style="color:var(--acc3)">&#129661; Face ID enabled</span>' : '');
+    if (btnDis) btnDis.style.display = 'block';
+  } else {
+    el.textContent = 'No lock set — data is unprotected';
+    if (btnDis) btnDis.style.display = 'none';
+  }
+}
+
 // ===== HISTORY =====
 function rHist() {
   var list = document.getElementById('hist-list');
