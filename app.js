@@ -14,6 +14,12 @@ var prs       = DB.get('prs', {});
 var restDays  = DB.get('restDays', []);
 var aw = null, wt = null, wst = null, curPid = null, curPhi = 0;
 var rtIv = null, rtTot = 120, rtRem = 120, rtRun = false, rtLast = 120, rtEndTime = 0;
+// True if the app was ever backgrounded while the current countdown segment
+// was running. When a completion is detected in that state, the native
+// wrapper's real iOS notification already fired (and already dinged) while
+// the screen was locked -- re-chiming on reopen would be a second, redundant
+// ding for the same completion. See tickRT()'s completion branch.
+var rtWentHidden = false;
 var rtVolume = DB.get('restTimerVolume', 1); // 0..1, independent of the phone's system media volume
 
 function isPremium() {
@@ -1662,6 +1668,7 @@ function setRT(s) {
   rtTot = s; rtRem = s; rtRun = true;
   rtLast = s; // remember this choice for the next set, however it was set
   rtEndTime = Date.now() + s * 1000;
+  rtWentHidden = false; // fresh countdown segment -- hasn't been backgrounded yet
   updRT();
   rtIv = setInterval(tickRT, 1000);
   // Ask the native wrapper (if we're in it) to schedule a real iOS local
@@ -1687,14 +1694,41 @@ function tickRT() {
     rtRun = false;
     clearInterval(rtIv);
     closeRT();
-    onRestTimerComplete();
+    // If this countdown was ever backgrounded, the native wrapper's real
+    // iOS notification already fired (and already dinged, per its own
+    // ringer-switch rules) at the actual completion moment while the screen
+    // was locked -- onRestTimerComplete()'s live chime would be a second,
+    // redundant ding for the same completion, heard only on reopen. Only
+    // suppress it in that specific case; a completion detected while the
+    // app was in the foreground the whole time (rtWentHidden still false)
+    // never had a notification fire, so the live chime is the only alert
+    // and must still play.
+    if (rtWentHidden && isNativeWrapper()) {
+      var rtp2 = document.getElementById('rt-pill');
+      if (rtp2) rtp2.classList.remove('show');
+    } else {
+      onRestTimerComplete();
+    }
   }
+}
+
+// True only inside the native iOS wrapper (kinetiq-ios), where
+// window.webkit.messageHandlers exists -- false in a plain browser tab or
+// installed PWA, where there's no guaranteed audible background alert to
+// defer to, so the live chime should never be suppressed there.
+function isNativeWrapper() {
+  try {
+    return !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers['rest-timer-chime']);
+  } catch (e) { return false; }
 }
 
 // Instantly resync the moment the tab/app becomes visible again, instead of
 // waiting for the next throttled tick -- and catch a completion that
 // happened while backgrounded, since a paused JS timer can't fire on time.
 document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden' && rtRun) {
+    rtWentHidden = true;
+  }
   if (document.visibilityState === 'visible' && rtRun && rtIv) {
     tickRT();
   }
@@ -1723,6 +1757,7 @@ function togRT() {
   if (rtRun) {
     // Resuming: re-anchor the wall-clock target to the frozen remaining time.
     rtEndTime = Date.now() + rtRem * 1000;
+    rtWentHidden = false; // fresh notification just scheduled for this segment
     nativeBridge('rest-timer-schedule', { seconds: rtRem });
   } else {
     // Paused -- don't let a stale notification fire while the countdown isn't running.
