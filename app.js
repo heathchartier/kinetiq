@@ -2002,6 +2002,10 @@ function showSecuritySettings() {
     + '<button onclick="showPINSetup()" id="btn-set-pin" style="width:100%;padding:12px;border-radius:var(--radius-md);background:rgba(0,229,184,.15);color:var(--acc);border:1px solid rgba(0,229,184,.3);cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;margin-bottom:8px">&#128273; Set PIN</button>'
     + '<button onclick="showFaceIDSetup()" id="btn-faceid" style="width:100%;padding:12px;border-radius:var(--radius-md);background:rgba(48,184,255,.15);color:var(--acc3);border:1px solid rgba(48,184,255,.3);cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;margin-bottom:8px">&#129661; Enable Face ID</button>'
     + '<button onclick="disableAppLock()" id="btn-dis-lock" style="display:none;width:100%;padding:12px;border-radius:var(--radius-md);background:transparent;border:1px solid var(--border);color:var(--t2);cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;margin-bottom:8px">&#128275; Disable Lock</button>'
+    + '<div style="height:1px;background:var(--border);margin:18px 0"></div>'
+    + '<div style="font-size:17px;font-weight:800;margin-bottom:4px">&#9888;&#65039; Account</div>'
+    + '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Permanently delete your Kinetiq account and all your data -- workouts, PRs, measurements, nutrition logs, everything. This cannot be undone.</div>'
+    + '<button onclick="confirmDeleteAccount()" id="btn-delete-account" style="width:100%;padding:12px;border-radius:var(--radius-md);background:rgba(255,58,74,.12);color:var(--danger);border:1px solid rgba(255,58,74,.3);cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;margin-bottom:8px">Delete My Account</button>'
     + '<button onclick="document.getElementById(\'security-sheet\').remove()" style="width:100%;padding:11px;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--t2);font-size:13px;cursor:pointer;font-family:inherit">Close</button>'
     + '</div>';
   sheet.addEventListener('click', function(e) { if (e.target === sheet) sheet.remove(); });
@@ -2096,6 +2100,54 @@ function updateSecurityStatus() {
   } else {
     el.textContent = 'No lock set — data is unprotected';
     if (btnDis) btnDis.style.display = 'none';
+  }
+}
+
+// Real, self-service, in-app account deletion -- required for Apple App
+// Store Review Guideline 5.1.1(v) (any app with account creation must let
+// users delete their account from inside the app, not just "email us").
+// A client-side Supabase call can never safely do this itself: deleting the
+// actual auth.users row needs the service_role key, which must never reach
+// browser JS, and RLS would block wiping other users' rows anyway even for
+// the caller's own data in a way that's provably correct. So this calls the
+// kinetiq-usda-proxy Worker's /delete-account endpoint instead, which
+// verifies the caller's session server-side and does the real deletion with
+// its own service_role secret -- see that repo's worker.js for the other
+// half of this.
+var DELETE_ACCOUNT_URL = 'https://kinetiq-usda-proxy.heathchartier.workers.dev/delete-account';
+
+async function confirmDeleteAccount() {
+  if (!currentUser) return;
+  if (!confirm('Delete your Kinetiq account?\n\nThis will permanently erase all your data — workouts, PRs, measurements, nutrition logs, everything.\n\nThis cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? All your data will be permanently deleted.')) return;
+
+  var btn = document.getElementById('btn-delete-account');
+  if (btn) { btn.disabled = true; btn.textContent = 'Deleting…'; }
+
+  try {
+    var sessionResult = await supabaseClient.auth.getSession();
+    var accessToken = sessionResult && sessionResult.data && sessionResult.data.session && sessionResult.data.session.access_token;
+    if (!accessToken) throw new Error('No active session');
+
+    var resp = await fetch(DELETE_ACCOUNT_URL, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    var result = await resp.json();
+
+    if (!resp.ok || !result.success) {
+      throw new Error(result.error || 'Delete failed');
+    }
+
+    // Account is gone server-side -- clear everything local and reload to
+    // a fresh signed-out state, same cleanup handleSignOut() does.
+    localStorage.clear();
+    alert('Your Kinetiq account and all associated data have been permanently deleted.');
+    location.reload();
+  } catch (e) {
+    console.error('Account deletion failed:', e);
+    toast('Account deletion failed — please try again or contact appiqsupport@gmail.com');
+    if (btn) { btn.disabled = false; btn.textContent = 'Delete My Account'; }
   }
 }
 

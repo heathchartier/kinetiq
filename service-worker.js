@@ -3,7 +3,7 @@
 // Enables offline functionality and app-like experience
 // ============================================================================
 
-const CACHE_NAME = 'kinetiq-v4.11.0';
+const CACHE_NAME = 'kinetiq-v4.12.0';
 const RUNTIME_CACHE = 'kinetiq-runtime-v2';
 
 // Base path — root now that kinetiqfit.pro custom domain is active
@@ -23,6 +23,7 @@ const STATIC_ASSETS = [
   BASE_PATH + 'onboarding.js',
   BASE_PATH + 'supabase-config.js',
   BASE_PATH + 'manifest.json',
+  BASE_PATH + 'privacy.html',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
 ];
 
