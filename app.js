@@ -14,6 +14,7 @@ var prs       = DB.get('prs', {});
 var restDays  = DB.get('restDays', []);
 var aw = null, wt = null, wst = null, curPid = null, curPhi = 0;
 var rtIv = null, rtTot = 120, rtRem = 120, rtRun = false, rtLast = 120, rtEndTime = 0;
+var rtVolume = DB.get('restTimerVolume', 1); // 0..1, independent of the phone's system media volume
 
 function isPremium() {
   return localStorage.getItem('ls_access_tier') === 'premium';
@@ -1632,6 +1633,12 @@ function showRT() {
   if (rtp0) rtp0.classList.remove('show');
   document.getElementById('rt-ov').classList.add('show');
 
+  // Sync the volume slider to the saved setting every time the overlay opens
+  var volInput = document.getElementById('rt-vol');
+  if (volInput) volInput.value = Math.round(rtVolume * 100);
+  var volLabel = document.getElementById('rt-vol-label');
+  if (volLabel) volLabel.textContent = Math.round(rtVolume * 100) + '%';
+
   // Ask once (browser only shows the prompt if permission is still
   // 'default' -- repeat calls are a silent no-op once granted or denied)
   // so a completed timer can notify even if the app is backgrounded.
@@ -1756,15 +1763,27 @@ function restoreRT() {
 function beep() {
   try {
     var c = new (window.AudioContext || window.webkitAudioContext)();
-    [0, 0.2, 0.4].forEach(function(t) {
+    var startGain = Math.max(0.0001, 0.3 * rtVolume); // exponentialRamp needs a >0 starting value
+    [0, 0.18].forEach(function(t) { // double "ding-ding", matching the native bell's timing
       var o = c.createOscillator(), g = c.createGain();
       o.connect(g); g.connect(c.destination);
       o.frequency.value = 880;
-      g.gain.setValueAtTime(0.3, c.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + t + 0.15);
-      o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.15);
+      g.gain.setValueAtTime(startGain, c.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.18);
+      o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.18);
     });
   } catch(e) {}
+}
+
+// Rest timer volume (0..1) -- independent of the phone's system media
+// volume, which still acts as an overall ceiling; this just scales the
+// chime within it. Persisted, and forwarded to the native chime/haptics
+// bridge on every completion.
+function setRTVolume(v) {
+  rtVolume = Math.max(0, Math.min(1, parseFloat(v) || 0));
+  DB.set('restTimerVolume', rtVolume);
+  var label = document.getElementById('rt-vol-label');
+  if (label) label.textContent = Math.round(rtVolume * 100) + '%';
 }
 
 // Fired when the rest timer actually hits zero. beep() only works when the
@@ -1780,11 +1799,12 @@ function onRestTimerComplete() {
   var rtp = document.getElementById('rt-pill');
   if (rtp) rtp.classList.remove('show');
   beep();
-  // In the native wrapper, this plays a real device chime that sounds even
-  // with the phone's silent switch on (closeRT(), called just before this,
-  // already cancelled the backgrounded-completion notification -- we're
-  // handling it live instead).
-  nativeBridge('rest-timer-chime');
+  // In the native wrapper, this plays a real device chime (+ haptics) that
+  // sounds even with the phone's silent switch on (closeRT(), called just
+  // before this, already cancelled the backgrounded-completion notification
+  // -- we're handling it live instead). Volume is Kinetiq's own in-app
+  // setting, not the phone's system media volume.
+  nativeBridge('rest-timer-chime', { volume: rtVolume });
 
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
   if (document.visibilityState === 'visible') return; // already looking at it, no need to notify
