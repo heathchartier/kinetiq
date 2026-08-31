@@ -1883,7 +1883,7 @@ function initAppLock() {
 }
 
 function showLockScreen() {
-  var hasFaceID = !!localStorage.getItem('ls_faceid_cred');
+  var hasFaceID = !!localStorage.getItem('ls_faceid_cred') || !!localStorage.getItem('ls_faceid_native');
   _pinBuf = '';
   var el = document.createElement('div');
   el.id = 'lock-screen';
@@ -1951,7 +1951,22 @@ function unlockApp() {
   var el = document.getElementById('lock-screen');
   if (el) { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300); }
 }
+// Face ID has two independent implementations depending on where the app is
+// running, tried in this order:
+//  1. Native (inside the kinetiq-ios wrapper): bridges to real
+//     LocalAuthentication via "faceid-authenticate" -- see FaceID.swift.
+//     window.onFaceIDResult (below) receives the async result.
+//  2. Browser/installed PWA: WebAuthn platform authenticator via
+//     navigator.credentials. Kept as the fallback for that context; inside
+//     the native WKWebView wrapper this reliably failed (WebAuthn platform
+//     authenticators there need an Associated Domains "webcredentials"
+//     entitlement + hosted apple-app-site-association file, which was never
+//     set up), which is why native gets its own real implementation instead.
 function tryFaceID() {
+  if (isNativeWrapper() && localStorage.getItem('ls_faceid_native')) {
+    nativeBridge('faceid-authenticate');
+    return;
+  }
   var credId = localStorage.getItem('ls_faceid_cred');
   if (!credId) return;
   try {
@@ -1966,6 +1981,11 @@ function tryFaceID() {
     }).then(function(assertion) { if (assertion) unlockApp(); }).catch(function() {});
   } catch (e) {}
 }
+// Called by FaceID.swift's authenticate() via evaluateJavaScript once the
+// native Face ID/Touch ID prompt resolves.
+window.onFaceIDResult = function(result) {
+  if (result && result.success) unlockApp();
+};
 
 // Bottom sheet with the App Security card -- Kinetiq has no dedicated
 // Settings view yet, so this is built on demand (same pattern as the rest
@@ -2020,6 +2040,13 @@ function confirmNewPIN() {
 }
 function showFaceIDSetup() {
   if (!localStorage.getItem('ls_pin')) { toast('Set a PIN first'); return; }
+  if (isNativeWrapper()) {
+    // No credential to create -- LocalAuthentication just checks live
+    // biometrics on demand, nothing to enroll beyond confirming it's
+    // available right now. window.onFaceIDCheck (below) finishes this.
+    nativeBridge('faceid-check');
+    return;
+  }
   if (!window.PublicKeyCredential) { toast('Face ID not supported on this device'); return; }
   navigator.credentials.create({
     publicKey: {
@@ -2039,9 +2066,20 @@ function showFaceIDSetup() {
     }
   }).catch(function() { toast('Face ID setup failed — make sure you have a passcode/Face ID set up on your iPhone'); });
 }
+// Called by FaceID.swift's checkAvailable() via evaluateJavaScript.
+window.onFaceIDCheck = function(result) {
+  if (result && result.available) {
+    localStorage.setItem('ls_faceid_native', '1');
+    toast('&#129661; Face ID enabled!');
+    updateSecurityStatus();
+  } else {
+    toast('Face ID/Touch ID isn’t set up on this device yet — add it in iPhone Settings first');
+  }
+};
 function disableAppLock() {
   localStorage.removeItem('ls_pin');
   localStorage.removeItem('ls_faceid_cred');
+  localStorage.removeItem('ls_faceid_native');
   _appUnlockedThisSession = false;
   toast('&#128275; App lock disabled');
   updateSecurityStatus();
@@ -2050,7 +2088,7 @@ function updateSecurityStatus() {
   var el = document.getElementById('sec-status');
   if (!el) return;
   var hasPin = !!localStorage.getItem('ls_pin');
-  var hasFace = !!localStorage.getItem('ls_faceid_cred');
+  var hasFace = !!localStorage.getItem('ls_faceid_cred') || !!localStorage.getItem('ls_faceid_native');
   var btnDis = document.getElementById('btn-dis-lock');
   if (hasPin) {
     el.innerHTML = '<span style="color:var(--acc)">&#10003; PIN set</span>' + (hasFace ? ' &bull; <span style="color:var(--acc3)">&#129661; Face ID enabled</span>' : '');
