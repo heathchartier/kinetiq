@@ -1639,6 +1639,17 @@ function showRT() {
     Notification.requestPermission();
   }
 }
+// Talk to the native iOS wrapper when running inside it (window.webkit.messageHandlers
+// only exists there) -- silent no-op everywhere else (browser tab, installed PWA),
+// so this is safe to call unconditionally from anywhere in the rest timer flow.
+function nativeBridge(name, payload) {
+  try {
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[name]) {
+      window.webkit.messageHandlers[name].postMessage(payload || {});
+    }
+  } catch (e) {}
+}
+
 function setRT(s) {
   if (rtIv) clearInterval(rtIv);
   rtTot = s; rtRem = s; rtRun = true;
@@ -1646,6 +1657,10 @@ function setRT(s) {
   rtEndTime = Date.now() + s * 1000;
   updRT();
   rtIv = setInterval(tickRT, 1000);
+  // Ask the native wrapper (if we're in it) to schedule a real iOS local
+  // notification for this exact countdown -- fires even if iOS fully
+  // suspends the app before the JS timer itself would complete.
+  nativeBridge('rest-timer-schedule', { seconds: s });
 }
 function tickRT() {
   if (!rtRun) return;
@@ -1691,6 +1706,10 @@ function togRT() {
   if (rtRun) {
     // Resuming: re-anchor the wall-clock target to the frozen remaining time.
     rtEndTime = Date.now() + rtRem * 1000;
+    nativeBridge('rest-timer-schedule', { seconds: rtRem });
+  } else {
+    // Paused -- don't let a stale notification fire while the countdown isn't running.
+    nativeBridge('rest-timer-cancel');
   }
   // Pausing needs no extra work -- rtRem already holds the correct frozen
   // value from the last tick, and tickRT() no-ops while !rtRun.
@@ -1701,6 +1720,7 @@ function closeRT() {
   document.getElementById('rt-ov').classList.remove('show');
   var rtp = document.getElementById('rt-pill');
   if (rtp) rtp.classList.remove('show');
+  nativeBridge('rest-timer-cancel'); // manually skipped/closed -- no notification should follow
 }
 
 // Dismiss the full-screen overlay but keep the countdown running in the
@@ -1739,16 +1759,22 @@ function beep() {
 
 // Fired when the rest timer actually hits zero. beep() only works when the
 // tab is in the foreground and the phone isn't on silent -- neither is
-// guaranteed to hold, so this also tries a system notification as a
-// best-effort second channel. NOTE: iOS's physical mute switch silences both
-// paths for any web app; there is no JS API that can override it. A true
-// fix (audio that plays through silent mode, plus a live countdown on the
-// lock screen) needs the native iOS wrapper, not this PWA -- see
-// kinetiq-ios project notes.
+// guaranteed to hold in a plain browser tab, so this also tries a system
+// notification as a best-effort second channel; iOS's physical mute switch
+// silences both paths for any web app, no JS API can override it there.
+// Inside the native iOS wrapper (kinetiq-ios), nativeBridge('rest-timer-chime')
+// below plays a real native chime that *does* sound through the mute switch,
+// and setRT()/togRT() already scheduled a genuine iOS local notification as
+// a backgrounded-completion fallback -- see RestTimer.swift in that project.
 function onRestTimerComplete() {
   var rtp = document.getElementById('rt-pill');
   if (rtp) rtp.classList.remove('show');
   beep();
+  // In the native wrapper, this plays a real device chime that sounds even
+  // with the phone's silent switch on (closeRT(), called just before this,
+  // already cancelled the backgrounded-completion notification -- we're
+  // handling it live instead).
+  nativeBridge('rest-timer-chime');
 
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
   if (document.visibilityState === 'visible') return; // already looking at it, no need to notify
