@@ -1671,7 +1671,17 @@ function tickRT() {
   // handler below) actually gets to run, no matter how long the gap was.
   rtRem = Math.max(0, Math.round((rtEndTime - Date.now()) / 1000));
   updRT();
-  if (rtRem <= 0) { clearInterval(rtIv); closeRT(); onRestTimerComplete(); }
+  if (rtRem <= 0) {
+    // rtRun must flip false here -- otherwise the visibilitychange handler
+    // below (guarded on `rtRun && rtIv`) keeps thinking a timer is still
+    // running forever, and re-fires this same completion branch (re-beeping,
+    // re-chiming, re-notifying) every single time the app is reopened after
+    // the timer already finished, not just the first time.
+    rtRun = false;
+    clearInterval(rtIv);
+    closeRT();
+    onRestTimerComplete();
+  }
 }
 
 // Instantly resync the moment the tab/app becomes visible again, instead of
