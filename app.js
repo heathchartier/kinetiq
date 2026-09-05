@@ -3278,24 +3278,16 @@ async function searchFatSecret() {
 }
 
 function addUSDAFood(fdcId, name, cals, protein, carbs, fat) {
-  var entry = {
-    id: uid(),
-    name: name,
-    cals: cals,
-    protein: protein,
-    carbs: carbs,
-    fat: fat,
-    time: new Date().toISOString()
-  };
-  
-  foodLog.push(entry);
-  saveFoodLog();
-  renderFoodLog();
-  updateNutritionSummary();
-  
-  // Clear search and show success
-  document.getElementById('fatsecret-search').value = '';
-  document.getElementById('fatsecret-results').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--ok);">✓ Added to log!</div>';
+  // USDA FoodData Central reports macros per 100g unless the entry says
+  // otherwise -- most branded/raw entries here are effectively "per 100g",
+  // so that's the honest default label rather than pretending it's "1 serving".
+  openQuantitySheet(name, cals, protein, carbs, fat, '100g', function(qty) {
+    addFoodEntry(name, cals, protein, carbs, fat, qty);
+
+    // Clear search and show success
+    document.getElementById('fatsecret-search').value = '';
+    document.getElementById('fatsecret-results').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--ok);">✓ Added to log!</div>';
+  });
 }
 
 function loadNutritionGoals() {
@@ -3352,23 +3344,75 @@ function searchFoods() {
 function addFood(foodName) {
   var food = kinetiqFoods.find(function(f) { return f.name === foodName; });
   if (!food) return;
-  
+
+  openQuantitySheet(food.name, food.cals, food.protein, food.carbs, food.fat, food.serving || '1 serving', function(qty) {
+    addFoodEntry(food.name, food.cals, food.protein, food.carbs, food.fat, qty);
+    document.getElementById('food-search').value = '';
+    document.getElementById('food-results').innerHTML = '';
+  });
+}
+
+// Shared by addFood() (curated library) and addUSDAFood() (USDA search) --
+// both need the same "how many servings did you actually eat" step before
+// logging, rather than always logging exactly one fixed serving.
+function addFoodEntry(name, cals, protein, carbs, fat, qty) {
+  qty = qty || 1;
   var entry = {
     id: uid(),
-    name: food.name,
-    cals: food.cals,
-    protein: food.protein,
-    carbs: food.carbs,
-    fat: food.fat,
+    name: qty !== 1 ? (qty + 'x ' + name) : name,
+    cals: Math.round(cals * qty),
+    protein: Math.round(protein * qty),
+    carbs: Math.round(carbs * qty),
+    fat: Math.round(fat * qty),
     time: new Date().toISOString()
   };
-  
+
   foodLog.push(entry);
   saveFoodLog();
   renderFoodLog();
   updateNutritionSummary();
-  document.getElementById('food-search').value = '';
-  document.getElementById('food-results').innerHTML = '';
+}
+
+// Bottom sheet asking "how many servings" before actually logging a food.
+// servingLabel is what one serving equals (e.g. "4oz (113g)" from the
+// curated library, or the USDA reference amount) so the user knows what
+// the base numbers mean before scaling them.
+function openQuantitySheet(name, cals, protein, carbs, fat, servingLabel, onConfirm) {
+  var old = document.getElementById('qty-sheet');
+  if (old) old.remove();
+
+  var sheet = document.createElement('div');
+  sheet.id = 'qty-sheet';
+  sheet.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9200;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)';
+  sheet.innerHTML = '<div style="background:var(--bg2);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:22px 20px calc(32px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--border)">'
+    + '<div style="width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px"></div>'
+    + '<div style="font-size:17px;font-weight:800;margin-bottom:4px">' + esc(name) + '</div>'
+    + '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">1 serving = ' + esc(servingLabel) + '</div>'
+    + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'
+    + '<label style="font-size:13px;color:var(--t2);flex-shrink:0">Servings</label>'
+    + '<input type="number" id="qty-input" value="1" min="0.25" step="0.25" inputmode="decimal" style="flex:1;padding:10px;border-radius:var(--radius-md);background:var(--bg3);border:1px solid var(--border);color:var(--t1);font-family:inherit;font-size:16px;text-align:center" oninput="updateQtyPreview(' + cals + ',' + protein + ',' + carbs + ',' + fat + ')">'
+    + '</div>'
+    + '<div id="qty-preview" style="font-size:13px;color:var(--acc);font-weight:700;margin-bottom:16px">' + Math.round(cals) + ' cal • P: ' + Math.round(protein) + 'g C: ' + Math.round(carbs) + 'g F: ' + Math.round(fat) + 'g</div>'
+    + '<button id="qty-confirm-btn" style="width:100%;padding:12px;border-radius:var(--radius-md);background:var(--acc);color:#000;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:800;margin-bottom:8px">Add to Log</button>'
+    + '<button onclick="document.getElementById(\'qty-sheet\').remove()" style="width:100%;padding:11px;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--t2);font-size:13px;cursor:pointer;font-family:inherit">Cancel</button>'
+    + '</div>';
+  sheet.addEventListener('click', function(e) { if (e.target === sheet) sheet.remove(); });
+  document.body.appendChild(sheet);
+
+  document.getElementById('qty-confirm-btn').onclick = function() {
+    var qty = parseFloat(document.getElementById('qty-input').value);
+    if (!qty || qty <= 0) qty = 1;
+    sheet.remove();
+    onConfirm(qty);
+  };
+}
+
+function updateQtyPreview(cals, protein, carbs, fat) {
+  var qtyEl = document.getElementById('qty-input');
+  var preview = document.getElementById('qty-preview');
+  if (!qtyEl || !preview) return;
+  var qty = parseFloat(qtyEl.value) || 0;
+  preview.textContent = Math.round(cals * qty) + ' cal • P: ' + Math.round(protein * qty) + 'g C: ' + Math.round(carbs * qty) + 'g F: ' + Math.round(fat * qty) + 'g';
 }
 
 function deleteFood(id) {
