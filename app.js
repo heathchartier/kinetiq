@@ -685,7 +685,20 @@ function openExDetail(name) {
 function rProgs() {
   var pl = document.getElementById('prog-list');
   var pg = allProgs();
-  var q = (document.getElementById('prog-search') && document.getElementById('prog-search').value || '').toLowerCase().trim();
+  var searchEl = document.getElementById('prog-search');
+  var q = (searchEl && searchEl.value || '').toLowerCase().trim();
+
+  // Defensive guard: some browsers (Chrome especially) will autofill *any*
+  // visible text input on the page with the just-submitted login email right
+  // after sign-in/sign-up, even with autocomplete="off" and a non-generic
+  // name -- this field has no legitimate reason to ever hold a full email
+  // address, so treat that as noise, ignore it for filtering, and wipe the
+  // field so the user never sees it looking broken.
+  if (q && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q)) {
+    q = '';
+    if (searchEl) searchEl.value = '';
+  }
+
   if (q) pg = pg.filter(function(p){ return p.name.toLowerCase().indexOf(q) !== -1 || (p.description || '').toLowerCase().indexOf(q) !== -1; });
 
   // Filter upcoming programs by search query too
