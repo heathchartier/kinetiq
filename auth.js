@@ -206,10 +206,25 @@ async function handleSignUp() {
 // Handle sign out
 async function handleSignOut() {
   const result = await signOut();
-  
+
   if (result.success) {
-    // Clear local data
+    // The PIN/Face ID lock is a device-level setting, not tied to the
+    // account session -- it should survive sign-out (see disableAppLock()
+    // in app.js for the actual way to turn it off). Preserve those three
+    // keys across the clear instead of wiping everything indiscriminately.
+    var lockKeys = ['ls_pin', 'ls_faceid_cred', 'ls_faceid_native'];
+    var savedLock = {};
+    lockKeys.forEach(function(k) {
+      var v = localStorage.getItem(k);
+      if (v !== null) savedLock[k] = v;
+    });
+
     localStorage.clear();
+
+    Object.keys(savedLock).forEach(function(k) {
+      localStorage.setItem(k, savedLock[k]);
+    });
+
     location.reload();
   }
 }

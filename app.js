@@ -1943,9 +1943,39 @@ function updatePinDots() {
   var msg = document.getElementById('lock-msg');
   if (msg) msg.textContent = '';
 }
-function verifyPIN(pin) {
+// PIN hashing (Web Crypto SHA-256 + a random per-setup salt) -- ls_pin used
+// to just be btoa('kq_'+pin+'_s7'), which is base64 encoding, not encryption:
+// one atob() call recovers the actual PIN. This is a real (if still local-
+// only, non-Keychain) improvement: the stored value can't be reversed back
+// to the PIN, only checked against a freshly-typed guess.
+function randomSaltB64() {
+  return btoa(String.fromCharCode.apply(null, crypto.getRandomValues(new Uint8Array(16))));
+}
+async function hashPIN(pin, saltB64) {
+  var digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(saltB64 + ':' + pin));
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(digest)));
+}
+async function verifyPIN(pin) {
   var stored = localStorage.getItem('ls_pin');
-  if (btoa('kq_' + pin + '_s7') === stored) {
+  var ok = false;
+  try {
+    var parsed = JSON.parse(stored);
+    if (parsed && parsed.salt && parsed.hash) {
+      ok = (await hashPIN(pin, parsed.salt)) === parsed.hash;
+    }
+  } catch (e) {
+    // Legacy pre-hash format (plain base64 string, not JSON) -- check it the
+    // old way once, and silently upgrade storage to the hashed format on a
+    // correct match so existing users get the fix without re-setting their PIN.
+    if (btoa('kq_' + pin + '_s7') === stored) {
+      ok = true;
+      var salt = randomSaltB64();
+      hashPIN(pin, salt).then(function(hash) {
+        localStorage.setItem('ls_pin', JSON.stringify({ salt: salt, hash: hash }));
+      });
+    }
+  }
+  if (ok) {
     unlockApp();
   } else {
     _pinBuf = '';
@@ -2043,12 +2073,14 @@ function showPINSetup() {
   document.body.appendChild(sheet);
   setTimeout(function() { var el = document.getElementById('pin-new1'); if (el) el.focus(); }, 200);
 }
-function confirmNewPIN() {
+async function confirmNewPIN() {
   var p1 = (document.getElementById('pin-new1') || {}).value || '';
   var p2 = (document.getElementById('pin-new2') || {}).value || '';
   if (!/^\d{4}$/.test(p1)) { toast('PIN must be exactly 4 digits'); return; }
   if (p1 !== p2) { toast('PINs do not match'); return; }
-  localStorage.setItem('ls_pin', btoa('kq_' + p1 + '_s7'));
+  var salt = randomSaltB64();
+  var hash = await hashPIN(p1, salt);
+  localStorage.setItem('ls_pin', JSON.stringify({ salt: salt, hash: hash }));
   _appUnlockedThisSession = true; // just set it in-app -- don't immediately re-lock
   var sheet = document.getElementById('pin-setup-sheet');
   if (sheet) sheet.remove();
